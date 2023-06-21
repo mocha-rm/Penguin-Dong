@@ -5,13 +5,17 @@ using UniRx;
 
 public class Player : MonoBehaviour
 {
-    private enum Side { Left = -1, Right = 1 }
+    private const float MAX_SPEED = 5f;
 
 
     [Header("Status")]
-    [SerializeField] private float speed = 0f;
+    [SerializeField]private float speed = 0f;
 
     private Vector3 originPosition;
+
+    private Coroutine routine = null;
+
+
 
 
     private void Awake()
@@ -22,7 +26,7 @@ public class Player : MonoBehaviour
 
     void Start()
     {
-        Observable.EveryUpdate()
+        Observable.EveryFixedUpdate()
             .Where(_ => Application.isPlaying)//TODO : Option Will Change : When CountDown End...
             .Subscribe(_ =>
             {
@@ -36,28 +40,59 @@ public class Player : MonoBehaviour
 
         transform.position = originPosition;
 
-        speed = Random.Range(0f, 1f) > 0.5f ? 3f : -3f;
+        speed = Random.Range(0f, 1f) > 0.5f ? MAX_SPEED : -MAX_SPEED;
 
-        transform.localScale = speed.Equals(3) ? new Vector3((int)Side.Right * 0.5f, 0f, 0f) : new Vector3((int)Side.Left * 0.5f, 0f, 0f);
+        transform.localScale = speed.Equals(3) ? Vector3.one : new Vector3(-1f, 1f, 1f);
 
         Debug.Log($"Player Initialized");
     }
 
-    private void Move()
-    {
-        transform.Translate(Vector3.right * Time.deltaTime * speed);
-    }
-
-
+    private void Move() => transform.position += Vector3.right * Time.deltaTime * speed;
+   
     public void SetDirection()
     {
-        if (transform.position.x < 0)
+        if(routine != null)
         {
-            speed = 3.0f;
+            StopCoroutine(routine);
         }
-        else
+        routine = StartCoroutine(speed > 0 ? IcyTurnLeft() : IcyTurnRight());
+    }
+
+    private IEnumerator IcyTurnLeft()
+    {
+        transform.localScale = new Vector3(-1f, 1f, 1f);;
+
+        float controlValue = 0.05f;
+
+        while(true)
         {
-            speed = -3.0f;
+            speed -= controlValue;
+            if(speed < -MAX_SPEED)
+            {
+                break;
+            }
+            yield return null;
         }
+
+        yield return null;
+    }
+
+    private IEnumerator IcyTurnRight()
+    {
+        transform.localScale = Vector3.one;
+
+        float controlValue = 0.05f;
+
+        while(true)
+        {
+            speed += controlValue;
+            if(speed > MAX_SPEED)
+            {
+                break;
+            }
+            yield return null;
+        }
+
+        yield return null;
     }
 }
