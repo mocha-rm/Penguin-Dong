@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UniRx;
+using UniRx.Triggers;
 
 
 public class Player : MonoBehaviour
@@ -9,9 +10,11 @@ public class Player : MonoBehaviour
 
 
     [Header("Status")]
-    [SerializeField]private float speed = 0f;
+    [SerializeField] private float speed = 0f;
 
     private Vector3 originPosition;
+
+    private Animator ani;
 
     private Coroutine routine = null;
 
@@ -38,20 +41,26 @@ public class Player : MonoBehaviour
     {
         ExGameManager.player = this;
 
+        ani = GetComponent<Animator>();
+
         transform.position = originPosition;
 
         speed = Random.Range(0f, 1f) > 0.5f ? MAX_SPEED : -MAX_SPEED;
 
-        transform.localScale = speed.Equals(3) ? Vector3.one : new Vector3(-1f, 1f, 1f);
+        transform.localScale = speed.Equals(MAX_SPEED) ? Vector3.one : new Vector3(-1f, 1f, 1f);
 
         Debug.Log($"Player Initialized");
     }
 
-    private void Move() => transform.position += Vector3.right * Time.deltaTime * speed;
-   
+    private void Move()
+    {
+        ani.SetBool("Run",true);
+        transform.position += Vector3.right * Time.deltaTime * speed;
+    }
+
     public void SetDirection()
     {
-        if(routine != null)
+        if (routine != null)
         {
             StopCoroutine(routine);
         }
@@ -60,14 +69,14 @@ public class Player : MonoBehaviour
 
     private IEnumerator IcyTurnLeft()
     {
-        transform.localScale = new Vector3(-1f, 1f, 1f);;
+        transform.localScale = new Vector3(-1f, 1f, 1f);
 
         float controlValue = 0.05f;
 
-        while(true)
+        while (true)
         {
             speed -= controlValue;
-            if(speed < -MAX_SPEED)
+            if (speed < -MAX_SPEED)
             {
                 break;
             }
@@ -83,10 +92,10 @@ public class Player : MonoBehaviour
 
         float controlValue = 0.05f;
 
-        while(true)
+        while (true)
         {
             speed += controlValue;
-            if(speed > MAX_SPEED)
+            if (speed > MAX_SPEED)
             {
                 break;
             }
@@ -94,5 +103,11 @@ public class Player : MonoBehaviour
         }
 
         yield return null;
+    }
+
+    public void SuperSlide() //필살기
+    {
+        ani.SetTrigger("SuperSlide");
+        //Rigidbody 2D 이용해서 옆으로 뛰는 느낌 주면 좋을 듯
     }
 }
