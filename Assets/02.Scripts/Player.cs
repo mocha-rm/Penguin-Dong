@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UniRx;
-using UniRx.Triggers;
+using Utility;
 
 
 public class Player : MonoBehaviour
@@ -49,7 +49,7 @@ public class Player : MonoBehaviour
 
         transform.localScale = speed.Equals(MAX_SPEED) ? Vector3.one : new Vector3(-1f, 1f, 1f);
 
-        Debug.Log($"Player Initialized");
+        CustomLog.Log($"Player Initialized");
     }
 
     private void Move()
@@ -105,9 +105,9 @@ public class Player : MonoBehaviour
         yield return null;
     }
 
-    public void SuperSlide() //ÇÊ»ì±â
+    public void SuperSlide() //ï¿½Ê»ï¿½ï¿½
     {
         ani.SetTrigger("SuperSlide");
-        //Rigidbody 2D ÀÌ¿ëÇØ¼­ ¿·À¸·Î ¶Ù´Â ´À³¦ ÁÖ¸é ÁÁÀ» µí
+        //Rigidbody 2D ï¿½Ì¿ï¿½ï¿½Ø¼ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ù´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ö¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
     }
 }
