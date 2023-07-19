@@ -12,14 +12,14 @@ GameObject:
   - component: {fileID: 3605603499391710279}
   - component: {fileID: 3605603499391710278}
   - component: {fileID: 3605603499391710277}
-  - component: {fileID: 3605603499391710281}
+  - component: {fileID: 4701872849391822796}
   m_Layer: 0
   m_Name: BasicPoo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &3605603499391710280
 Transform:
   m_ObjectHideFlags: 0
@@ -124,7 +124,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &3605603499391710281
+--- !u!114 &4701872849391822796
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -133,6 +133,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 3605603499391710276}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 08eaa6a2bc3664d43bb90fe4654316c7, type: 3}
+  m_Script: {fileID: 11500000, guid: e42244b2b84ac86409c7c4ffe16c6df3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
