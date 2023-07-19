@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using VContainer;
-using VContainer.Unity;
 using UniRx;
 using UniRx.Triggers;
 
@@ -87,9 +86,9 @@ namespace GameScene.Icicle
         {
             public static readonly string[] TYPE = new string[]
             {
-                "StandardPoo",
-                "LegendPoo",
-                "SuperPoo",
+                "BasicIcicle",
+                "SuperIcicle",
+                "LegendIcicle",
             };
             public static readonly int POOLING_SIZE = 50;
         }

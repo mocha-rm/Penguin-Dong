@@ -39,7 +39,7 @@ public class SceneLoader
                 _resourceContainer.ReleaseResources();
             }
 
-            //_resourceContainer = GetCurrentContainer(Scene);
+            _resourceContainer = GetCurrentContainer(Scene);
 
             var loadSc = await _resourceContainer.InstatiateLoadingScreenAsync();
 
@@ -58,19 +58,19 @@ public class SceneLoader
         }
     }
 
-    /*BaseResourceContainer GetCurrentContainer(SceneName scene) //TODO : Correct
+    BaseResourceContainer GetCurrentContainer(SceneName scene)
     {
         switch (scene)
         {
-            case SceneName.FallDownGame:
-                return new FallDownGame.ResourceContainer();
+            /*case SceneName.LobbyScene:
+                return new LobbyScene.*/
 
-            case SceneName.Penguin:
-                return new PenguinResourceContainer();
+            case SceneName.GameScene:
+                return new GameScene.GameResourceContainer();   
         }
 
         return new DefaultResourceContainer();
-    }*/
+    }
 
     public T GetCurrentResouceContainer<T>() where T : BaseResourceContainer
     {

@@ -4,6 +4,7 @@ using UnityEngine;
 using VContainer;
 using VContainer.Unity;
 using MessagePipe;
+using GameScene.Icicle;
 using GameScene.Player;
 using GameScene.UI;
 using GameScene.Rule;
@@ -49,12 +50,12 @@ namespace GameScene
 
             Dictionary<string, MiniPool> poolDic = new Dictionary<string, MiniPool>();
             {
-                for (int i = 0; i < Icicle.IcicleFacade.Constants.TYPE.Length; i++)
+                for (int i = 0; i < IcicleFacade.Constants.TYPE.Length; i++)
                 {
-                    var poolObj = resouceContainer.GetGameObject(Icicle.IcicleFacade.Constants.TYPE[i]);
+                    var poolObj = resouceContainer.GetGameObject(IcicleFacade.Constants.TYPE[i]);
                     var pool = new MiniPool();
-                    pool.Init(poolObj, Icicle.IcicleFacade.Constants.POOLING_SIZE);
-                    poolDic.Add(Icicle.IcicleFacade.Constants.TYPE[i], pool);
+                    pool.Init(poolObj, IcicleFacade.Constants.POOLING_SIZE);
+                    poolDic.Add(IcicleFacade.Constants.TYPE[i], pool);
                 }
             }
 
@@ -64,7 +65,7 @@ namespace GameScene
         private void RegisterController(IContainerBuilder builder)
         {
             builder.RegisterEntryPoint<PlayerController>().AsSelf();
-            builder.RegisterEntryPoint<Icicle.IcicleController>().AsSelf();
+            builder.RegisterEntryPoint<IcicleController>().AsSelf();
             builder.RegisterEntryPoint<InGameUIController>().AsSelf();
         }
 

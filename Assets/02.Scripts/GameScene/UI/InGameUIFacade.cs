@@ -35,8 +35,8 @@ namespace GameScene.UI
 
         [Header("Game Control")] //다른 Facade로 분리예정
         private GameObject _gameOverPanel;
-        [SerializeField] Button _home;
-        [SerializeField] Button _retry;
+       /* [SerializeField] Button _home;
+        [SerializeField] Button _retry;*/
 
 
 

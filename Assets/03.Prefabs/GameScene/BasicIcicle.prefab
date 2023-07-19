@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 3605603499391710277}
   - component: {fileID: 4701872849391822796}
   m_Layer: 0
-  m_Name: BasicPoo
+  m_Name: BasicIcicle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: LoadingScreen
+  m_EditorClassIdentifier: 
+  m_GroupName: LoadingScreen
+  m_Data:
+    m_SerializedData: []
+  m_GUID: c63726c30b902d841ac4793abda7951e
+  m_SerializeEntries:
+  - m_GUID: 779c8643e1d0af443844ffb5f110a857
+    m_Address: DefaultLoadingScreen
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Preload
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: dce36328b6e9fed4190c4f0da0d06da6, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 51d0fea49ef21064eaa3d4c21e781196, type: 2}
+    - {fileID: 11400000, guid: 6090f30344331e04198878c96ecbb23d, type: 2}
