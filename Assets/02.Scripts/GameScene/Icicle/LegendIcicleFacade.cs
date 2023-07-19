@@ -1,15 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
+using UniRx;
 
 namespace GameScene.Icicle
 {
     public class LegendIcicleFacade : IcicleFacade
     {
-        protected override FacadeModel CreateModel(float gr = 1.5f)
+        protected override FacadeModel CreateModel()
         {
-            return base.CreateModel(gr);
+            return new FacadeModel()
+            {
+                _isAlive = new ReactiveProperty<bool>(true),
+                _gravity = new ReactiveProperty<float>(Constants.GRAVITY_Scales[(int)IcicleType.Legend]),
+            };
         }
     }
 }

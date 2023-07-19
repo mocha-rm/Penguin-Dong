@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
@@ -12,7 +11,7 @@ using MessagePipe;
 
 namespace GameScene.Icicle
 {
-    public enum PooType { Standard, Super, Legend }
+    public enum IcicleType { Basic, Super, Legend }
 
     public class IcicleController : IInitializable, IDisposable
     {
@@ -31,9 +30,9 @@ namespace GameScene.Icicle
 
             _obstaclePools = new MiniPool[]
             {
-                poolDic[IcicleFacade.Constants.TYPE[(int)PooType.Standard]],//enumÀ¸·Î ´ëÃ¼
-                poolDic[IcicleFacade.Constants.TYPE[(int)PooType.Super]],
-                poolDic[IcicleFacade.Constants.TYPE[(int)PooType.Legend]],
+                poolDic[IcicleFacade.Constants.TYPE[(int)IcicleType.Basic]],
+                poolDic[IcicleFacade.Constants.TYPE[(int)IcicleType.Super]],
+                poolDic[IcicleFacade.Constants.TYPE[(int)IcicleType.Legend]],
             };
         }
 
@@ -45,7 +44,7 @@ namespace GameScene.Icicle
 
         public void Spawn()
         {
-            rand = UnityEngine.Random.Range(0, 3); //TODO : È®·üÁ¶Á¤
+            rand = UnityEngine.Random.Range(0, 3); //TODO : È®ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
             SetIcicle();
         }
 

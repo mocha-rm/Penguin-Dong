@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 using VContainer;
@@ -80,8 +78,8 @@ namespace GameScene.Rule
                     break;
                 }
 
-                //¿ÀºêÁ§Æ® ½ºÆù(¿ÀºêÁ§Æ® Á¾·ù´Â ÇÒ¶§ ¸¶´Ù ·£´ýÀ¸·Î È®·ü·Î µîÀå)
-                //ÀÏÁ¤ ½ºÄÚ¾î ÀÌ»ó ´Þ¼ºÇÏ¸é ¾î·Á¿î ¿ÀºêÁ§Æ®°¡ ³ª¿Ã È®·ü »ó½Â
+                //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ò¶ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
+                //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ú¾ï¿½ ï¿½Ì»ï¿½ ï¿½Þ¼ï¿½ï¿½Ï¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½ ï¿½ï¿½ï¿½
 
             } while (true);
         }
@@ -107,7 +105,7 @@ namespace GameScene.Rule
 
         public static class Constants
         {
-            public static readonly double Difficulty = 1000;
+            public static readonly double Difficulty = 500;
         }
     }
 }

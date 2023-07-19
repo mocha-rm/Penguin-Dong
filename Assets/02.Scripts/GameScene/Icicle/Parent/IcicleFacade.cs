@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using VContainer;
 using UniRx;
@@ -65,12 +63,12 @@ namespace GameScene.Icicle
             _model = null;
         }
 
-        protected virtual FacadeModel CreateModel(float gr = 1.0f)
+        protected virtual FacadeModel CreateModel()
         {
             return new FacadeModel()
             {
                 _isAlive = new ReactiveProperty<bool>(true),
-                _gravity = new ReactiveProperty<float>(gr),
+                _gravity = new ReactiveProperty<float>(Constants.GRAVITY_Scales[(int)IcicleType.Basic]),
             };
         }
 
@@ -82,7 +80,7 @@ namespace GameScene.Icicle
             return pos;
         }
 
-        public static class Constants
+        public partial class Constants
         {
             public static readonly string[] TYPE = new string[]
             {
@@ -90,7 +88,15 @@ namespace GameScene.Icicle
                 "SuperIcicle",
                 "LegendIcicle",
             };
+
             public static readonly int POOLING_SIZE = 50;
+
+            public static readonly float[] GRAVITY_Scales = new float[]
+            {
+                2.0f,
+                5.0f,
+                7.0f,
+            };
         }
 
         public class FacadeModel : IFacadeModelObservable
