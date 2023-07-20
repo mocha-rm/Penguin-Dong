@@ -18,7 +18,7 @@ namespace GameScene
     {
         [Header("Facades")]
         [SerializeField] PlayerFacade _player;
-        [SerializeField] InGameUIFacade _ingameUI;
+        [SerializeField] NormalUIFacade _ingameUI;
 
 
         //UI

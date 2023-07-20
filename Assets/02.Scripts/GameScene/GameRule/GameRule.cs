@@ -55,6 +55,8 @@ namespace GameScene.Rule
 
             SubscribeCountDownCompleteEvent().AddTo(bag);
 
+            SubscribeGameOverEvent().AddTo(bag);
+
             _disposable = bag.Build();
         }
 
