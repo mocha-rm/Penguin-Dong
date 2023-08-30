@@ -21,10 +21,6 @@ namespace GameScene
         [SerializeField] NormalUIFacade _ingameUI;
 
 
-        //UI
-        //+ UI Facades
-
-
         protected override void Configure(IContainerBuilder builder)
         {
             base.Configure(builder);
@@ -81,6 +77,7 @@ namespace GameScene
 
             builder.RegisterMessageBroker<DirectionButtonClick>(option);
             builder.RegisterMessageBroker<CountDownComplete>(option);
+            builder.RegisterMessageBroker<GameOverEvent>(option);
         }
     }
 }

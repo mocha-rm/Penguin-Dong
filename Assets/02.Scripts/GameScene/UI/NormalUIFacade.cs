@@ -28,8 +28,9 @@ namespace GameScene.UI
         IPublisher<CountDownComplete> _countdownPub;
 
         [Header("Info Output")]
-        private TextMeshProUGUI _score;
-        private TextMeshProUGUI _life;
+        [SerializeField] TextMeshProUGUI _score;
+        [SerializeField] TextMeshProUGUI _life;
+        IPublisher<GameOverEvent> _gameoverPub;
 
         FacadeModel _model;
 
@@ -44,6 +45,8 @@ namespace GameScene.UI
             _playerTurnPub = _container.Resolve<IPublisher<DirectionButtonClick>>();
 
             _countdownPub = _container.Resolve<IPublisher<CountDownComplete>>();
+
+            _gameoverPub = _container.Resolve<IPublisher<GameOverEvent>>();
 
             _directionControlBtn.OnClickAsObservable()
                  .Subscribe(_ =>
@@ -61,7 +64,15 @@ namespace GameScene.UI
 
             _model.life.Subscribe(life =>
             {
-                _life.text = $"잔여 목숨 : {life}";
+                _life.text = $"Life : {life}";
+                if(life.Equals(0))
+                {
+                    _gameoverPub.Publish(new GameOverEvent()
+                    {
+
+                    });
+                }
+
             }).AddTo(this);
 
             _model.score.Subscribe(score =>
@@ -81,9 +92,9 @@ namespace GameScene.UI
                 await UniTask.Delay(System.TimeSpan.FromMilliseconds(1000));
             }
 
-            _countdownPub.Publish(new CountDownComplete() //카운트컴플리트 이벤트 퍼블리싱
+            _countdownPub.Publish(new CountDownComplete()
             {
-
+                
             });
 
             Debug.Log($"{_countNum} Count Ended");

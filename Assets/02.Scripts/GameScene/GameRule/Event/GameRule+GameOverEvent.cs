@@ -21,6 +21,7 @@ namespace GameScene.Rule
             {
                 _model.GameState.Value = GameState.GameOver;
                 //TODO : Pop GameOver Panel UI
+                Debug.Log("GameOver");
             });
         }
     }
