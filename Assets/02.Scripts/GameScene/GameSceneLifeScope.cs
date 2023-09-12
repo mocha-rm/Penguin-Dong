@@ -42,7 +42,7 @@ namespace GameScene
 
         private void RegisterPool(IContainerBuilder builder)
         {
-            var resouceContainer = Parent.Container.Resolve<SceneLoader>().GetCurrentResouceContainer<GameResourceContainer>();
+            var resouceContainer = Parent.Container.Resolve<SceneService>().GetCurrentResouceContainer<GameResourceContainer>();
 
             Dictionary<string, MiniPool> poolDic = new Dictionary<string, MiniPool>();
             {

@@ -8,12 +8,11 @@ using UnityEngine;
 using UnityEngine.UI;
 
 
-public class DefaultLoadingScreen : BaseLoadingScreen
-{
-    [SerializeField] Image _slider;
-
-    public override void Report(float value)
+    public class DefaultLoadingScreen : BaseLoadingScreen
     {
-        _slider.fillAmount = value;
+        [SerializeField] Image _slider;
+        public override void Report(float value)
+        {
+            _slider.fillAmount = value;
+        }
     }
-}

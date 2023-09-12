@@ -11,7 +11,7 @@ namespace GameScene
     {
         public List<string> resourcesTag = new List<string>()
         {
-            SceneLoader.SceneName.GameScene.ToString(),
+            SceneName.GameScene.ToString(),
         };
 
         Dictionary<string, GameObject> _gameObjContainer = new Dictionary<string, GameObject>();

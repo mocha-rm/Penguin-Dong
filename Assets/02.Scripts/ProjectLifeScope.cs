@@ -8,13 +8,23 @@ using VContainer.Diagnostics;
 using MessagePipe;
 using MessagePipe.VContainer;
 using UnityEngine.SceneManagement;
+
 using Cysharp.Threading.Tasks;
 
 
+public enum SceneName
+{
+    LobbyScene,
+    GameScene,
+    None,
+}
 
 public class ProjectLifeScope : LifetimeScope
 {
+    readonly SceneName StartScene = SceneName.LobbyScene;
     #region SingleScope
+
+
     static ProjectLifeScope _instance;
     protected override void Awake()
     {
@@ -32,9 +42,22 @@ public class ProjectLifeScope : LifetimeScope
         }
     }
 
-    private void Start()
+    private async void Start()
     {
-        Container.Resolve<SceneLoader>().LoadScene(SceneLoader.SceneName.LobbyScene).Forget();
+        var sceneService = Container.Resolve<SceneService>();
+
+        await sceneService.LoadPreload();
+
+        Container.Resolve<SceneService>().LoadScene(StartScene).Forget();
+    }
+
+    public static IObjectResolver GetProjectContainer()
+    {
+        if (_instance == null)
+        {
+            return null;
+        }
+        return _instance.Container;
     }
     #endregion
 
@@ -43,7 +66,8 @@ public class ProjectLifeScope : LifetimeScope
     {
         base.Configure(builder);
 
-        builder.Register<SceneLoader>(Lifetime.Singleton);
-        //기본적으로 게임에 들어가는 Manager들 Sound , DB , etc...
+        //Proejct Services
+        builder.Register<SceneService>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
+        builder.Register<AudioService>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
     }
 }

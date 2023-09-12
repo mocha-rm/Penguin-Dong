@@ -29,19 +29,19 @@ namespace LobbyScene.UI
             _canvasRoot = _container.Resolve<RectTransform>();
             var buttons = _canvasRoot.GetComponentsInChildren<Button>();
 
-            var loader = _container.Resolve<SceneLoader>();
+            var loader = _container.Resolve<SceneService>();
 
             _singleGame = buttons[0];
             _quickGame = buttons[1];
 
             _singleGame.OnClickAsObservable().Subscribe(_ =>
             {
-                loader.LoadScene(SceneLoader.SceneName.GameScene).Forget();
+                loader.LoadScene(SceneName.GameScene).Forget();
             });
 
-            _quickGame.OnClickAsObservable().Subscribe(_ => //TODO : Make MultiPlayScene Later
+            _quickGame.OnClickAsObservable().Subscribe(_ =>
             {
-                loader.LoadScene(SceneLoader.SceneName.GameScene).Forget();
+                loader.LoadScene(SceneName.GameScene).Forget();
             });
         }
 

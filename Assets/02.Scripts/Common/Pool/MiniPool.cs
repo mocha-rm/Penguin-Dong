@@ -2,82 +2,86 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UniRx;
 
-public class MiniPool : IDisposable
-{
-    GameObject _original;
-    Queue<GameObject> _poolObject = new Queue<GameObject>();
-    bool _isInitalize = false;
-    Transform _parent;
 
-    public void Init(GameObject original, int Count)
+    public class MiniPool : IDisposable
     {
-        if (_isInitalize)
+        public IEnumerable<GameObject> AllObjects { get => _poolObject; }   //For Inject
+
+        GameObject _original;
+        Queue<GameObject> _poolObject = new Queue<GameObject>();
+        bool _isInitalize = false;
+        Transform _parent;
+
+
+        public void Init(GameObject original, int Count)
         {
-            Debug.LogError($"{original.name} is Already Initalized");
-            return;
+            if (_isInitalize)
+            {
+                Debug.LogError($"{original.name} is Already Initalized");
+                return;
+            }
+
+            _isInitalize = true;
+
+            _parent = new GameObject(original.name).transform;
+
+            _original = original;
+            for (int i = 0; i < Count; i++)
+            {
+                CreatePool();
+            }
         }
 
-        _isInitalize = true;
-
-        _parent = new GameObject(original.name).transform;
-
-        _original = original;
-        for (int i = 0; i < Count; i++)
+        void CreatePool()
         {
-            CreatePool();
-        }
-    }
-
-    void CreatePool()
-    {
-        var newObj = UnityEngine.Object.Instantiate(_original, _parent);
-        newObj.name = _original.name;
-        push(newObj);
-    }
-
-    public T Pop<T>(Transform parent = null) where T : MonoBehaviour
-    {
-        if (_poolObject.Count <= 0)
-        {
-            Debug.LogWarning("Pool is Lack");
-            CreatePool();
+            var newObj = UnityEngine.Object.Instantiate(_original, _parent);
+            newObj.name = _original.name;
+            push(newObj);
         }
 
-        var popObject = _poolObject.Dequeue();
-        popObject.SetActive(true);
-        if (parent != null)
+        public T Pop<T>(Transform parent = null) where T : MonoBehaviour
         {
-            popObject.transform.SetParent(parent);
+            if (_poolObject.Count <= 0)
+            {
+                Debug.LogWarning($"Pool is Lack If {_original.name} is BaseFacade, Can't Resolve Anywhere");
+                CreatePool();
+            }
+
+            var popObject = _poolObject.Dequeue();
+            popObject.SetActive(true);
+            if (parent != null)
+            {
+                popObject.transform.SetParent(parent);
+            }
+
+            return popObject.GetOrAddComponent<T>();
         }
 
-        return popObject.GetOrAddComponent<T>();
-    }
-
-    public void push(GameObject poolObject)
-    {
-        if (poolObject.name == _original.name)
+        public void push(GameObject poolObject)
         {
-            poolObject.transform.SetParent(_parent);
-            poolObject.SetActive(false);
-            _poolObject.Enqueue(poolObject);
-        }
-    }
-
-    public void Clear()
-    {
-        foreach (var obj in _poolObject)
-        {
-            UnityEngine.Object.Destroy(obj);
+            if (poolObject.name == _original.name)
+            {
+                poolObject.transform.SetParent(_parent);
+                poolObject.SetActive(false);
+                _poolObject.Enqueue(poolObject);
+            }
         }
 
-        _poolObject.Clear();
-        _isInitalize = false;
-    }
+        public void Clear()
+        {
+            foreach (var obj in _poolObject)
+            {
+                UnityEngine.Object.Destroy(obj);
+            }
 
-    public void Dispose()
-    {
-        Clear();
-    }
-}
+            _poolObject.Clear();
+            _isInitalize = false;
+        }
 
+        public void Dispose()
+        {
+            Clear();
+        }
+    }

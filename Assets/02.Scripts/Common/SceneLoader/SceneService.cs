@@ -4,24 +4,50 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.UI;
+using UniRx;
 using Cysharp.Threading.Tasks;
 using VContainer;
 using VContainer.Unity;
 
 
-public class SceneLoader
+public class SceneService : IInitializable, IDisposable
 {
-    public enum SceneName
-    {
-        LobbyScene,
-        GameScene,
-        None,
-    }
 
     [Inject] IObjectResolver _container;
 
     SceneName _currentScene = SceneName.None;
+    PreloadResouceContainer _preloadResouceContainer;
     BaseResourceContainer _resourceContainer;
+
+    IDisposable _disposable;
+    public void Initialize()
+    {
+        _currentScene = SceneName.None;
+        _resourceContainer = null;
+    }
+
+    public void Dispose()
+    {
+        if (_resourceContainer != null)
+        {
+            _resourceContainer.ReleaseResources();
+            _resourceContainer = null;
+        }
+
+        _disposable?.Dispose();
+    }
+
+    public async UniTask LoadPreload()
+    {
+        _preloadResouceContainer = new PreloadResouceContainer();
+
+        var loadSc = await _preloadResouceContainer.InstatiateLoadingScreenAsync();
+        loadSc.SetLoadingText("LoadingPreResources");
+
+        await _preloadResouceContainer.LoadResourcesAsync(loadSc);
+
+        _preloadResouceContainer.ReleaseLoadingScreen();
+    }
 
     public async UniTaskVoid LoadScene(SceneName Scene)
     {
@@ -34,9 +60,10 @@ public class SceneLoader
         }
         else
         {
-            if (_resourceContainer != null && _resourceContainer is DefaultResourceContainer == false)
+            if (_resourceContainer != null)
             {
                 _resourceContainer.ReleaseResources();
+                _resourceContainer = null;
             }
 
             _resourceContainer = GetCurrentContainer(Scene);
@@ -62,11 +89,8 @@ public class SceneLoader
     {
         switch (scene)
         {
-            /*case SceneName.LobbyScene:
-                return new LobbyScene.*/
-
             case SceneName.GameScene:
-                return new GameScene.GameResourceContainer();   
+                return new GameScene.GameResourceContainer();
         }
 
         return new DefaultResourceContainer();
@@ -74,13 +98,18 @@ public class SceneLoader
 
     public T GetCurrentResouceContainer<T>() where T : BaseResourceContainer
     {
+        if (typeof(T) == typeof(PreloadResouceContainer))
+        {
+            return _preloadResouceContainer as T;
+        }
+
         var container = _resourceContainer as T;
         if (container == null)
         {
-            Debug.LogError("Container is Null");
+            Debug.LogError($"Container is Null {nameof(T)}");
             return null;
         }
         return container;
     }
-}
 
+}
