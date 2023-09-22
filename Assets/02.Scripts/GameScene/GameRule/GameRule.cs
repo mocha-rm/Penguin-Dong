@@ -9,7 +9,7 @@ using UniRx;
 using Cysharp.Threading.Tasks;
 using GameScene.Player;
 using GameScene.UI;
-using GameScene.Icicle;
+using GameScene.Obstacle;
 
 namespace GameScene.Rule
 {
@@ -17,7 +17,7 @@ namespace GameScene.Rule
 
     public partial class GameRule : IInitializable, IDisposable
     {
-        public IGameModelObserver Model { get { return _model; } }
+        public IGameModel Model { get { return _model; } }
 
         GameModel _model;
 
@@ -26,25 +26,26 @@ namespace GameScene.Rule
 
         //Controller
         PlayerController _playerController;
-        IcicleController _icicleController;
+        ObstacleController _obstacleController;
         InGameUIController _uiController;
 
         //Sub
         IDisposable _disposable;
 
 
+        [Inject]
+        void Construct() //Initialize 함수보다 호출순서가 빠름 System적으로 맨 처음 있어야 될 것들은 Construct 함수에서 호출 해주면 될 것 같다
+        {
+            _model = CreateModel();
+        }
+
 
         public void Initialize()
         {
             _playerController = _container.Resolve<PlayerController>();
-            _icicleController = _container.Resolve<IcicleController>();
+            _obstacleController = _container.Resolve<ObstacleController>();
             _uiController = _container.Resolve<InGameUIController>();
 
-            if (_model == null)
-            {
-                _model = CreateModel();
-
-            }
 
             GameRunning().Forget();
 
@@ -57,33 +58,31 @@ namespace GameScene.Rule
 
             SubscribeGameOverEvent().AddTo(bag);
 
+            SubscribeObstacleCrashEvent().AddTo(bag);
+
+            SubscribeSceneLoadEvent().AddTo(bag);
+
             _disposable = bag.Build();
         }
 
         private async UniTaskVoid GameRunning()
         {
-            int score = 0;
-
             await UniTask.WaitUntil(() => _model.GameState.Value == GameState.Playing);
 
-            do
+            while (true)
             {
-                _icicleController.Spawn();
-                score++;
+                int level = _model.Score.Value / 100 + 1;
+                int duration = Mathf.FloorToInt(Constants.Duration * Mathf.Pow(Constants.DurationRatePerLevel, _model.Score.Value));
 
-                await UniTask.Delay(TimeSpan.FromMilliseconds(Constants.Difficulty));
+                await UniTask.Delay(Mathf.Max(Constants.MinDuration, duration)); //TODO: Change when level up timing later
 
                 if (_model.GameState.Value == GameState.GameOver)
                 {
-                    Debug.Log(score.ToString());
-                    Debug.Log($"Game is Over");
                     break;
                 }
 
-                //������Ʈ ����(������Ʈ ������ �Ҷ� ���� �������� Ȯ���� ����)
-                //���� ���ھ� �̻� �޼��ϸ� ����� ������Ʈ�� ���� Ȯ�� ���
-
-            } while (true);
+                _obstacleController.SpawnObstacles(1);
+            }
         }
 
 
@@ -107,7 +106,9 @@ namespace GameScene.Rule
 
         public static class Constants
         {
-            public static readonly double Difficulty = 500;
+            public static int Duration = 1000;
+            public static int MinDuration = 200;
+            public static float DurationRatePerLevel = 0.9f;
         }
     }
 }

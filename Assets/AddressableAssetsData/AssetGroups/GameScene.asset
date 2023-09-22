@@ -18,17 +18,7 @@ MonoBehaviour:
   m_GUID: 768627ab41af88242b30d9168b9ff585
   m_SerializeEntries:
   - m_GUID: dec66d18e152940d5826ef9c2c35133f
-    m_Address: BasicIcicle
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - GameScene
-  - m_GUID: 1202f5a599cbfc54380dac9c1ec3c252
-    m_Address: SuperIcicle
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - GameScene
-  - m_GUID: 751d388cc01c20b4dbab540c7a02ef9e
-    m_Address: LegendIcicle
+    m_Address: ObstacleFacade
     m_ReadOnly: 0
     m_SerializedLabels:
     - GameScene

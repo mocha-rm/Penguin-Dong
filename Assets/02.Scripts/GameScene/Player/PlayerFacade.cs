@@ -8,25 +8,31 @@ using System;
 using MessagePipe;
 using GameScene.Rule;
 using GameScene.Message;
+using UnityEngine.EventSystems;
 
 namespace GameScene.Player
 {
-    public class PlayerFacade : MonoBehaviour, IInitializable, IDisposable
+    public class PlayerFacade : BaseFacade, IRegistMonobehavior, Environment.IWarpAble
     {
-        BloC _bloc;
-
-        //플레이어
-
-        [Inject] IObjectResolver _container;
+        BloC _bloc; //Through BLOC can Access GameState of GameRule.GameModel
 
         //Component (부품)
-        [SerializeField] PlayerBehaviour _pBehaviour;
+        PlayerBehaviour _pBehaviour;
+        Rigidbody2D _rigid;
 
         //Model
-        private FacadeModel _model;
+        FacadeModel _model;
 
 
-        public void Initialize()
+
+        public void RegistBehavior(IContainerBuilder builder)
+        {
+            _pBehaviour = transform.GetChild(0).GetComponent<PlayerBehaviour>();
+            _rigid = GetComponent<Rigidbody2D>();
+        }
+
+
+        public override void Initialize()
         {
             _bloc = _container.Resolve<BloC>();
 
@@ -39,7 +45,7 @@ namespace GameScene.Player
         }
 
 
-        public void Dispose()
+        public override void Dispose()
         {
             _pBehaviour.Clear();
 
@@ -49,7 +55,7 @@ namespace GameScene.Player
 
         public void MoveAction()
         {
-            _bloc.GameModelObservable.GameStateProperty
+            _bloc.GameModel.GameStateProperty
                 .Where(state => state == GameState.Playing)
                 .Subscribe(action => _pBehaviour.Move());
         }
@@ -62,7 +68,7 @@ namespace GameScene.Player
 
         public static class Hierachy
         {
-            //Hierachy InspectorView 에 나타낼 항목들
+            
         }
 
         public static class Constants
@@ -79,6 +85,12 @@ namespace GameScene.Player
             {
                 _life = new ReactiveProperty<int>(Constants.life)
             };
+        }
+
+        public void ToWarp(Vector3 position)
+        {
+            var facadePos = this.transform.position;
+            this.transform.position = new Vector3(position.x, facadePos.y, facadePos.z);
         }
 
         public class FacadeModel : IFacadeModelObservable

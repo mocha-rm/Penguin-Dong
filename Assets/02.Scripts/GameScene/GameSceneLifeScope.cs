@@ -4,7 +4,8 @@ using UnityEngine;
 using VContainer;
 using VContainer.Unity;
 using MessagePipe;
-using GameScene.Icicle;
+using GameScene.Obstacle;
+using GameScene.Environment;
 using GameScene.Player;
 using GameScene.UI;
 using GameScene.Rule;
@@ -16,14 +17,12 @@ namespace GameScene
 {
     public class GameSceneLifeScope : LifetimeScope
     {
-        [Header("Facades")]
-        [SerializeField] PlayerFacade _player;
-        [SerializeField] NormalUIFacade _ingameUI;
-
-
         protected override void Configure(IContainerBuilder builder)
         {
             base.Configure(builder);
+
+            builder.RegisterEntryPoint<BloC>(Lifetime.Singleton).AsSelf();
+
             RegisterRule(builder);
             RegisterPool(builder);
             RegisterController(builder);
@@ -34,41 +33,45 @@ namespace GameScene
 
         private void RegisterRule(IContainerBuilder builder)
         {
-            builder.RegisterEntryPoint<GameRule>().AsSelf();
-            builder.Register<BloC>(Lifetime.Singleton)
-                .AsImplementedInterfaces()
-                .AsSelf();
+            builder.RegisterEntryPoint<GameRule>(Lifetime.Singleton).AsSelf();
         }
 
         private void RegisterPool(IContainerBuilder builder)
         {
-            var resouceContainer = Parent.Container.Resolve<SceneService>().GetCurrentResouceContainer<GameResourceContainer>();
-
-            Dictionary<string, MiniPool> poolDic = new Dictionary<string, MiniPool>();
+            if(Parent == null)
             {
-                for (int i = 0; i < IcicleFacade.Constants.TYPE.Length; i++)
-                {
-                    var poolObj = resouceContainer.GetGameObject(IcicleFacade.Constants.TYPE[i]);
-                    var pool = new MiniPool();
-                    pool.Init(poolObj, IcicleFacade.Constants.POOLING_SIZE);
-                    poolDic.Add(IcicleFacade.Constants.TYPE[i], pool);
-                }
+                Debug.LogError($"There Have No ParentScopoe in {nameof(GameSceneLifeScope)}");
+                return;
             }
 
-            builder.RegisterComponent(poolDic);
+            var resouceContainer = Parent.Container.Resolve<SceneService>().GetCurrentResouceContainer<GameResourceContainer>();
+
+            builder.Register(_ => resouceContainer, Lifetime.Singleton)
+                .As<BaseResourceContainer>();
+
+            var poolFactory = builder.RegisterPoolFactory();
+
+            builder.RegisterPool<ObstacleFacade>(resouceContainer, poolFactory, new PoolFactory.PoolModel()
+            {
+                resourceId = ObstacleFacade.Constants.AddressableId,
+                poolId = ObstacleFacade.Constants.PoolId,
+                poolSize = ObstacleFacade.Constants.PoolSize,
+            });
         }
 
         private void RegisterController(IContainerBuilder builder)
         {
-            builder.RegisterEntryPoint<PlayerController>().AsSelf();
-            builder.RegisterEntryPoint<IcicleController>().AsSelf();
-            builder.RegisterEntryPoint<InGameUIController>().AsSelf();
+            builder.RegisterEntryPoint<PlayerController>(Lifetime.Singleton).AsSelf();
+            builder.RegisterEntryPoint<ObstacleController>(Lifetime.Singleton).AsSelf();
+            builder.RegisterEntryPoint<InGameUIController>(Lifetime.Singleton).AsSelf();
         }
 
         private void RegisterFacade(IContainerBuilder builder)
         {
-            builder.RegisterComponent(_player).AsImplementedInterfaces().AsSelf();
-            builder.RegisterComponent(_ingameUI).AsImplementedInterfaces().AsSelf();
+            builder.RegisterByHierarchy<PlayerFacade>(null, Hierarchy.PlayerFacade);
+            builder.RegisterByHierarchy<EnvironmentFacade>(null, Hierarchy.EnvironmentFacade);
+            builder.RegisterByHierarchy<InfoIndicateFacade>(null, Hierarchy.InfoIndicateFacade);
+            builder.RegisterByHierarchy<InteractionFacade>(null, Hierarchy.InteractionFacade);
         }
 
         private void RegisterMessage(IContainerBuilder builder)
@@ -78,6 +81,20 @@ namespace GameScene
             builder.RegisterMessageBroker<DirectionButtonClick>(option);
             builder.RegisterMessageBroker<CountDownComplete>(option);
             builder.RegisterMessageBroker<GameOverEvent>(option);
+            builder.RegisterMessageBroker<SceneLoadEvent>(option);
+            builder.RegisterMessageBroker<ObstacleCrashEvent>(option);
+        }
+
+
+        public static class Hierarchy
+        {
+            public static readonly string PlayerFacade = "PlayerFacade";
+            public static readonly string EnvironmentFacade = "EnvironmentFacade";
+
+            #region UI
+            public static readonly string InfoIndicateFacade = "UI/InfoIndicate";
+            public static readonly string InteractionFacade = "UI/Interaction";
+            #endregion
         }
     }
 }

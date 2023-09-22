@@ -1,46 +1,79 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
-using UniRx;
-
-
+using MessagePipe;
+using System;
+using GameScene.Message;
+using UnityEditor.VersionControl;
+using Unity.VisualScripting;
 
 namespace GameScene.UI
 {
-    public class InGameUIController : IInitializable, IDisposable
+    public class InGameUIController : MonoBehaviour, VContainer.Unity.IInitializable, IDisposable, ITickable
     {
         [Inject] IObjectResolver _container;
-        BloC _bloc;
 
-        NormalUIFacade _ingameUI;
-        //EndUIFacade
+        InfoIndicateFacade _infoIndicateFacade;
+        InteractionFacade _interactionFacade;
+        IPublisher<GameOverEvent> _gameOverPub;
 
-        CompositeDisposable _disposables;
+
+        //For Test
+        int _tScore = 0;
+        int _addAmount = 100;
+        bool _isRecord;
+
+        int lifeOrder = 2;
+
+        float _levelGuage = 0f;
+        int _currentLevel = 1;
 
 
         public void Initialize()
         {
-            _disposables = new CompositeDisposable();
-            _bloc = _container.Resolve<BloC>();
-
-            _ingameUI = _container.Resolve<NormalUIFacade>();
+            _infoIndicateFacade = _container.Resolve<InfoIndicateFacade>();
+            _interactionFacade = _container.Resolve<InteractionFacade>();
+            _gameOverPub = _container.Resolve<IPublisher<GameOverEvent>>();
         }
-
-
-        public void PopGameOverPanel()
-        {
-            Debug.Log($"Game is Over..\n");
-
-        }
-
         public void Dispose()
         {
-            _disposables?.Dispose();
-            _disposables?.Clear();
-            _disposables = null;
+            
+        }
+
+        public void Tick() //just in testcase
+        {
+            //Nontest situation use Bloc class to access between ui <-> datas
+
+            if (Input.GetKeyDown(KeyCode.S))
+            {
+                _tScore += _addAmount;
+                _infoIndicateFacade.IndicateScore(_tScore);
+            }
+
+            if (Input.GetKeyDown(KeyCode.L))
+            {
+                _infoIndicateFacade.IndicateLifeStatus(lifeOrder--);
+                if (lifeOrder < 0)
+                {
+                    _interactionFacade.ActivateGameOverPanel(_isRecord);
+                    _gameOverPub.Publish(new GameOverEvent());
+                }
+            }
+
+            if (Input.GetKeyDown(KeyCode.G))
+            {
+                _levelGuage += UnityEngine.Random.Range(0.1f, 0.3f);
+
+                if (_levelGuage > 1f)
+                {
+                    _currentLevel += 1;
+                    _levelGuage -= 1f;
+                }
+
+                _infoIndicateFacade.IndicateLevelStatus(_levelGuage, _currentLevel);
+            }
         }
     }
 }

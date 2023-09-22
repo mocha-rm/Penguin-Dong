@@ -58,7 +58,7 @@ namespace GameScene.Player
             transform.position += Vector3.right * Time.deltaTime * _speed;
         }
 
-        public void SetDirection() //UI 버튼이 조작해야 되는 것들은 BloC?
+        public void SetDirection()
         {
             if (routine != null)
             {
@@ -111,7 +111,7 @@ namespace GameScene.Player
         public void SuperSlide() //필살기
         {
             ani.SetTrigger("SuperSlide");
-            //Rigidbody 2D 이용해서 옆으로 뛰는 느낌 주면 좋을 듯
+            //Rigidbody 2D 이용해서 옆으로 뛰는 느낌 주면 좋을 듯 or 간단한 사자후 이펙트 후 모든 똥 클리어
         }
     }
 }

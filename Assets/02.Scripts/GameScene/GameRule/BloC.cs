@@ -6,21 +6,32 @@ using VContainer.Unity;
 
 using GameScene.Player;
 using GameScene.UI;
-using GameScene.Icicle;
+
 using GameScene.Rule;
 
+
+//Add Models Here
+//public Rule.IGameModel GameModel {get; private set;}
+
+//public Score.IScoreModel ScoreModel {get; private set;}
+
+//what we have to indicate on UI ? Life, Score, Level
 
 namespace GameScene
 {
     public class BloC : IInitializable
     {
-        public IGameModelObserver GameModelObservable;
-
         [Inject] IObjectResolver _container;
+
+        public IGameModel GameModel { get; private set; }
 
         public void Initialize()
         {
-            GameModelObservable = _container.Resolve<GameRule>().Model;
+            //Initialize Model Here
+            //normally bloc pattern is for seperate presentation Layer and businessLogic
+            //It `s just for presenting (UI Parts)? 
+
+            GameModel = _container.Resolve<GameRule>().Model;
         }
     }
 }

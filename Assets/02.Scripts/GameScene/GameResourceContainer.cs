@@ -40,7 +40,7 @@ namespace GameScene
             _gameObjContainer.Clear();
         }
 
-        public GameObject GetGameObject(string str)
+        public override GameObject GetGameObject(string str)
         {
             if (_gameObjContainer.ContainsKey(str) == false)
             {

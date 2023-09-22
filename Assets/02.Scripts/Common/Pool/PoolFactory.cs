@@ -89,7 +89,7 @@ using UniRx;
         }
     }
 
-    //BaseFacade ���� (Interface�� Resolve �ϴ� �� ������ BaseFacade�� �������� �Ѵ�)
+    
     public interface ISelfEndPoolable
     {
         public GameObject gameObject { get; }
