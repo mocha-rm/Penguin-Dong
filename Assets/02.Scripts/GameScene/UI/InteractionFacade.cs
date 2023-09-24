@@ -97,6 +97,7 @@ namespace GameScene.UI
             _pausePanelOpenBtn.OnClickAsObservable().Subscribe(_ =>
             {
                 _pausePanel.gameObject.SetActive(true);
+                Time.timeScale = 0f;
                 _pausePanelOpenBtn.interactable = false;
             }).AddTo(_disposable);
 
@@ -135,6 +136,7 @@ namespace GameScene.UI
             {
                 //Game Resume
                 _pausePanel.gameObject.SetActive(false);
+                Time.timeScale = 1.0f;
                 _pausePanelOpenBtn.interactable = true;
             }).AddTo(_disposable);
 

@@ -8,7 +8,7 @@ namespace GameScene.Environment
     {
         [SerializeField] Transform _obstacleSpawnTrans;
         [SerializeField] Transform _groundTrans;
-        [SerializeField] List<WarpComponent> _warpComponentList;
+        //[SerializeField] List<WarpComponent> _warpComponentList;
 
 
         Collider2D _spawnCollider;
@@ -28,7 +28,7 @@ namespace GameScene.Environment
         {
             _spawnCollider = _obstacleSpawnTrans.GetComponent<Collider2D>();
 
-            _warpComponentList.ForEach(warp => warp.Init());
+            //_warpComponentList.ForEach(warp => warp.Init());
 
         }
 

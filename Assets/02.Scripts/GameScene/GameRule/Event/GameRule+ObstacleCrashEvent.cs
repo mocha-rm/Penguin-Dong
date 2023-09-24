@@ -19,7 +19,7 @@ namespace GameScene.Rule
                 if (data.Character != null && data.Obstacle != null)
                 {
                     //sound play
-                    //Delete Heart 
+                    //Delete Heart
                 }
                 else
                 {

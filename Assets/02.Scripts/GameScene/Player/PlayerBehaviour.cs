@@ -8,7 +8,7 @@ namespace GameScene.Player
 {
     public class PlayerBehaviour : MonoBehaviour
     {
-        //Player ÀÇ ºÎÇ° Áß 1
+        //Player ï¿½ï¿½ ï¿½ï¿½Ç° ï¿½ï¿½ 1
 
         private Vector3 LeftScale = new Vector3(-1f, 1f, 1f);
 
@@ -106,12 +106,6 @@ namespace GameScene.Player
             }
 
             yield return null;
-        }
-
-        public void SuperSlide() //ÇÊ»ì±â
-        {
-            ani.SetTrigger("SuperSlide");
-            //Rigidbody 2D ÀÌ¿ëÇØ¼­ ¿·À¸·Î ¶Ù´Â ´À³¦ ÁÖ¸é ÁÁÀ» µí or °£´ÜÇÑ »çÀÚÈÄ ÀÌÆåÆ® ÈÄ ¸ğµç ¶Ë Å¬¸®¾î
         }
     }
 }
