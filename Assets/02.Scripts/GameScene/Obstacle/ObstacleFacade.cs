@@ -34,13 +34,18 @@ namespace GameScene.Obstacle
         FacadeModel _model = null;
         float _endOfY;
 
+        Rigidbody2D _rigid;
+        Animator _ani;
+        Coroutine _aniRoutine = null;
+
         CompositeDisposable _disposables;
         IPublisher<ObstacleCrashEvent> _colPub;
 
 
         public void RegistBehavior(IContainerBuilder builder)
         {
-
+            _ani = GetComponent<Animator>();
+            _rigid = GetComponent<Rigidbody2D>();
         }
 
         public override void Initialize()
@@ -58,6 +63,7 @@ namespace GameScene.Obstacle
 
             _id = id;
             transform.position = pos;
+            _rigid.constraints = RigidbodyConstraints2D.None;
             _endOfY = endOfY;
             _disposables?.Dispose();
             _disposables?.Clear();
@@ -77,7 +83,7 @@ namespace GameScene.Obstacle
                             Obstacle = this,
                         });
 
-                        _model._isAlilve.Value = false;
+                        ExplosionAnim();
                     }
                 }).AddTo(_disposables);
 
@@ -95,7 +101,7 @@ namespace GameScene.Obstacle
                                 Obstacle = this,
                             });
 
-                            _model._isAlilve.Value = false;
+                            ExplosionAnim();
                         }
                     }
                 }).AddTo(_disposables);
@@ -108,6 +114,29 @@ namespace GameScene.Obstacle
 
             _disposables?.Dispose();
             _disposables = null;
+        }
+
+
+        private void ExplosionAnim()
+        {
+            _rigid.constraints = RigidbodyConstraints2D.FreezePositionY;
+
+            _ani.Play("Explosion");
+
+            if (_aniRoutine != null)
+            {
+                StopCoroutine(_aniRoutine);
+            }
+            _aniRoutine = StartCoroutine(ExplosionAnimRoutine());
+        }
+
+        private IEnumerator ExplosionAnimRoutine()
+        {
+            var state = _ani.GetCurrentAnimatorStateInfo(0);
+
+            yield return new WaitUntil(() => state.IsName("Explosion") == true && state.normalizedTime >= 1.0f);
+
+            _model._isAlilve.Value = false;
         }
 
         FacadeModel CreateModel()

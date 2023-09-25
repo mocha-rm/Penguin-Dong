@@ -12,7 +12,7 @@ namespace GameScene.Rule
         ISubscriber<ObstacleCrashEvent> _colObstacleSub;
 
         IDisposable SubscribeObstacleCrashEvent()
-        {
+        {//TODO : Make Complete of this crashevent part
             _colObstacleSub = _container.Resolve<ISubscriber<ObstacleCrashEvent>>();
             return _colObstacleSub.Subscribe(data =>
             {
@@ -20,12 +20,14 @@ namespace GameScene.Rule
                 {
                     //sound play
                     //Delete Heart
+                    data.Character.IsInvulnerable();
                 }
                 else
                 {
                     if (_model.GameState.Value == GameState.Playing)
                     {
                         _model.Score.Value++;
+                        //Show Score on UI
                     }
                 }
             });

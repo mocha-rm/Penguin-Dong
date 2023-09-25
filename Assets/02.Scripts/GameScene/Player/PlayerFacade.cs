@@ -1,19 +1,22 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
 using VContainer;
 using VContainer.Unity;
-using System;
 using MessagePipe;
 using GameScene.Rule;
 using GameScene.Message;
-using UnityEngine.EventSystems;
+
+
+
 
 namespace GameScene.Player
 {
     public class PlayerFacade : BaseFacade, IRegistMonobehavior, Environment.IWarpAble
     {
+       
         BloC _bloc; //Through BLOC can Access GameState of GameRule.GameModel
 
         //Component (ºÎÇ°)
@@ -22,6 +25,8 @@ namespace GameScene.Player
 
         //Model
         FacadeModel _model;
+
+        Coroutine _routine = null;
 
 
 
@@ -48,16 +53,13 @@ namespace GameScene.Player
         public override void Dispose()
         {
             _pBehaviour.Clear();
-
             _model?.Dispose();
             _model = null;
         }
 
         public void MoveAction()
         {
-            _bloc.GameModel.GameStateProperty
-                .Where(state => state == GameState.Playing)
-                .Subscribe(action => _pBehaviour.Move());
+            _pBehaviour.Move();
         }
 
         public void DirectionControlAction()
@@ -65,17 +67,40 @@ namespace GameScene.Player
             _pBehaviour.SetDirection();
         }
 
-
-        public static class Hierachy
+        public void IsInvulnerable() //1
         {
-            
+            if(_model._isInvul.Value == false)
+            {
+                _model._isInvul.Value = true;
+
+                if (_routine != null)
+                {
+                    StopCoroutine(_routine);
+                }
+
+                _routine = StartCoroutine(InvulnerableEnd());
+            }
         }
+
+        private IEnumerator InvulnerableEnd() //2
+        {
+            _pBehaviour.Crashed();
+
+            yield return new WaitForSeconds(Constants.InvulnerableTime);
+
+            _pBehaviour.BodyColorSwitch();
+
+            _model._isInvul.Value = false;
+        }
+
+
 
         public static class Constants
         {
             public static readonly int life = 3;
             public static readonly float maxSpeed = 5;
             public static readonly Vector3 originPos = Vector3.zero;
+            public static readonly float InvulnerableTime = 2.5f;
         }
 
 
@@ -83,7 +108,8 @@ namespace GameScene.Player
         {
             return new FacadeModel()
             {
-                _life = new ReactiveProperty<int>(Constants.life)
+                _life = new ReactiveProperty<int>(Constants.life),
+                _isInvul = new ReactiveProperty<bool>(false),
             };
         }
 
@@ -97,11 +123,16 @@ namespace GameScene.Player
         {
             public ReactiveProperty<int> _life;
 
+            public ReactiveProperty<bool> _isInvul;
+
             public IReadOnlyReactiveProperty<int> Life { get => _life; }
+
+            public IReadOnlyReactiveProperty<bool> Isinvul { get => _isInvul; }
 
             public void Dispose()
             {
                 _life?.Dispose();
+                _isInvul?.Dispose();
             }
         }
     }
@@ -109,6 +140,8 @@ namespace GameScene.Player
     public interface IFacadeModelObservable
     {
         public IReadOnlyReactiveProperty<int> Life { get; }
+
+        public IReadOnlyReactiveProperty<bool> Isinvul { get; }
     }
 }
 

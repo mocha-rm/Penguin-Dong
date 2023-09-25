@@ -19,14 +19,20 @@ namespace GameScene.Player
 
         private Animator ani;
 
+        private SpriteRenderer _renderer;
 
         private Coroutine routine = null;
 
 
+        private void OnValidate() //component register method
+        {
+            _renderer = GetComponent<SpriteRenderer>();
+            ani = GetComponent<Animator>();
+        }
+
+
         public void Init(float maxSpeed, Vector3 pos)
         {
-            ani = GetComponent<Animator>();
-
             _maxSpeed = maxSpeed;
 
             transform.position = pos;
@@ -55,19 +61,37 @@ namespace GameScene.Player
         public void Move()
         {
             ani.SetBool("Run", true);
+            
             transform.position += Vector3.right * Time.deltaTime * _speed;
         }
 
         public void SetDirection()
         {
-            if (routine != null)
-            {
-                StopCoroutine(routine);
-            }
+            var state = ani.GetCurrentAnimatorStateInfo(0);
 
-            routine = StartCoroutine(_speed > 0 ? IcyTurnLeft() : IcyTurnRight());
+            if(state.IsName("penguin_walk"))
+            {
+                if (routine != null)
+                {
+                    StopCoroutine(routine);
+                }
+
+                routine = StartCoroutine(_speed > 0 ? IcyTurnLeft() : IcyTurnRight());
+            }
         }
 
+        public void Crashed() //invulnerable (상처를 입힐 수 없는ㅋ)
+        {
+            ani.Play("penguin_jump");
+
+            _renderer.color = new Color(1.0f, 1.0f, 1.0f, 0.5f);
+        }
+
+       
+        public void BodyColorSwitch()
+        {
+            _renderer.color = Color.white;
+        }
 
 
         private IEnumerator IcyTurnLeft()

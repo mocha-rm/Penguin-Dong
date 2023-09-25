@@ -21,7 +21,8 @@ namespace GameScene.Environment
 
         public float GetGroundY()
         {
-            return _groundTrans.position.y;
+            //5.4 + 0.6 = 6.0
+            return _groundTrans.position.y + 0.6f;
         }
 
         public override void Initialize()

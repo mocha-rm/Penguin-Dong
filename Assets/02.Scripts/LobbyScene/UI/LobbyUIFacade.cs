@@ -20,7 +20,7 @@ namespace LobbyScene.UI
 
         Button _singleGame;
 
-        Button _quickGame;
+        //Button _quickGame;
 
 
 
@@ -32,18 +32,18 @@ namespace LobbyScene.UI
             var loader = _container.Resolve<SceneService>();
 
             _singleGame = buttons[0];
-            _quickGame = buttons[1];
+            //_quickGame = buttons[1];
 
             _singleGame.OnClickAsObservable().Subscribe(_ =>
             {
                 loader.LoadScene(SceneName.GameScene).Forget();
             });
-
+/*
             _quickGame.OnClickAsObservable().Subscribe(_ =>
             {
                 loader.LoadScene(SceneName.GameScene).Forget();
             });
-        }
+*/        }
 
         public void Dispose()
         {

@@ -1,3 +1,4 @@
+using GameScene.Rule;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,26 +11,26 @@ namespace GameScene.Player
 {
     public class PlayerController : IInitializable, IDisposable, IFixedTickable
     {
-        //_player를 컨트롤 하는 객체
-
         [Inject] IObjectResolver _container;
 
+        BloC _bloc;
         PlayerFacade _player;
 
 
         public void Initialize()
         {
+            _bloc = _container.Resolve<BloC>();
             _player = _container.Resolve<PlayerFacade>();
         }
 
         public void Dispose()
         {
-
+            
         }
 
         public void FixedTick()
         {
-            if (Application.isPlaying)
+            if (_bloc.GameModel.GameStateProperty.Value == GameState.Playing)
             {
                 _player.MoveAction();
             }
