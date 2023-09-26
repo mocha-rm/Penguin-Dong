@@ -11,15 +11,34 @@ namespace LobbyScene
 {
     public class LobbySceneLifeScope : LifetimeScope
     {
-        [SerializeField] RectTransform _lobbyUI;
-
-
         protected override void Configure(IContainerBuilder builder)
         {
             base.Configure(builder);
 
-            builder.RegisterComponent(_lobbyUI);
-            builder.RegisterEntryPoint<LobbyUIFacade>(Lifetime.Singleton);
+            RegisterController(builder);
+            RegisterFacade(builder);
+            RegisterMessage(builder);
+        }
+
+        private void RegisterController(IContainerBuilder builder)
+        {
+
+        }
+
+        private void RegisterFacade(IContainerBuilder builder)
+        {
+            builder.RegisterByHierarchy<LobbyUIFacade>(null, Hierarchy.LobbyUIFacade);
+        }
+
+        private void RegisterMessage(IContainerBuilder builder)
+        {
+
+        }
+
+
+        public static class Hierarchy
+        {
+            public static readonly string LobbyUIFacade = "UI";
         }
     }
 }

@@ -21,7 +21,7 @@ namespace GameScene
         {
             base.Configure(builder);
 
-            builder.RegisterEntryPoint<BloC>(Lifetime.Singleton).AsSelf();
+            builder.RegisterEntryPoint<BLOC>(Lifetime.Singleton).AsSelf();
 
             RegisterRule(builder);
             RegisterPool(builder);

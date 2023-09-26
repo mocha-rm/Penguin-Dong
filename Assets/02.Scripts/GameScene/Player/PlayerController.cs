@@ -13,13 +13,13 @@ namespace GameScene.Player
     {
         [Inject] IObjectResolver _container;
 
-        BloC _bloc;
+        BLOC _bloc;
         PlayerFacade _player;
 
 
         public void Initialize()
         {
-            _bloc = _container.Resolve<BloC>();
+            _bloc = _container.Resolve<BLOC>();
             _player = _container.Resolve<PlayerFacade>();
         }
 

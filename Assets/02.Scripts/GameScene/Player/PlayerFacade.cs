@@ -17,7 +17,7 @@ namespace GameScene.Player
     public class PlayerFacade : BaseFacade, IRegistMonobehavior, Environment.IWarpAble
     {
        
-        BloC _bloc; //Through BLOC can Access GameState of GameRule.GameModel
+        BLOC _bloc; //Through BLOC can Access GameState of GameRule.GameModel
 
         //Component (ºÎÇ°)
         PlayerBehaviour _pBehaviour;
@@ -39,7 +39,7 @@ namespace GameScene.Player
 
         public override void Initialize()
         {
-            _bloc = _container.Resolve<BloC>();
+            _bloc = _container.Resolve<BLOC>();
 
             if (_model == null)
             {

@@ -19,7 +19,7 @@ using GameScene.Rule;
 
 namespace GameScene
 {
-    public class BloC : IInitializable
+    public class BLOC : IInitializable
     {
         [Inject] IObjectResolver _container;
 

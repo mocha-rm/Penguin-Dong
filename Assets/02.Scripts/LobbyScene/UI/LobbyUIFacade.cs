@@ -11,42 +11,48 @@ using UniRx;
 
 namespace LobbyScene.UI
 {
-    public class LobbyUIFacade : IInitializable, IDisposable
+    public class LobbyUIFacade : BaseFacade, IRegistMonobehavior
     {
-        [Inject]
-        IObjectResolver _container;
+        #region Login
+        /*Button _googleLoginBtn;
+        Button _guestLoginBtn;*/
+        #endregion
 
-        RectTransform _canvasRoot;
-
-        Button _singleGame;
-
-        //Button _quickGame;
+        Button _startBtn;
 
 
 
-        public void Initialize()
+
+        public void RegistBehavior(IContainerBuilder builder)
         {
-            _canvasRoot = _container.Resolve<RectTransform>();
-            var buttons = _canvasRoot.GetComponentsInChildren<Button>();
+            _startBtn = gameObject.GetHierachyPath<Button>(Hierarchy.GameStartButton);
+        }
 
+        public override void Initialize()
+        {
             var loader = _container.Resolve<SceneService>();
 
-            _singleGame = buttons[0];
-            //_quickGame = buttons[1];
-
-            _singleGame.OnClickAsObservable().Subscribe(_ =>
+            _startBtn.OnClickAsObservable().Subscribe(_ =>
             {
                 loader.LoadScene(SceneName.GameScene).Forget();
             });
-/*
-            _quickGame.OnClickAsObservable().Subscribe(_ =>
-            {
-                loader.LoadScene(SceneName.GameScene).Forget();
-            });
-*/        }
+        }
 
-        public void Dispose()
+        public override void Dispose()
         {
+
+        }
+
+
+
+        public static class Constants
+        {
+
+        }
+
+        public static class Hierarchy
+        {
+            public static readonly string GameStartButton = "Background/Start/GameStart";
         }
     }
 }

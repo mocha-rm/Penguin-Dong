@@ -13,9 +13,15 @@ using GameScene.Obstacle;
 
 namespace GameScene.Rule
 {
+    //Rule
+    /*
+     * 1500점 마다 1레벨씩 상승
+     */
+
+
     public enum GameState { Waiting, Playing, GameOver }
 
-    public partial class GameRule : IInitializable, IDisposable
+    public partial class GameRule : IInitializable, IDisposable, ITickable
     {
         public IGameModel Model { get { return _model; } }
 
@@ -23,6 +29,8 @@ namespace GameScene.Rule
 
         [Inject] IObjectResolver _container;
 
+        
+        double _reducedTime = 0;
 
         //Controller
         PlayerController _playerController;
@@ -67,14 +75,15 @@ namespace GameScene.Rule
 
         private async UniTaskVoid GameRunning()
         {
+            //TODO : make level system here and use reactiveproperty control indicateui`s level fillamount
+
             await UniTask.WaitUntil(() => _model.GameState.Value == GameState.Playing);
 
             while (true)
             {
-                int level = _model.Score.Value / 100 + 1;
-                int duration = Mathf.FloorToInt(Constants.Duration * Mathf.Pow(Constants.DurationRatePerLevel, _model.Score.Value));
+                await UniTask.Delay(TimeSpan.FromMilliseconds((Constants.DefaultTime - _reducedTime) * 1000));
 
-                await UniTask.Delay(Mathf.Max(Constants.MinDuration, duration)); //TODO: Change when level up timing later
+                Debug.Log((Constants.DefaultTime - _reducedTime) * 1000);
 
                 if (_model.GameState.Value == GameState.GameOver)
                 {
@@ -100,15 +109,27 @@ namespace GameScene.Rule
             return new GameModel()
             {
                 Score = new ReactiveProperty<int>(0),
+                Life = new ReactiveProperty<int>(Constants.DefaultLifeCount),
+                Level = new ReactiveProperty<int>(Constants.DefaultLevel),
                 GameState = new ReactiveProperty<GameState>(GameState.Waiting),
             };
         }
 
+        public void Tick()
+        {
+            //Level Testing
+            if(Input.GetKeyDown(KeyCode.Space))
+            {
+                _reducedTime += 0.2;
+            }
+        }
+
         public static class Constants
         {
-            public static int Duration = 1000;
-            public static int MinDuration = 200;
-            public static float DurationRatePerLevel = 0.9f;
+            public static int DefaultLifeCount = 3;
+            public static int DefaultLevel = 1;
+
+            public static double DefaultTime = 1.0;
         }
     }
 }

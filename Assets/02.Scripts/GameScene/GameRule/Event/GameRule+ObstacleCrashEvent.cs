@@ -26,8 +26,7 @@ namespace GameScene.Rule
                 {
                     if (_model.GameState.Value == GameState.Playing)
                     {
-                        _model.Score.Value++;
-                        //Show Score on UI
+                        _uiController.ScoreUIAction(_model.Score.Value++);
                     }
                 }
             });
@@ -43,6 +42,5 @@ namespace GameScene.Message
         public PlayerFacade Character;
         public Obstacle.ObstacleFacade Obstacle;
     }
-
 }
 

@@ -51,7 +51,7 @@ using VContainer.Unity;
             }
             else
             {
-                //Inject ������ ��� ��������, Resolve�� ������
+                
                 builder.Register(_ => component, Lifetime.Scoped).AsSelf();
             }
 
