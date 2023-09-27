@@ -15,14 +15,12 @@ namespace GameScene.UI
 
         InfoIndicateFacade _infoIndicateFacade;
         InteractionFacade _interactionFacade;
-        IPublisher<GameOverEvent> _gameOverPub;
 
 
         public void Initialize()
         {
             _infoIndicateFacade = _container.Resolve<InfoIndicateFacade>();
             _interactionFacade = _container.Resolve<InteractionFacade>();
-            _gameOverPub = _container.Resolve<IPublisher<GameOverEvent>>();
         }
         public void Dispose()
         {
@@ -40,9 +38,16 @@ namespace GameScene.UI
             //TODO: make public method in _infoIndicateFacade and use here
         }
 
-        public void LifeUIAction()
+        public void LifeUIAction(int order)
         {
-            
+            _infoIndicateFacade.IndicateLifeStatus(order);
         }
+
+        #region Interaction Part
+        public void GameOverUIAction(bool isRecord)
+        {
+            _interactionFacade.ActivateGameOverPanel(isRecord);
+        }
+        #endregion
     }
 }

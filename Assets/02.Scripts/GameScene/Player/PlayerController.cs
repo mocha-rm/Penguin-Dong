@@ -40,5 +40,10 @@ namespace GameScene.Player
         {
             _player.DirectionControlAction();
         }
+
+        public bool IsPlayerInvul()
+        {
+            return _player.Model.Isinvul.Value;
+        }
     }
 }

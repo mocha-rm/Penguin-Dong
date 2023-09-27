@@ -17,17 +17,18 @@ namespace GameScene.Player
 
         private float _speed;
 
-        private Animator ani;
+        private Animator _ani;
 
         private SpriteRenderer _renderer;
 
-        private Coroutine routine = null;
+        private Coroutine _routine = null;
+
 
 
         private void OnValidate() //component register method
         {
+            _ani = GetComponent<Animator>();
             _renderer = GetComponent<SpriteRenderer>();
-            ani = GetComponent<Animator>();
         }
 
 
@@ -60,37 +61,42 @@ namespace GameScene.Player
 
         public void Move()
         {
-            ani.SetBool("Run", true);
-            
+            _ani.SetBool("Run", true);
+
             transform.position += Vector3.right * Time.deltaTime * _speed;
         }
 
         public void SetDirection()
         {
-            var state = ani.GetCurrentAnimatorStateInfo(0);
+            var state = _ani.GetCurrentAnimatorStateInfo(0);
 
-            if(state.IsName("penguin_walk"))
+            if (state.IsName("penguin_walk"))
             {
-                if (routine != null)
+                if (_routine != null)
                 {
-                    StopCoroutine(routine);
+                    StopCoroutine(_routine);
                 }
 
-                routine = StartCoroutine(_speed > 0 ? IcyTurnLeft() : IcyTurnRight());
+                _routine = StartCoroutine(_speed > 0 ? IcyTurnLeft() : IcyTurnRight());
             }
         }
 
         public void Crashed() //invulnerable (상처를 입힐 수 없는ㅋ)
         {
-            ani.Play("penguin_jump");
+            _ani.Play("penguin_jump");
 
             _renderer.color = new Color(1.0f, 1.0f, 1.0f, 0.5f);
         }
 
-       
+
         public void BodyColorSwitch()
         {
             _renderer.color = Color.white;
+        }
+
+        public void GameOverAnimate()
+        {
+            _ani.Play("GameOver");
         }
 
 

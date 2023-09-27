@@ -20,9 +20,10 @@ namespace GameScene.Rule
             _playerTurnSub = _container.Resolve<ISubscriber<DirectionButtonClick>>();
             return _playerTurnSub.Subscribe(dta =>
             {
-                //플레이어 턴 동작?
-                _playerController.SetdirectionChange();
-                Debug.Log("Turn");
+                if(_model.GameState.Value == GameState.Playing)
+                {
+                    _playerController.SetdirectionChange();
+                }
             });
         }
     }

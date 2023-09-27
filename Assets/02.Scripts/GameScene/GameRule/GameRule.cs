@@ -10,6 +10,7 @@ using Cysharp.Threading.Tasks;
 using GameScene.Player;
 using GameScene.UI;
 using GameScene.Obstacle;
+using GameScene.Message;
 
 namespace GameScene.Rule
 {
@@ -29,7 +30,7 @@ namespace GameScene.Rule
 
         [Inject] IObjectResolver _container;
 
-        
+        IPublisher<GameOverEvent> _gameOverPub;
         double _reducedTime = 0;
 
         //Controller
@@ -53,9 +54,20 @@ namespace GameScene.Rule
             _playerController = _container.Resolve<PlayerController>();
             _obstacleController = _container.Resolve<ObstacleController>();
             _uiController = _container.Resolve<InGameUIController>();
-
+            _gameOverPub = _container.Resolve<IPublisher<GameOverEvent>>();
 
             GameRunning().Forget();
+
+            _model.Life.AsObservable()
+                .Where(_ => _model.Life.Value <= 0)
+                .Subscribe(_ =>
+                {
+                    _gameOverPub.Publish(new GameOverEvent()
+                    {
+
+                    });
+                });
+
 
             //ISubScriber
             var bag = DisposableBag.CreateBuilder();
@@ -83,7 +95,7 @@ namespace GameScene.Rule
             {
                 await UniTask.Delay(TimeSpan.FromMilliseconds((Constants.DefaultTime - _reducedTime) * 1000));
 
-                Debug.Log((Constants.DefaultTime - _reducedTime) * 1000);
+                //Debug.Log((Constants.DefaultTime - _reducedTime) * 1000);
 
                 if (_model.GameState.Value == GameState.GameOver)
                 {
@@ -118,7 +130,7 @@ namespace GameScene.Rule
         public void Tick()
         {
             //Level Testing
-            if(Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetKeyDown(KeyCode.Space))
             {
                 _reducedTime += 0.2;
             }

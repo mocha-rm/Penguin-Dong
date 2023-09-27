@@ -91,7 +91,7 @@ namespace GameScene.Obstacle
                 .Where(_ => this.gameObject.activeInHierarchy)
                 .Subscribe(collision =>
                 {
-                    if (collision.attachedRigidbody != null)
+                    if (collision.attachedRigidbody != null && collision.tag != "Invulnerable")
                     {
                         if (collision.attachedRigidbody.TryGetComponent<PlayerFacade>(out var character))
                         {

@@ -16,12 +16,26 @@ namespace GameScene.Player
 {
     public class PlayerFacade : BaseFacade, IRegistMonobehavior, Environment.IWarpAble
     {
-       
+        enum Tag
+        {
+            Player,
+            Invulnerable
+        }
+
+
+        public IFacadeModelObservable Model
+        {
+            get
+            {
+                return _model;
+            }
+        }
+
+
         BLOC _bloc; //Through BLOC can Access GameState of GameRule.GameModel
 
         //Component (ºÎÇ°)
         PlayerBehaviour _pBehaviour;
-        Rigidbody2D _rigid;
 
         //Model
         FacadeModel _model;
@@ -33,7 +47,6 @@ namespace GameScene.Player
         public void RegistBehavior(IContainerBuilder builder)
         {
             _pBehaviour = transform.GetChild(0).GetComponent<PlayerBehaviour>();
-            _rigid = GetComponent<Rigidbody2D>();
         }
 
 
@@ -47,6 +60,12 @@ namespace GameScene.Player
             }
 
             _pBehaviour.Init(Constants.maxSpeed, Constants.originPos);
+
+            _model._isInvul.AsObservable()
+                .Subscribe(_ =>
+                {
+                    gameObject.tag = _model._isInvul.Value ? Tag.Invulnerable.ToString() : Tag.Player.ToString();
+                }).AddTo(this.gameObject);
         }
 
 
@@ -69,16 +88,23 @@ namespace GameScene.Player
 
         public void IsInvulnerable() //1
         {
-            if(_model._isInvul.Value == false)
+            if (_model._isInvul.Value == false)
             {
-                _model._isInvul.Value = true;
-
-                if (_routine != null)
+                if (_bloc.GameModel.GameStateProperty.Value == GameState.GameOver)
                 {
-                    StopCoroutine(_routine);
+                    _pBehaviour.GameOverAnimate();
                 }
+                else
+                {
+                    _model._isInvul.Value = true;
 
-                _routine = StartCoroutine(InvulnerableEnd());
+                    if (_routine != null)
+                    {
+                        StopCoroutine(_routine);
+                    }
+
+                    _routine = StartCoroutine(InvulnerableEnd());
+                }
             }
         }
 
@@ -97,7 +123,6 @@ namespace GameScene.Player
 
         public static class Constants
         {
-            public static readonly int life = 3;
             public static readonly float maxSpeed = 5;
             public static readonly Vector3 originPos = Vector3.zero;
             public static readonly float InvulnerableTime = 2.5f;
@@ -108,7 +133,6 @@ namespace GameScene.Player
         {
             return new FacadeModel()
             {
-                _life = new ReactiveProperty<int>(Constants.life),
                 _isInvul = new ReactiveProperty<bool>(false),
             };
         }
@@ -121,17 +145,12 @@ namespace GameScene.Player
 
         public class FacadeModel : IFacadeModelObservable
         {
-            public ReactiveProperty<int> _life;
-
             public ReactiveProperty<bool> _isInvul;
-
-            public IReadOnlyReactiveProperty<int> Life { get => _life; }
 
             public IReadOnlyReactiveProperty<bool> Isinvul { get => _isInvul; }
 
             public void Dispose()
             {
-                _life?.Dispose();
                 _isInvul?.Dispose();
             }
         }
@@ -139,8 +158,6 @@ namespace GameScene.Player
 
     public interface IFacadeModelObservable
     {
-        public IReadOnlyReactiveProperty<int> Life { get; }
-
         public IReadOnlyReactiveProperty<bool> Isinvul { get; }
     }
 }

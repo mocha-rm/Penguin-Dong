@@ -20,7 +20,8 @@ namespace GameScene.Rule
             return _gameOverSub.Subscribe(data =>
             {
                 _model.GameState.Value = GameState.GameOver;
-                //TODO : Pop GameOver Panel UI
+                _uiController.GameOverUIAction(false); //boolian value is for compare new record or not
+                
                 Debug.Log("GameOver");
             });
         }

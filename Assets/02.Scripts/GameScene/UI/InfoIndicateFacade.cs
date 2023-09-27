@@ -88,8 +88,11 @@ namespace GameScene.UI
 
         public void IndicateLifeStatus(int order)
         {
-            //maybe can use Animation
-            _lifeImages[order].gameObject.SetActive(false);
+            if(order >= 0)
+            {
+                //maybe can use Animation
+                _lifeImages[order].gameObject.SetActive(false);
+            }
         }
 
         public void IndicateLevelStatus(float guage, int level)
@@ -168,6 +171,7 @@ namespace GameScene.UI
         public static class Constants
         {
             public static readonly int countdown = 3;
+
             public static readonly int lifeCount = 3;
 
             public enum LevelChild
