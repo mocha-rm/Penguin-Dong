@@ -35,6 +35,7 @@ namespace GameScene.Obstacle
         float _endOfY;
 
         Rigidbody2D _rigid;
+        CircleCollider2D _collider;
         Animator _ani;
         Coroutine _aniRoutine = null;
 
@@ -46,12 +47,13 @@ namespace GameScene.Obstacle
         {
             _ani = GetComponent<Animator>();
             _rigid = GetComponent<Rigidbody2D>();
+            _collider = GetComponent<CircleCollider2D>();
         }
 
         public override void Initialize()
         {
-            Debug.Log("Initialize!");
             Init(Guid.Empty, Vector3.zero, 0f);
+            Debug.Log("Initialize!");
         }
 
         public void Init(Guid id, Vector3 pos, float endOfY)
@@ -89,11 +91,11 @@ namespace GameScene.Obstacle
 
             this.gameObject.OnTriggerEnter2DAsObservable()
                 .Where(_ => this.gameObject.activeInHierarchy)
-                .Subscribe(collision =>
+                .Subscribe(collider =>
                 {
-                    if (collision.attachedRigidbody != null && collision.tag != "Invulnerable")
+                    if (collider.attachedRigidbody != null && collider.tag != "Invulnerable")
                     {
-                        if (collision.attachedRigidbody.TryGetComponent<PlayerFacade>(out var character))
+                        if (collider.attachedRigidbody.TryGetComponent<PlayerBehaviour>(out var character))
                         {
                             _colPub.Publish(new ObstacleCrashEvent()
                             {
@@ -115,7 +117,6 @@ namespace GameScene.Obstacle
             _disposables?.Dispose();
             _disposables = null;
         }
-
 
         private void ExplosionAnim()
         {

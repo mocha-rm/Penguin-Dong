@@ -16,7 +16,7 @@ namespace GameScene.Rule
         int lifeImg_order = 2;
 
         IDisposable SubscribeObstacleCrashEvent()
-        {//TODO : Make Complete of this crashevent part
+        {
             _colObstacleSub = _container.Resolve<ISubscriber<ObstacleCrashEvent>>();
             return _colObstacleSub.Subscribe(data =>
             {
@@ -25,7 +25,7 @@ namespace GameScene.Rule
                     if(!_playerController.IsPlayerInvul())
                     {
                         _model.Life.Value -= 1;
-                        data.Character.IsInvulnerable();
+                        data.Character.GetComponentInParent<PlayerFacade>().IsInvulnerable();
                         _uiController.LifeUIAction(lifeImg_order--);
                         //sound play
                     }
@@ -51,7 +51,7 @@ namespace GameScene.Message
 {
     public class ObstacleCrashEvent
     {
-        public PlayerFacade Character;
+        public PlayerBehaviour Character;
         public Obstacle.ObstacleFacade Obstacle;
     }
 }

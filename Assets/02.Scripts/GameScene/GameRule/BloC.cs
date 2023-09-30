@@ -25,6 +25,11 @@ namespace GameScene
 
         public IGameModel GameModel { get; private set; }
 
+        public IPlayerModel PlayerModel { get; private set; }
+
+
+
+
         public void Initialize()
         {
             //Initialize Model Here
@@ -32,6 +37,8 @@ namespace GameScene
             //It `s just for presenting (UI Parts)? 
 
             GameModel = _container.Resolve<GameRule>().Model;
+
+            PlayerModel = _container.Resolve<PlayerFacade>().Model;
         }
     }
 }

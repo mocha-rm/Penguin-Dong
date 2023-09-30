@@ -35,6 +35,7 @@ namespace GameScene.UI
         TextMeshProUGUI _coinText;
 
         Button[] _gameOverBtns;
+        IPublisher<SceneLoadEvent> _sceneloadPub;
         enum GameOverPanelBtn { Home, AdContinue }
         #endregion
 
@@ -76,6 +77,8 @@ namespace GameScene.UI
 
             _directionPub = _container.Resolve<IPublisher<DirectionButtonClick>>();
 
+            _sceneloadPub = _container.Resolve<IPublisher<SceneLoadEvent>>();
+
             for (int i = 0; i < _pauseBtns.Length; i++)
             {
                 _pauseBtns[i] = _pausePanel.GetChild(i + 1).GetComponent<Button>();
@@ -99,6 +102,26 @@ namespace GameScene.UI
                 _pausePanel.gameObject.SetActive(true);
                 Time.timeScale = 0f;
                 _pausePanelOpenBtn.interactable = false;
+            }).AddTo(_disposable);
+
+            _gameOverBtns[(int)GameOverPanelBtn.Home].OnClickAsObservable().Subscribe(_ =>
+            {
+                //go to lobby scene
+                _sceneloadPub.Publish(new SceneLoadEvent()
+                {
+                    Scene = SceneName.LobbyScene
+                });
+
+            }).AddTo(_disposable);
+
+            _gameOverBtns[(int)GameOverPanelBtn.AdContinue].OnClickAsObservable().Subscribe(_ =>
+            {
+                //play ad here
+                _sceneloadPub.Publish(new SceneLoadEvent()
+                {
+                    Scene = SceneName.GameScene
+                });
+
             }).AddTo(_disposable);
 
             PausePanelButtonsSetting();

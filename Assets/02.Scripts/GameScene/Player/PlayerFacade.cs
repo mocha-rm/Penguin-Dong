@@ -23,7 +23,7 @@ namespace GameScene.Player
         }
 
 
-        public IFacadeModelObservable Model
+        public IPlayerModel Model
         {
             get
             {
@@ -34,7 +34,7 @@ namespace GameScene.Player
 
         BLOC _bloc; //Through BLOC can Access GameState of GameRule.GameModel
 
-        //Component (ºÎÇ°)
+        //Component (ï¿½ï¿½Ç°)
         PlayerBehaviour _pBehaviour;
 
         //Model
@@ -64,7 +64,16 @@ namespace GameScene.Player
             _model._isInvul.AsObservable()
                 .Subscribe(_ =>
                 {
-                    gameObject.tag = _model._isInvul.Value ? Tag.Invulnerable.ToString() : Tag.Player.ToString();
+                    if(_model._isInvul.Value == true)
+                    {
+                        gameObject.tag = Tag.Invulnerable.ToString();
+                        _pBehaviour.gameObject.tag = Tag.Invulnerable.ToString();
+                    }
+                    else
+                    {
+                        gameObject.tag = Tag.Player.ToString();
+                        _pBehaviour.gameObject.tag = Tag.Player.ToString();
+                    }
                 }).AddTo(this.gameObject);
         }
 
@@ -143,7 +152,7 @@ namespace GameScene.Player
             this.transform.position = new Vector3(position.x, facadePos.y, facadePos.z);
         }
 
-        public class FacadeModel : IFacadeModelObservable
+        public class FacadeModel : IPlayerModel
         {
             public ReactiveProperty<bool> _isInvul;
 
@@ -156,7 +165,7 @@ namespace GameScene.Player
         }
     }
 
-    public interface IFacadeModelObservable
+    public interface IPlayerModel
     {
         public IReadOnlyReactiveProperty<bool> Isinvul { get; }
     }
