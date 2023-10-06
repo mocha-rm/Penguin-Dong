@@ -22,7 +22,7 @@ namespace GameScene.Rule
 
     public enum GameState { Waiting, Playing, GameOver }
 
-    public partial class GameRule : IInitializable, IDisposable, ITickable
+    public partial class GameRule : IInitializable, IDisposable
     {
         public IGameModel Model { get { return _model; } }
 
@@ -87,7 +87,8 @@ namespace GameScene.Rule
 
         private async UniTaskVoid GameRunning()
         {
-            //TODO : make level system here and use reactiveproperty control indicateui`s level fillamount
+            _model.Level.Value = Constants.DefaultLevel;
+            float levelGuage = 0f;
 
             await UniTask.WaitUntil(() => _model.GameState.Value == GameState.Playing);
 
@@ -95,8 +96,17 @@ namespace GameScene.Rule
             {
                 await UniTask.Delay(TimeSpan.FromMilliseconds((Constants.DefaultTime - _reducedTime) * 1000));
 
-                //Debug.Log((Constants.DefaultTime - _reducedTime) * 1000);
+                levelGuage += 0.1f;
 
+                if(levelGuage >= 1.0f)
+                {
+                    _model.Level.Value += 1;
+                    levelGuage -= 1.0f;
+                    _reducedTime += 0.2;
+                }
+
+                _uiController.LevelUIAction(levelGuage, _model.Level.Value);
+                
                 if (_model.GameState.Value == GameState.GameOver)
                 {
                     break;
@@ -127,14 +137,7 @@ namespace GameScene.Rule
             };
         }
 
-        public void Tick()
-        {
-            //Level Testing
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                _reducedTime += 0.2;
-            }
-        }
+
 
         public static class Constants
         {
