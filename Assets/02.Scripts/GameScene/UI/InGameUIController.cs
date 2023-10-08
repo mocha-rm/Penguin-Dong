@@ -16,15 +16,17 @@ namespace GameScene.UI
         InfoIndicateFacade _infoIndicateFacade;
         InteractionFacade _interactionFacade;
 
+        
 
         public void Initialize()
         {
             _infoIndicateFacade = _container.Resolve<InfoIndicateFacade>();
             _interactionFacade = _container.Resolve<InteractionFacade>();
         }
+
         public void Dispose()
         {
-
+            
         }
 
 
@@ -33,9 +35,9 @@ namespace GameScene.UI
             _infoIndicateFacade.IndicateScore(score);
         }
 
-        public void LevelUIAction()
+        public void LevelUIAction(float guage, int level)
         {
-            //TODO: make public method in _infoIndicateFacade and use here
+            _infoIndicateFacade.IndicateLevelStatus(guage, level);
         }
 
         public void LifeUIAction(int order)

@@ -88,7 +88,7 @@ namespace GameScene.UI
 
         public void IndicateLifeStatus(int order)
         {
-            if(order >= 0)
+            if (order >= 0)
             {
                 //maybe can use Animation
                 _lifeImages[order].gameObject.SetActive(false);
@@ -146,7 +146,7 @@ namespace GameScene.UI
         {
             _countNumber = Constants.countdown;
 
-            while(_countNumber > 0)
+            while (_countNumber > 0)
             {
                 --_countNumber;
                 _countText.text = _countNumber.ToString();
@@ -182,7 +182,7 @@ namespace GameScene.UI
 
             public static readonly float RollDuration = 0.6f;
 
-            public static readonly float LevelUpSpeed = 0.5f;
+            public static readonly float LevelUpSpeed = 0.75f;
         }
 
         public static class Hierarchy
