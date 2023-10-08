@@ -14,12 +14,6 @@ using GameScene.Message;
 
 namespace GameScene.Rule
 {
-    //Rule
-    /*
-     * 1500점 마다 1레벨씩 상승
-     */
-
-
     public enum GameState { Waiting, Playing, GameOver }
 
     public partial class GameRule : IInitializable, IDisposable
@@ -102,7 +96,11 @@ namespace GameScene.Rule
                 {
                     _model.Level.Value += 1;
                     levelGuage -= 1.0f;
-                    _reducedTime += 0.2;
+
+                    if(_reducedTime < 0.8f)
+                    {
+                        _reducedTime += 0.2f;
+                    }
                 }
 
                 _uiController.LevelUIAction(levelGuage, _model.Level.Value);
