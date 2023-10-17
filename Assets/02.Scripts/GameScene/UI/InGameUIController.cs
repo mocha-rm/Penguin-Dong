@@ -46,9 +46,9 @@ namespace GameScene.UI
         }
 
         #region Interaction Part
-        public void GameOverUIAction(bool isRecord)
+        public void GameOverUIAction(bool isRecord, int score, int level, int coin)
         {
-            _interactionFacade.ActivateGameOverPanel(isRecord);
+            _interactionFacade.ActivateGameOverPanel(isRecord, score, level, coin);
         }
         #endregion
     }

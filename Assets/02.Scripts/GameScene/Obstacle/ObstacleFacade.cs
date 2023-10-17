@@ -93,7 +93,7 @@ namespace GameScene.Obstacle
                 .Where(_ => this.gameObject.activeInHierarchy)
                 .Subscribe(collider =>
                 {
-                    if (collider.attachedRigidbody != null && collider.tag != "Invulnerable")
+                    if (collider.attachedRigidbody != null)
                     {
                         if (collider.attachedRigidbody.TryGetComponent<PlayerBehaviour>(out var character))
                         {

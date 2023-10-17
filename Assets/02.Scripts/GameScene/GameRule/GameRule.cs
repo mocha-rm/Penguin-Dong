@@ -130,6 +130,7 @@ namespace GameScene.Rule
             {
                 Score = new ReactiveProperty<int>(0),
                 Life = new ReactiveProperty<int>(Constants.DefaultLifeCount),
+                Coin = new ReactiveProperty<int>(0),
                 Level = new ReactiveProperty<int>(Constants.DefaultLevel),
                 GameState = new ReactiveProperty<GameState>(GameState.Waiting),
             };

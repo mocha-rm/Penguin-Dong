@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 476144090718079687}
   - component: {fileID: 8741664185776018454}
   - component: {fileID: 5855935903955367113}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: ObstacleFacade
   m_TagString: Untagged
   m_Icon: {fileID: 0}

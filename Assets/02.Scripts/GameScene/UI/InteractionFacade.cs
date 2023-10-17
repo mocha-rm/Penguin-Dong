@@ -137,17 +137,12 @@ namespace GameScene.UI
         }
 
         #region Public Methods
-        public void ActivateGameOverPanel(bool isRecord)
+        public void ActivateGameOverPanel(bool isRecord, int score, int level, int coin)
         {
             _gameoverPanel.gameObject.SetActive(true);
             _pausePanelOpenBtn.interactable = false;
 
-            //Show Elements
-            if (isRecord)
-            {
-                //TODO : make DB and Save BestRecord and Compare it for this 
-                _newRecordImg.gameObject.SetActive(true);
-            }
+            ResultTask(isRecord, score, level, coin).Forget();
         }
         #endregion
 
@@ -192,9 +187,25 @@ namespace GameScene.UI
             }).AddTo(_disposable);
         }
 
-        private async UniTaskVoid ResultTask()
+        private async UniTaskVoid ResultTask(bool isRecord, int score, int level, int coin)
         {
-            await UniTask.Yield();
+            await UniTask.Delay(TimeSpan.FromMilliseconds(500));
+            _scoreText.gameObject.SetActive(true);
+            _scoreText.text = score.ToString();
+
+            await UniTask.Delay(TimeSpan.FromMilliseconds(500));
+            _levelText.gameObject.SetActive(true);
+            _levelText.text = level.ToString();
+
+            if (isRecord)
+            {
+                //TODO : make DB and Save BestRecord and Compare it for this 
+                _newRecordImg.gameObject.SetActive(true);
+            }
+
+            await UniTask.Delay(TimeSpan.FromMilliseconds(500));
+            _coinText.gameObject.SetActive(true);
+            _coinText.text = coin.ToString();
         }
 
         #endregion

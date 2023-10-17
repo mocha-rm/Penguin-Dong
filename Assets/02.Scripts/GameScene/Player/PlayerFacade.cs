@@ -64,13 +64,19 @@ namespace GameScene.Player
             _model._isInvul.AsObservable()
                 .Subscribe(_ =>
                 {
-                    if(_model._isInvul.Value == true)
+                    if (_model._isInvul.Value == true)
                     {
+                        gameObject.layer = 8;
+                        _pBehaviour.gameObject.layer = 8;
+
                         gameObject.tag = Tag.Invulnerable.ToString();
                         _pBehaviour.gameObject.tag = Tag.Invulnerable.ToString();
                     }
                     else
                     {
+                        gameObject.layer = 6;
+                        _pBehaviour.gameObject.layer = 6;
+
                         gameObject.tag = Tag.Player.ToString();
                         _pBehaviour.gameObject.tag = Tag.Player.ToString();
                     }
