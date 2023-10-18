@@ -69,5 +69,6 @@ public class ProjectLifeScope : LifetimeScope
         //Proejct Services
         builder.Register<SceneService>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
         builder.Register<AudioService>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
+        builder.Register<Preferences>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
     }
 }
