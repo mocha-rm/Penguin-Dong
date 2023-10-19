@@ -7,8 +7,7 @@ using UniRx;
 using UniRx.Triggers;
 using MessagePipe;
 using GameScene.Message;
-using UnityEditor.VersionControl;
-using UnityEngine.TextCore.Text;
+
 using GameScene.Player;
 
 namespace GameScene.Obstacle

@@ -6,6 +6,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using VContainer;
 
+using VibrationUtility;
+
 
 
 
@@ -21,6 +23,8 @@ public class Preferences : IInitializable, IDisposable
     {
         PlayerPrefs.SetInt(Constants.SoundPrefKey, 1);
         PlayerPrefs.SetInt(Constants.VibrationPrefKey, 1);
+
+        VibrationUtil.Init();   
     }
 
     public void Dispose()
@@ -54,6 +58,7 @@ public class Preferences : IInitializable, IDisposable
         {
             PlayerPrefs.SetInt(Constants.VibrationPrefKey, 1);
             btn.image.color = Color.white;
+            VibrationUtil.Vibrate(VibrationType.Rigid, 1f);
         }
     }
 

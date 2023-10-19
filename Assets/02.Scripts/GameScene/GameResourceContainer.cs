@@ -18,19 +18,17 @@ namespace GameScene
 
         public override async UniTask LoadResourcesAsync(BaseLoadingScreen sc)
         {
+            sc.SetLoadingText("GameObjectLoading");
+            var handler = Addressables.LoadAssetsAsync<GameObject>(resourcesTag, (obj) =>
             {
-                sc.SetLoadingText("GameObjectLoading");
-                var handler = Addressables.LoadAssetsAsync<GameObject>(resourcesTag, (obj) =>
-                {
-                    Debug.Log(obj.name);
-                    _gameObjContainer.Add(obj.name, obj);
-                }, Addressables.MergeMode.Intersection);
-                await handler.ToUniTask(sc);
+                Debug.Log(obj.name);
+                _gameObjContainer.Add(obj.name, obj);
+            }, Addressables.MergeMode.Intersection);
+            await handler.ToUniTask(sc);
 
-                if (handler.IsValid())
-                {
-                    Addressables.Release(handler);
-                }
+            if (handler.IsValid())
+            {
+                Addressables.Release(handler);
             }
         }
 

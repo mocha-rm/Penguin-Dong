@@ -32,9 +32,9 @@ namespace GameScene.Obstacle
         public void Initialize()
         {
             Debug.Log("Initialize ObstacleController");
-            _environment = _container.Resolve<EnvironmentFacade>();
             var poolGet = _container.Resolve<Func<string, MiniPool>>();
             _obastaclePool = poolGet(ObstacleFacade.Constants.PoolId);
+            _environment = _container.Resolve<EnvironmentFacade>();
 
             var totalObstacles = _container.Resolve<IEnumerable<ObstacleFacade>>();
 

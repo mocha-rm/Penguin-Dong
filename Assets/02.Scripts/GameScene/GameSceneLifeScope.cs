@@ -24,9 +24,9 @@ namespace GameScene
             builder.RegisterEntryPoint<BLOC>(Lifetime.Singleton).AsSelf();
 
             RegisterRule(builder);
-            RegisterPool(builder);
-            RegisterController(builder);
             RegisterFacade(builder);
+            RegisterController(builder);
+            RegisterPool(builder);
             RegisterMessage(builder);
         }
 
