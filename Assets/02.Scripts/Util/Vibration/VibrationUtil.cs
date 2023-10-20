@@ -31,6 +31,7 @@ namespace VibrationUtility
                 Debug.LogError($"Vibration Utility - Failed to Initialize : {e}");
                 return;
             }
+
             Debug.Log($"Vibration Utility - Initialized Successfully {vibrationInstance}");
         }
 

@@ -3,7 +3,7 @@
     "m_SelectedPackage": {
         "deviceId": "LMV409N55b20b4d",
         "name": "com.ralral.pgd",
-        "processId": 30391,
+        "processId": 29372,
         "exited": false
     },
     "m_SelectedPriority": 0,
@@ -17,12 +17,6 @@
         {
             "deviceId": "LMV409N55b20b4d",
             "name": "com.ralral.pgd",
-            "processId": 8356,
-            "exited": true
-        },
-        {
-            "deviceId": "LMV409N55b20b4d",
-            "name": "com.ralral.pgd",
             "processId": 9880,
             "exited": true
         },
@@ -30,6 +24,24 @@
             "deviceId": "LMV409N55b20b4d",
             "name": "com.ralral.pgd",
             "processId": 30391,
+            "exited": true
+        },
+        {
+            "deviceId": "LMV409N55b20b4d",
+            "name": "com.ralral.pgd",
+            "processId": 28563,
+            "exited": true
+        },
+        {
+            "deviceId": "LMV409N55b20b4d",
+            "name": "com.ralral.pgd",
+            "processId": 28787,
+            "exited": true
+        },
+        {
+            "deviceId": "LMV409N55b20b4d",
+            "name": "com.ralral.pgd",
+            "processId": 29372,
             "exited": false
         }
     ],

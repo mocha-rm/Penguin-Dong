@@ -46,16 +46,15 @@ namespace GameScene
 
             var resouceContainer = Parent.Container.Resolve<SceneService>().GetCurrentResouceContainer<GameResourceContainer>();
 
-            builder.Register(_ => resouceContainer, Lifetime.Singleton)
-                .As<BaseResourceContainer>();
+            builder.Register(_ => resouceContainer, Lifetime.Singleton).As<BaseResourceContainer>();
 
             var poolFactory = builder.RegisterPoolFactory();
 
             builder.RegisterPool<ObstacleFacade>(resouceContainer, poolFactory, new PoolFactory.PoolModel()
             {
-                resourceId = ObstacleFacade.Constants.AddressableId,
-                poolId = ObstacleFacade.Constants.PoolId,
-                poolSize = ObstacleFacade.Constants.PoolSize,
+                resourceId = "ObstacleFacade",
+                poolId = "ObstacleFacade",
+                poolSize = 64,
             });
         }
 

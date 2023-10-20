@@ -23,8 +23,6 @@ public class Preferences : IInitializable, IDisposable
     {
         PlayerPrefs.SetInt(Constants.SoundPrefKey, 1);
         PlayerPrefs.SetInt(Constants.VibrationPrefKey, 1);
-
-        VibrationUtil.Init();   
     }
 
     public void Dispose()

@@ -9,33 +9,51 @@ namespace GameScene
 {
     public class GameResourceContainer : BaseResourceContainer
     {
-        public List<string> resourcesTag = new List<string>()
+        List<string> resourcesTag = new List<string>()
         {
-            SceneName.GameScene.ToString(),
+            "GameScene",
         };
 
         Dictionary<string, GameObject> _gameObjContainer = new Dictionary<string, GameObject>();
+        //Dictionary<string, AudioClip> _audioClipContainer = new Dictionary<string, AudioClip>();
 
         public override async UniTask LoadResourcesAsync(BaseLoadingScreen sc)
         {
-            sc.SetLoadingText("GameObjectLoading");
-            var handler = Addressables.LoadAssetsAsync<GameObject>(resourcesTag, (obj) =>
             {
-                Debug.Log(obj.name);
-                _gameObjContainer.Add(obj.name, obj);
-            }, Addressables.MergeMode.Intersection);
-            await handler.ToUniTask(sc);
+                //sc.SetLoadingText("GameObjectLoading");
+                var handler = Addressables.LoadAssetsAsync<GameObject>(resourcesTag, (obj) =>
+                {
+                    _gameObjContainer.Add(obj.name, obj);
+                }, Addressables.MergeMode.Intersection);
+                await handler.ToUniTask(sc);
 
-            if (handler.IsValid())
-            {
-                Addressables.Release(handler);
+                if (handler.IsValid())
+                {
+                    Addressables.Release(handler);
+                }
+            }
+
+            { 
+                /*sc.SetLoadingText("AudioLoading");
+                var handler = Addressables.LoadAssetsAsync<AudioClip>(resourcesTag, (audio) =>
+                {
+                    _audioClipContainer.Add(audio.name, audio);
+                }, Addressables.MergeMode.Intersection);
+                await handler.ToUniTask(sc);
+                
+                if(handler.IsValid())
+                {
+                    Addressables.Release(handler);
+                }*/
             }
         }
+
 
         public override void ReleaseResources()
         {
             Debug.Log("Release Resouce Container");
             _gameObjContainer.Clear();
+            //_audioClipContainer.Clear();
         }
 
         public override GameObject GetGameObject(string str)
@@ -48,5 +66,15 @@ namespace GameScene
 
             return _gameObjContainer[str];
         }
+
+        /*public override AudioClip GetAudioClip(string addressableId)
+        {
+            if(_audioClipContainer.ContainsKey(addressableId) == false)
+            {
+                return null;
+            }
+
+            return _audioClipContainer[addressableId];
+        }*/
     }
 }

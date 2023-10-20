@@ -17,16 +17,16 @@ MonoBehaviour:
     serializedVersion: 2
     Hash: 00000000000000000000000000000000
   m_OptimizeCatalogSize: 0
-  m_BuildRemoteCatalog: 0
+  m_BuildRemoteCatalog: 1
   m_BundleLocalCatalog: 0
   m_CatalogRequestsTimeout: 0
   m_DisableCatalogUpdateOnStart: 0
   m_IgnoreUnsupportedFilesInBuild: 0
-  m_UniqueBundleIds: 0
-  m_NonRecursiveBuilding: 1
+  m_UniqueBundleIds: 1
+  m_NonRecursiveBuilding: 0
   m_CCDEnabled: 0
   m_maxConcurrentWebRequests: 500
-  m_ContiguousBundles: 1
+  m_ContiguousBundles: 0
   m_StripUnityVersionFromBundleBuild: 0
   m_DisableVisibleSubAssetRepresentations: 0
   m_ShaderBundleNaming: 0
@@ -36,7 +36,7 @@ MonoBehaviour:
   m_RemoteCatalogBuildPath:
     m_Id: 9be9eda716a53214bb47490d7e6ba867
   m_RemoteCatalogLoadPath:
-    m_Id: c8712dc96bee05543989030cc7720d03
+    m_Id: 61cf8ea052035ec43951e9a13ce356c1
   m_ContentStateBuildPath: 
   m_BuildAddressablesWithPlayerBuild: 0
   m_overridePlayerVersion: Android 0.1
@@ -79,7 +79,7 @@ MonoBehaviour:
       - m_Id: 9be9eda716a53214bb47490d7e6ba867
         m_Value: ServerData/[BuildTarget]
       - m_Id: 61cf8ea052035ec43951e9a13ce356c1
-        m_Value: http://[PrivateIpAddress]:[HostingServicePort]
+        m_Value: http://s3.ap-northeast-2.amazonaws.com/builders-storage-bsh/[BuildTarget]
     m_ProfileEntryNames:
     - m_Id: 2f51e3a2214edf0499b9c9a5fd0d8372
       m_Name: BuildTarget
@@ -115,7 +115,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d81c09da00471ff4fbb0261720501300, type: 2}
   - {fileID: 11400000, guid: d46e4b05fcf055447915a2c79bbecfc8, type: 2}
   - {fileID: 11400000, guid: c4fdbef67a09bf34b976cd4bb6923290, type: 2}
-  m_ActiveProfileId: aec1149a6082f794aa0792128a7688bc
+  m_ActiveProfileId: 5d1828f9686a11246906198f6550e1dd
   m_HostingServicesManager:
     m_HostingServiceInfos: []
     m_Settings: {fileID: 11400000}

@@ -20,6 +20,7 @@ public class AudioService : IInitializable, IDisposable
     [Inject] IObjectResolver _container;
 
     GameObject _soundObject;
+    SceneService _scene;
 
     AudioSource[] _audioSources = new AudioSource[(int)SoundType.End];
     float[] _volumes = new float[(int)SoundType.End];
@@ -29,6 +30,8 @@ public class AudioService : IInitializable, IDisposable
 
     public void Initialize()
     {
+        _scene = _container.Resolve<SceneService>();
+
         if (_soundObject == null)
         {
             _soundObject = new GameObject() { name = "AudioService" };
@@ -79,6 +82,14 @@ public class AudioService : IInitializable, IDisposable
     public void Play()
     {
 
+    }
+
+
+    private AudioClip GetAudioClip(string resourceId)
+    {
+        var resourceContainer = _scene.GetCurrentResouceContainer<BaseResourceContainer>();
+
+        return resourceContainer.GetAudioClip(resourceId);
     }
 
     public void Dispose()

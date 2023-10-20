@@ -20,6 +20,8 @@ public class SceneService : IInitializable, IDisposable
     BaseResourceContainer _resourceContainer;
 
     IDisposable _disposable;
+
+
     public void Initialize()
     {
         _currentScene = SceneName.None;
@@ -86,11 +88,11 @@ public class SceneService : IInitializable, IDisposable
 
     BaseResourceContainer GetCurrentContainer(SceneName scene)
     {
-        switch (scene)
+       /* switch (scene)
         {
             case SceneName.GameScene:
                 return new GameScene.GameResourceContainer();
-        }
+        }*/
 
         return new DefaultResourceContainer();
     }
