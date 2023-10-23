@@ -19,8 +19,18 @@ namespace GameScene.Player
 
         public void Initialize()
         {
-            _bloc = _container.Resolve<BLOC>();
-            _player = _container.Resolve<PlayerFacade>();
+
+            try
+            {
+                _bloc = _container.Resolve<BLOC>();
+                _player = _container.Resolve<PlayerFacade>();
+
+            }
+            catch(Exception e)
+            {
+                Debug.Log(e.Message);
+                Debug.Log("PlayerController Init Error");
+            }
         }
 
         public void Dispose()

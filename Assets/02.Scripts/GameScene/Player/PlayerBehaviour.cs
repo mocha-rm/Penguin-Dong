@@ -25,7 +25,7 @@ namespace GameScene.Player
 
 
 
-        private void OnValidate() //component register method
+        private void Awake()
         {
             _ani = GetComponent<Animator>();
             _renderer = GetComponent<SpriteRenderer>();

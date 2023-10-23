@@ -46,7 +46,14 @@ namespace GameScene.Player
 
         public void RegistBehavior(IContainerBuilder builder)
         {
-            _pBehaviour = transform.GetChild(0).GetComponent<PlayerBehaviour>();
+            try
+            {
+                _pBehaviour = transform.GetChild(0).GetComponent<PlayerBehaviour>();
+            }
+            catch (Exception e)
+            {
+                Debug.Log(e.Message + "PlayerFacade RegisterBehavior error");
+            }
         }
 
 

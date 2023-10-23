@@ -24,9 +24,9 @@ namespace GameScene
             builder.RegisterEntryPoint<BLOC>(Lifetime.Singleton).AsSelf();
 
             RegisterRule(builder);
+            RegisterPool(builder);
             RegisterFacade(builder);
             RegisterController(builder);
-            RegisterPool(builder);
             RegisterMessage(builder);
         }
 
@@ -38,11 +38,11 @@ namespace GameScene
 
         private void RegisterPool(IContainerBuilder builder)
         {
-            if(Parent == null)
+            /*if (Parent == null)
             {
                 Debug.LogError($"There Have No ParentScopoe in {nameof(GameSceneLifeScope)}");
                 return;
-            }
+            }*/
 
             var resouceContainer = Parent.Container.Resolve<SceneService>().GetCurrentResouceContainer<GameResourceContainer>();
 
@@ -50,12 +50,14 @@ namespace GameScene
 
             var poolFactory = builder.RegisterPoolFactory();
 
-            builder.RegisterPool<ObstacleFacade>(resouceContainer, poolFactory, new PoolFactory.PoolModel()
+            PoolFactory.PoolModel poolinfo = new PoolFactory.PoolModel()
             {
-                resourceId = "ObstacleFacade",
                 poolId = "ObstacleFacade",
                 poolSize = 64,
-            });
+                resourceId = "ObstacleFacade",
+            };
+
+            builder.RegisterPool<ObstacleFacade>(resouceContainer, poolFactory, poolinfo);
         }
 
         private void RegisterController(IContainerBuilder builder)

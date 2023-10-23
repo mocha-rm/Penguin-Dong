@@ -3,7 +3,7 @@
     "m_SelectedPackage": {
         "deviceId": "LMV409N55b20b4d",
         "name": "com.ralral.pgd",
-        "processId": 29372,
+        "processId": 18870,
         "exited": false
     },
     "m_SelectedPriority": 0,
@@ -13,18 +13,6 @@
             "name": "com.lge.launcher3",
             "processId": 3119,
             "exited": false
-        },
-        {
-            "deviceId": "LMV409N55b20b4d",
-            "name": "com.ralral.pgd",
-            "processId": 9880,
-            "exited": true
-        },
-        {
-            "deviceId": "LMV409N55b20b4d",
-            "name": "com.ralral.pgd",
-            "processId": 30391,
-            "exited": true
         },
         {
             "deviceId": "LMV409N55b20b4d",
@@ -42,6 +30,18 @@
             "deviceId": "LMV409N55b20b4d",
             "name": "com.ralral.pgd",
             "processId": 29372,
+            "exited": true
+        },
+        {
+            "deviceId": "LMV409N55b20b4d",
+            "name": "com.ralral.pgd",
+            "processId": 13496,
+            "exited": true
+        },
+        {
+            "deviceId": "LMV409N55b20b4d",
+            "name": "com.ralral.pgd",
+            "processId": 18870,
             "exited": false
         }
     ],

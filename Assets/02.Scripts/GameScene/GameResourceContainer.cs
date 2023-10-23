@@ -64,7 +64,7 @@ namespace GameScene
                 return null;
             }
 
-            return _gameObjContainer[str];
+            return _gameObjContainer[str].gameObject;
         }
 
         /*public override AudioClip GetAudioClip(string addressableId)
