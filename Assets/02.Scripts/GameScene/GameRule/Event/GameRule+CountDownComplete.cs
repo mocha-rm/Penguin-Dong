@@ -27,9 +27,9 @@ namespace GameScene.Rule
 
 
 namespace GameScene.Message
+{
+    class CountDownComplete
     {
-        class CountDownComplete
-        {
-            
-        }
+        
     }
+}

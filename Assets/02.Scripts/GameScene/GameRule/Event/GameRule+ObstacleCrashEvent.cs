@@ -36,7 +36,7 @@ namespace GameScene.Rule
                 }
                 else
                 {
-                    if (_model.GameState.Value == GameState.Playing)
+                    if (_model.GameState.Value == GameState.Playing && Time.timeScale != 0)
                     {
                         _uiController.ScoreUIAction(_model.Score.Value++);
                     }

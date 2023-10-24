@@ -15,6 +15,7 @@ using MessagePipe;
 using GameScene.Message;
 using Cysharp.Threading.Tasks.CompilerServices;
 
+
 namespace GameScene.UI
 {
     public class InfoIndicateFacade : BaseFacade, IRegistMonobehavior
@@ -40,6 +41,8 @@ namespace GameScene.UI
 
         CancellationTokenSource _cts;
 
+        AudioService _audioService;
+
 
 
         public void RegistBehavior(IContainerBuilder builder)
@@ -53,6 +56,8 @@ namespace GameScene.UI
 
         public override void Initialize()
         {
+            _audioService = _container.Resolve<AudioService>();
+
             _scoreText.text = "0";
 
             _lifeImages = new Image[Constants.lifeCount];
@@ -159,6 +164,8 @@ namespace GameScene.UI
             });
 
             Debug.Log($"CountDown Ended");
+
+            _audioService.Play(AudioService.AudioResources.GameScene_1, AudioService.SoundType.BGM);
 
             _countText.gameObject.SetActive(false);
         }
