@@ -46,6 +46,8 @@ namespace GameScene.Player
             }
         }
 
+        
+
         public void SetdirectionChange()
         {
             _player.DirectionControlAction();

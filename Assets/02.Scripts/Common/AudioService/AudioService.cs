@@ -17,20 +17,38 @@ public class AudioService : IInitializable, IDisposable
         End //for counting
     }
 
+    public enum AudioResources //If resources more added you have to edit code again.. so this is not a good idea..
+    {
+        #region BGM
+        GameScene_1,
+        GameScene_2,
+        #endregion
+
+        #region SFX
+        Button,
+        Count,
+        Fire_Impact,
+        Fire_Shoot,
+        GO,
+        #endregion
+    }
+
     [Inject] IObjectResolver _container;
 
     GameObject _soundObject;
-    SceneService _scene;
 
     AudioSource[] _audioSources = new AudioSource[(int)SoundType.End];
     float[] _volumes = new float[(int)SoundType.End];
+
+    Dictionary<string, AudioClip> _audioClips = new Dictionary<string, AudioClip>();
 
     IDisposable _disposable;
 
 
     public void Initialize()
     {
-        _scene = _container.Resolve<SceneService>();
+        LoadSoundResource();
+
 
         if (_soundObject == null)
         {
@@ -38,7 +56,7 @@ public class AudioService : IInitializable, IDisposable
             UnityEngine.Object.DontDestroyOnLoad(_soundObject);
 
             string[] soundNames = System.Enum.GetNames(typeof(SoundType));
-            for(int i = 0; i < soundNames.Length - 1; i++)
+            for (int i = 0; i < soundNames.Length - 1; i++)
             {
                 GameObject obj = new GameObject { name = soundNames[i] };
                 _audioSources[i] = obj.AddComponent<AudioSource>();
@@ -53,10 +71,26 @@ public class AudioService : IInitializable, IDisposable
         }
     }
 
-    
+    private void LoadSoundResource()
+    {
+        AudioClip[] bgm = Resources.LoadAll<AudioClip>("Sounds/BGM");
+        AudioClip[] sfx = Resources.LoadAll<AudioClip>("Sounds/SFX");
+
+        for (int i = 0; i < bgm.Length; i++)
+        {
+            _audioClips[bgm[i].name] = bgm[i];
+        }
+
+        for (int i = 0; i < sfx.Length; i++)
+        {
+            _audioClips[sfx[i].name] = sfx[i];
+        }
+    }
+
+
     public void SetVolume(SoundType type, float volume)
     {
-        if(type >= SoundType.End)
+        if (type >= SoundType.End)
         {
             Debug.LogWarning($"{type} is Over MaxCount");
             return;
@@ -68,7 +102,7 @@ public class AudioService : IInitializable, IDisposable
 
     public void Stop(SoundType type)
     {
-        if(type < SoundType.End)
+        if (type < SoundType.End)
         {
             _audioSources[(int)type].Stop();
         }
@@ -79,24 +113,25 @@ public class AudioService : IInitializable, IDisposable
     }
 
 
-    public void Play()
+    public void Play(AudioResources resourceName, SoundType soundType)
     {
-
+        if (soundType == SoundType.BGM)
+        {
+            _audioSources[(int)soundType].clip = _audioClips[resourceName.ToString()];
+            _audioSources[(int)soundType].Play();
+        }
+        else
+        {
+            _audioSources[(int)soundType].PlayOneShot(_audioClips[resourceName.ToString()]);
+        }
     }
 
-
-    private AudioClip GetAudioClip(string resourceId)
-    {
-        var resourceContainer = _scene.GetCurrentResouceContainer<BaseResourceContainer>();
-
-        return resourceContainer.GetAudioClip(resourceId);
-    }
 
     public void Dispose()
     {
-        foreach(AudioSource audioSource in _audioSources)
+        foreach (AudioSource audioSource in _audioSources)
         {
-            if(audioSource != null)
+            if (audioSource != null)
             {
                 audioSource.Stop();
                 audioSource.clip = null;

@@ -22,6 +22,9 @@ namespace LobbyScene.UI
 
         Button _soundBtn;
         Button _vibrationBtn;
+        Button _rankingloadBtn;
+
+        AudioService _audioService;
 
 
         CompositeDisposable _disposables;
@@ -33,16 +36,20 @@ namespace LobbyScene.UI
             _startBtn = gameObject.GetHierachyPath<Button>(Hierarchy.GameStartButton);
             _soundBtn = gameObject.GetHierachyPath<Button>(Hierarchy.SoundControlButton);
             _vibrationBtn = gameObject.GetHierachyPath<Button>(Hierarchy.VibrationControlButton);
+            _rankingloadBtn = gameObject.GetHierachyPath<Button>(Hierarchy.RankingLoadButton);
         }
 
         public override void Initialize()
         {
+            _audioService = _container.Resolve<AudioService>();
+
             _disposables = new CompositeDisposable();
 
             var loader = _container.Resolve<SceneService>();
 
             _startBtn.OnClickAsObservable().Subscribe(_ =>
             {
+                _audioService.Play(AudioService.AudioResources.Button, AudioService.SoundType.SFX);
                 loader.LoadScene(SceneName.GameScene).Forget();
             }).AddTo(_disposables);
 
@@ -50,12 +57,20 @@ namespace LobbyScene.UI
 
             _soundBtn.OnClickAsObservable().Subscribe(_ =>
             {
+                _audioService.Play(AudioService.AudioResources.Button, AudioService.SoundType.SFX);
                 pref.SoundControl(_soundBtn);
             }).AddTo(_disposables);
 
             _vibrationBtn.OnClickAsObservable().Subscribe(_ =>
             {
+                _audioService.Play(AudioService.AudioResources.Button, AudioService.SoundType.SFX);
                 pref.VibrateControl(_vibrationBtn);
+            }).AddTo(_disposables);
+
+            _rankingloadBtn.OnClickAsObservable().Subscribe(_ =>
+            {
+                _audioService.Play(AudioService.AudioResources.Button, AudioService.SoundType.SFX);
+                //Ranking Board Open
             }).AddTo(_disposables);
         }
 
@@ -64,6 +79,7 @@ namespace LobbyScene.UI
             _startBtn.onClick.RemoveAllListeners();
             _soundBtn.onClick.RemoveAllListeners();
             _vibrationBtn.onClick.RemoveAllListeners();
+            _rankingloadBtn.onClick.RemoveAllListeners();
 
             _disposables?.Dispose();
             _disposables = null;
@@ -77,6 +93,7 @@ namespace LobbyScene.UI
 
             public static readonly string SoundControlButton = "Background/Preferences/Sound";
             public static readonly string VibrationControlButton = "Background/Preferences/Vibration";
+            public static readonly string RankingLoadButton = "Background/Preferences/RankingLoad";
         }
     }
 }

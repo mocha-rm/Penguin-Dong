@@ -103,8 +103,11 @@ namespace GameScene.Player
         private IEnumerator IcyTurnLeft()
         {
             transform.localScale = new Vector3(-1f, 1f, 1f);
-
-            float controlValue = 0.05f;
+#if UNITY_EDITOR
+            float controlValue = 0.1f;
+#else
+            float controlValue = 0.7f;
+#endif
 
             while (true)
             {
@@ -122,9 +125,12 @@ namespace GameScene.Player
         private IEnumerator IcyTurnRight()
         {
             transform.localScale = Vector3.one;
-
-            float controlValue = 0.05f;
-
+#if UNITY_EDITOR
+            float controlValue = 0.1f;
+#else
+            float controlValue = 0.7f;
+#endif
+            
             while (true)
             {
                 _speed += controlValue;
