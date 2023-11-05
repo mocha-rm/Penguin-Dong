@@ -16,7 +16,7 @@ namespace GameScene.Obstacle
     {
         public Guid ID { get => _id; }
 
-        public IFacadeModelObservable Model
+        public IObstacleModel Model
         {
             get
             {
@@ -27,7 +27,7 @@ namespace GameScene.Obstacle
                 return _model;
             }
         }
-
+        BLOC _bloc;
 
         Guid _id;
         FacadeModel _model = null;
@@ -39,7 +39,8 @@ namespace GameScene.Obstacle
         Coroutine _aniRoutine = null;
 
         CompositeDisposable _disposables;
-        IPublisher<ObstacleCrashEvent> _colPub;
+
+        IPublisher<ScoreUpEvent> _scoreUpPub;
 
 
         public void RegistBehavior(IContainerBuilder builder)
@@ -57,6 +58,10 @@ namespace GameScene.Obstacle
 
         public void Init(Guid id, Vector3 pos, float endOfY)
         {
+          
+            _bloc = _container.Resolve<BLOC>();
+            _scoreUpPub = _container.Resolve<IPublisher<ScoreUpEvent>>();
+
             if (_model == null)
             {
                 _model = CreateModel();
@@ -69,41 +74,21 @@ namespace GameScene.Obstacle
             _disposables?.Dispose();
             _disposables?.Clear();
             _disposables = new CompositeDisposable();
-            _colPub = _container.Resolve<IPublisher<ObstacleCrashEvent>>();
 
             Observable.EveryUpdate()
                 .Where(_ => this.gameObject.activeInHierarchy)
                 .Where(_ => _model.IsAlive.Value == true)
                 .Subscribe(_ =>
                 {
-                    if (transform.position.y < _endOfY)
+                    if (transform.position.y < _endOfY && _bloc.GameModel.GameStateProperty.Value == Rule.GameState.Playing
+                    && Time.timeScale != 0)
                     {
-                        _colPub.Publish(new ObstacleCrashEvent()
+                        _scoreUpPub.Publish(new ScoreUpEvent()
                         {
-                            Character = null,
-                            Obstacle = this,
+
                         });
 
                         ExplosionAnim();
-                    }
-                }).AddTo(_disposables);
-
-            this.gameObject.OnTriggerEnter2DAsObservable()
-                .Where(_ => this.gameObject.activeInHierarchy)
-                .Subscribe(collider =>
-                {
-                    if (collider.attachedRigidbody != null)
-                    {
-                        if (collider.attachedRigidbody.TryGetComponent<PlayerBehaviour>(out var character))
-                        {
-                            _colPub.Publish(new ObstacleCrashEvent()
-                            {
-                                Character = character,
-                                Obstacle = this,
-                            });
-
-                            ExplosionAnim();
-                        }
                     }
                 }).AddTo(_disposables);
         }
@@ -117,7 +102,7 @@ namespace GameScene.Obstacle
             _disposables = null;
         }
 
-        private void ExplosionAnim()
+        public void ExplosionAnim()
         {
             _rigid.constraints = RigidbodyConstraints2D.FreezePositionY;
 
@@ -164,7 +149,7 @@ namespace GameScene.Obstacle
 
         }
 
-        public class FacadeModel : IFacadeModelObservable
+        public class FacadeModel : IObstacleModel
         {
             public IReadOnlyReactiveProperty<bool> IsAlive { get => _isAlilve; }
 
@@ -176,7 +161,7 @@ namespace GameScene.Obstacle
             }
         }
 
-        public interface IFacadeModelObservable
+        public interface IObstacleModel
         {
             public IReadOnlyReactiveProperty<bool> IsAlive { get; }
         }

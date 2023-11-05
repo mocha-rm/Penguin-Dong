@@ -70,6 +70,7 @@ namespace GameScene
         private void RegisterFacade(IContainerBuilder builder)
         {
             builder.RegisterByHierarchy<PlayerFacade>(null, Hierarchy.PlayerFacade);
+            
             builder.RegisterByHierarchy<EnvironmentFacade>(null, Hierarchy.EnvironmentFacade);
             builder.RegisterByHierarchy<InfoIndicateFacade>(null, Hierarchy.InfoIndicateFacade);
             builder.RegisterByHierarchy<InteractionFacade>(null, Hierarchy.InteractionFacade);
@@ -84,12 +85,14 @@ namespace GameScene
             builder.RegisterMessageBroker<GameOverEvent>(option);
             builder.RegisterMessageBroker<SceneLoadEvent>(option);
             builder.RegisterMessageBroker<ObstacleCrashEvent>(option);
+            builder.RegisterMessageBroker<ScoreUpEvent>(option);
         }
 
 
         public static class Hierarchy
         {
             public static readonly string PlayerFacade = "PlayerFacade";
+            
             public static readonly string EnvironmentFacade = "EnvironmentFacade";
 
             #region UI

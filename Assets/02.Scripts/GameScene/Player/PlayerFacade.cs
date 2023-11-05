@@ -42,6 +42,8 @@ namespace GameScene.Player
 
         Coroutine _routine = null;
 
+        IPublisher<ObstacleCrashEvent> _colPub;
+
 
 
         public void RegistBehavior(IContainerBuilder builder)
@@ -60,6 +62,8 @@ namespace GameScene.Player
         public override void Initialize()
         {
             _bloc = _container.Resolve<BLOC>();
+
+            _colPub = _container.Resolve<IPublisher<ObstacleCrashEvent>>();
 
             if (_model == null)
             {
@@ -88,6 +92,18 @@ namespace GameScene.Player
                         _pBehaviour.gameObject.tag = Tag.Player.ToString();
                     }
                 }).AddTo(this.gameObject);
+
+
+            Observable.EveryFixedUpdate().Where(_ => _pBehaviour.IsCrashed == true)
+                .Subscribe(_ =>
+                {
+                    _pBehaviour.IsCrashed = false;
+
+                    _colPub.Publish(new ObstacleCrashEvent()
+                    {
+
+                    });
+                });
         }
 
 
@@ -130,6 +146,8 @@ namespace GameScene.Player
             }
         }
 
+
+
         private IEnumerator InvulnerableEnd() //2
         {
             _pBehaviour.Crashed();
@@ -140,6 +158,9 @@ namespace GameScene.Player
 
             _model._isInvul.Value = false;
         }
+
+
+
 
 
 

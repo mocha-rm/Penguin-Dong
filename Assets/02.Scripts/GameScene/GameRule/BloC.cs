@@ -5,6 +5,7 @@ using VContainer;
 using VContainer.Unity;
 
 using GameScene.Player;
+using GameScene.Obstacle;
 using GameScene.UI;
 
 using GameScene.Rule;
@@ -26,7 +27,6 @@ namespace GameScene
         public IGameModel GameModel { get; private set; }
 
         public IPlayerModel PlayerModel { get; private set; }
-
 
 
 

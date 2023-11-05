@@ -16,7 +16,7 @@ namespace GameScene.Obstacle
     {
         [Inject] IObjectResolver _container;
 
-        public IFactoryModelObservable Model
+        public IObstacleControllerModel Model
         {
             get
             {
@@ -25,6 +25,7 @@ namespace GameScene.Obstacle
         }
 
         EnvironmentFacade _environment;
+        
 
         MiniPool _obastaclePool;
         FactoryModel _model = new FactoryModel();
@@ -34,6 +35,7 @@ namespace GameScene.Obstacle
             Debug.Log("Initialize ObstacleController");
             var poolGet = _container.Resolve<Func<string, MiniPool>>();
             _obastaclePool = poolGet(ObstacleFacade.Constants.PoolId);
+            
             _environment = _container.Resolve<EnvironmentFacade>();
 
             var totalObstacles = _container.Resolve<IEnumerable<ObstacleFacade>>();
@@ -64,6 +66,7 @@ namespace GameScene.Obstacle
         void SpawnObstacle()
         {
             var facade = _obastaclePool.Pop<ObstacleFacade>();
+            
             var id = Guid.NewGuid();
             var pos = _environment.GetRandomObstacleSpawnPos();
             var endPosy = _environment.GetGroundY();
@@ -96,7 +99,8 @@ namespace GameScene.Obstacle
         }
 
 
-        public class FactoryModel : IFactoryModelObservable
+
+        public class FactoryModel : IObstacleControllerModel
         {
             public IObservable<Guid> GetAddedFacadeObservable()
             {
@@ -113,7 +117,7 @@ namespace GameScene.Obstacle
                 return _facadeDic.ObserveCountChanged();
             }
 
-            public ObstacleFacade.IFacadeModelObservable GetFacadeObservable(Guid id)
+            public ObstacleFacade.IObstacleModel GetFacadeObservable(Guid id)
             {
                 return _facadeDic[id].Model;
             }
@@ -127,12 +131,12 @@ namespace GameScene.Obstacle
         }
     }
 
-    public interface IFactoryModelObservable
+    public interface IObstacleControllerModel
     {
         public IObservable<Guid> GetAddedFacadeObservable();
         public IObservable<Guid> GetRemoveFacadeModelId();
         public IObservable<int> ObserveCount();
-        public ObstacleFacade.IFacadeModelObservable GetFacadeObservable(Guid id);
+        public ObstacleFacade.IObstacleModel GetFacadeObservable(Guid id);
     }
 
 }

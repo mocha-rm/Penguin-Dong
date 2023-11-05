@@ -20,27 +20,11 @@ namespace GameScene.Rule
             _colObstacleSub = _container.Resolve<ISubscriber<ObstacleCrashEvent>>();
             return _colObstacleSub.Subscribe(data =>
             {
-                if (data.Character != null && data.Obstacle != null)
-                {
-                    if(!_playerController.IsPlayerInvul())
-                    {
-                        _model.Life.Value -= 1;
-                        data.Character.GetComponentInParent<PlayerFacade>().IsInvulnerable();
-                        _uiController.LifeUIAction(lifeImg_order--);
-                        //sound play
-                    }
-                    else
-                    {
-                        return;
-                    }
-                }
-                else
-                {
-                    if (_model.GameState.Value == GameState.Playing && Time.timeScale != 0)
-                    {
-                        _uiController.ScoreUIAction(_model.Score.Value++);
-                    }
-                }
+                _model.Life.Value -= 1;
+                _playerController.SetPlayerInvulnerable();
+                _uiController.LifeUIAction(lifeImg_order--);
+                //Sound Play 
+
             });
         }
     }
@@ -51,8 +35,7 @@ namespace GameScene.Message
 {
     public class ObstacleCrashEvent
     {
-        public PlayerBehaviour Character;
-        public Obstacle.ObstacleFacade Obstacle;
+
     }
 }
 

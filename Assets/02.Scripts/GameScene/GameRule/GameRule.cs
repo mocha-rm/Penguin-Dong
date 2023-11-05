@@ -45,6 +45,7 @@ namespace GameScene.Rule
 
         public void Initialize()
         {
+
             _playerController = _container.Resolve<PlayerController>();
             _obstacleController = _container.Resolve<ObstacleController>();
             _uiController = _container.Resolve<InGameUIController>();
@@ -76,6 +77,7 @@ namespace GameScene.Rule
 
             SubscribeSceneLoadEvent().AddTo(bag);
 
+            SubscribeScoreUpEvent().AddTo(bag);
             _disposable = bag.Build();
         }
 

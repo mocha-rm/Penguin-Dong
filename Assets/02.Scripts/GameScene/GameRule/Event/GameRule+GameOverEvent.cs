@@ -21,7 +21,7 @@ namespace GameScene.Rule
             {
                 _model.GameState.Value = GameState.GameOver;
                 _model.Coin.Value = (int)(_model.Score.Value * 0.1f); // need to save the total coin on DB
-                _uiController.GameOverUIAction(false, _model.Score.Value, _model.Level.Value, _model.Coin.Value); //boolian value is for compare new record or not
+                _uiController.GameOverUIAction(true, _model.Score.Value, _model.Level.Value, _model.Coin.Value); //boolian value is for compare new record or not
             });
         }
     }

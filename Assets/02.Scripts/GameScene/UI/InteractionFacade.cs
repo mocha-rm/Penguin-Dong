@@ -11,6 +11,7 @@ using UniRx;
 using System;
 using MessagePipe;
 using GameScene.Message;
+using UnityEditor.ShaderKeywordFilter;
 
 namespace GameScene.UI
 {
@@ -33,6 +34,7 @@ namespace GameScene.UI
         TextMeshProUGUI _levelText;
         //Coin
         TextMeshProUGUI _coinText;
+        Image _coinImg;
 
         Button[] _gameOverBtns;
         IPublisher<SceneLoadEvent> _sceneloadPub;
@@ -65,6 +67,7 @@ namespace GameScene.UI
             _newRecordImg = gameObject.GetHierachyPath<Image>(Hierarchy.NewRecordImage);
             _levelText = gameObject.GetHierachyPath<TextMeshProUGUI>(Hierarchy.LevelText);
             _coinText = gameObject.GetHierachyPath<TextMeshProUGUI>(Hierarchy.CoinText);
+            _coinImg = gameObject.GetHierachyPath<Image>(Hierarchy.CoinImage);
         }
 
         public override void Initialize()
@@ -190,9 +193,13 @@ namespace GameScene.UI
         private async UniTaskVoid ResultTask(bool isRecord, int score, int level, int coin)
         {
             await UniTask.Delay(TimeSpan.FromMilliseconds(500));
+            _scoreText.transform.parent.gameObject.SetActive(true);
+            await UniTask.Delay(TimeSpan.FromMilliseconds(500));
             _scoreText.gameObject.SetActive(true);
             _scoreText.text = score.ToString();
 
+            await UniTask.Delay(TimeSpan.FromMilliseconds(500));
+            _levelText.transform.parent.gameObject.SetActive(true);
             await UniTask.Delay(TimeSpan.FromMilliseconds(500));
             _levelText.gameObject.SetActive(true);
             _levelText.text = level.ToString();
@@ -204,10 +211,19 @@ namespace GameScene.UI
             }
 
             await UniTask.Delay(TimeSpan.FromMilliseconds(500));
+            _coinText.transform.parent.gameObject.SetActive(true);
+            await UniTask.Delay(TimeSpan.FromMilliseconds(500));
             _coinText.gameObject.SetActive(true);
             _coinText.text = coin.ToString();
-        }
+            _coinImg.gameObject.SetActive(true);
 
+            await UniTask.Delay(TimeSpan.FromMilliseconds(500));
+
+            foreach(Button btn in _gameOverBtns)
+            {
+                btn.gameObject.SetActive(true);
+            }
+        }
         #endregion
 
 
@@ -227,10 +243,11 @@ namespace GameScene.UI
             public static readonly string PausePanel = "Pause";
 
             public static readonly string GameOverPanel = "GameOver";
-            public static readonly string ScoreText = "GameOver/Tr_Score/Text_Score";
+            public static readonly string ScoreText= "GameOver/Tr_Score/Text_Score";
             public static readonly string NewRecordImage = "GameOver/Tr_Score/Img_NewRecord";
             public static readonly string LevelText = "GameOver/Tr_Level/Text_Level";
             public static readonly string CoinText = "GameOver/Tr_Coin/Text_Coin";
+            public static readonly string CoinImage = "GameOver/Tr_Coin/Img_Coin";
         }
     }
 }

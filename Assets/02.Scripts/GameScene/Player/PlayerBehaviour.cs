@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using GameScene.Rule;
+
+
+using UniRx;
 
 
 namespace GameScene.Player
@@ -22,6 +24,8 @@ namespace GameScene.Player
         private SpriteRenderer _renderer;
 
         private Coroutine _routine = null;
+
+        public bool IsCrashed { get; set; }
 
 
 
@@ -50,6 +54,15 @@ namespace GameScene.Player
             transform.localScale = _speed.Equals(maxSpeed) ? Vector3.one : LeftScale;
 
             Debug.Log($"Player Initialized");
+        }
+
+        private void OnTriggerEnter2D(Collider2D collision)
+        {
+            if (collision.gameObject.layer == 7 && this.gameObject.layer == 6)
+            {
+                IsCrashed = true;
+                collision.GetComponent<Obstacle.ObstacleFacade>().ExplosionAnim();
+            }
         }
 
 
