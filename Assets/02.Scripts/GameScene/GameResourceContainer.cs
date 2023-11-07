@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using UnityEngine.AddressableAssets;
-
+using UnityEngine.ResourceManagement.AsyncOperations;
 
 namespace GameScene
 {
@@ -21,15 +21,21 @@ namespace GameScene
         {
             {
                 //sc.SetLoadingText("GameObjectLoading");
-                var handler = Addressables.LoadAssetsAsync<GameObject>(resourcesTag, (obj) =>
+                /*var handler = Addressables.LoadAssetsAsync<GameObject>(resourcesTag, (obj) =>
                 {
                     _gameObjContainer.Add(obj.name, obj);
-                }, Addressables.MergeMode.Intersection);
+                }, Addressables.MergeMode.Intersection);*/
+                //SetMergeMode(Addressables.MergeMode.Intersection, resourcesTag[0]);
+
+                SetMergeMode(Addressables.MergeMode.Intersection, resourcesTag[0]);
+
+                var handler = Addressables.LoadAssetAsync<GameObject>(resourcesTag[0]);
+                handler.Completed += OnLoadCompleted;
                 await handler.ToUniTask(sc);
 
                 if (handler.IsValid())
                 {
-                    Addressables.Release(handler);
+                    Debug.Log(handler.PercentComplete * 100);
                 }
             }
 
@@ -48,6 +54,25 @@ namespace GameScene
             }
         }
 
+        private void OnLoadCompleted(AsyncOperationHandle<GameObject> handle)
+        {
+            if(handle.Status == AsyncOperationStatus.Succeeded)
+            {
+                GameObject loadedAsset = handle.Result;
+                _gameObjContainer.Add(loadedAsset.name, loadedAsset);
+            }
+            else
+            {
+                Debug.LogError($"Failed to load the remote addressable asset");
+            }
+        }
+
+        private void SetMergeMode(Addressables.MergeMode mode, string key)
+        {
+            Addressables.MergeMode _mode = mode;
+            Addressables.ClearDependencyCacheAsync(key, true);
+        }
+
 
         public override void ReleaseResources()
         {
@@ -63,8 +88,15 @@ namespace GameScene
                 Debug.LogError($"{str} is not Contain in ResourceContainer");
                 return null;
             }
+            else
+            {
+                if (_gameObjContainer[str] == null)
+                {
+                    Debug.Log($"Target is NULL");
+                }
+            }
 
-            return _gameObjContainer[str].gameObject;
+            return _gameObjContainer[str];
         }
 
         /*public override AudioClip GetAudioClip(string addressableId)

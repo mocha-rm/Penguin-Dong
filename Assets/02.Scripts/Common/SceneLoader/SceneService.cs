@@ -59,6 +59,7 @@ public class SceneService : IInitializable, IDisposable
             var sceneLoad = await Addressables.LoadSceneAsync(Scene.ToString(), UnityEngine.SceneManagement.LoadSceneMode.Single, false).ToUniTask(loadSc);
             await sceneLoad.ActivateAsync();
             _resourceContainer.ReleaseLoadingScreen();
+            
         }
         else
         {

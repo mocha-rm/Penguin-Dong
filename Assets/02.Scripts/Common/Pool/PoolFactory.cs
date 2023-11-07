@@ -118,11 +118,11 @@ public static partial class RegisterExtension
     public static void RegisterPool<T>(this IContainerBuilder builder, BaseResourceContainer resources, PoolFactory factory, PoolFactory.PoolModel poolInfo) where T : UnityEngine.Component
     {
         var originalObj = resources.GetGameObject(poolInfo.resourceId);
-        if (originalObj == null)
+    /*    if (originalObj == null)
         {
             originalObj = GameObject.Find(poolInfo.resourceId);
             originalObj.SetActive(false);
-        }
+        }*/
         var miniPool = factory.AddPool(poolInfo.poolId, originalObj, poolInfo.poolSize);
 
         var originalType = originalObj.GetComponent<T>();

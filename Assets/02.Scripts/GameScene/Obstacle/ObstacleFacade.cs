@@ -58,7 +58,6 @@ namespace GameScene.Obstacle
 
         public void Init(Guid id, Vector3 pos, float endOfY)
         {
-          
             _bloc = _container.Resolve<BLOC>();
             _scoreUpPub = _container.Resolve<IPublisher<ScoreUpEvent>>();
 
