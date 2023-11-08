@@ -13,6 +13,7 @@ namespace GameScene.Rule
             _sceneLoadSub = _container.Resolve<ISubscriber<SceneLoadEvent>>();
             return _sceneLoadSub.Subscribe(evt =>
             {
+                _model.GameState.Value = GameState.GameOver;
                 var sceneLoader = _container.Resolve<SceneService>();
                 //_audioService.Stop(AudioService.SoundType.BGM);
                 sceneLoader.LoadScene(evt.Scene).Forget();

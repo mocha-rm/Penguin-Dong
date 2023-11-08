@@ -72,4 +72,9 @@ public class ProjectLifeScope : LifetimeScope
         builder.Register<Preferences>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
         builder.Register<VibrationService>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
     }
+
+    private void OnApplicationQuit()
+    {
+        Debug.Log($"App Quit");
+    }
 }

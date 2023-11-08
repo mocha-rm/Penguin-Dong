@@ -17,8 +17,13 @@ namespace GameScene.UI
 {
     public class InteractionFacade : BaseFacade, IRegistMonobehavior
     {
+        AudioService _audioService;
+        Preferences _pref;
+        
+
         Button _directionBtn;
         IPublisher<DirectionButtonClick> _directionPub;
+        IPublisher<SceneLoadEvent> _sceneloadPub;
 
         Button _pausePanelOpenBtn;
 
@@ -37,7 +42,6 @@ namespace GameScene.UI
         Image _coinImg;
 
         Button[] _gameOverBtns;
-        IPublisher<SceneLoadEvent> _sceneloadPub;
         enum GameOverPanelBtn { Home, AdContinue }
         #endregion
 
@@ -72,6 +76,10 @@ namespace GameScene.UI
 
         public override void Initialize()
         {
+            _audioService = _container.Resolve<AudioService>();
+
+            _pref = _container.Resolve<Preferences>();
+
             _disposable = new CompositeDisposable();
 
             _pauseBtns = new Button[Constants.PausePanelButtonCount];
@@ -103,12 +111,16 @@ namespace GameScene.UI
             _pausePanelOpenBtn.OnClickAsObservable().Subscribe(_ =>
             {
                 _pausePanel.gameObject.SetActive(true);
+                _pref.CheckSoundStatus(_pauseBtns[(int)PausePanelBtn.Sound]);
+                _pref.CheckVibrationStatus(_pauseBtns[(int)PausePanelBtn.Vibration]);
                 Time.timeScale = 0f;
                 _pausePanelOpenBtn.interactable = false;
             }).AddTo(_disposable);
 
             _gameOverBtns[(int)GameOverPanelBtn.Home].OnClickAsObservable().Subscribe(_ =>
             {
+                _audioService.Stop(AudioService.SoundType.BGM);
+
                 //go to lobby scene
                 _sceneloadPub.Publish(new SceneLoadEvent()
                 {
@@ -119,6 +131,10 @@ namespace GameScene.UI
 
             _gameOverBtns[(int)GameOverPanelBtn.AdContinue].OnClickAsObservable().Subscribe(_ =>
             {
+                _audioService.Stop(AudioService.SoundType.BGM);
+
+                //Input AdMob Codes Here
+
                 //play ad here
                 _sceneloadPub.Publish(new SceneLoadEvent()
                 {
@@ -155,7 +171,6 @@ namespace GameScene.UI
         {
             _pauseBtns[(int)PausePanelBtn.Continue].OnClickAsObservable().Subscribe(_ =>
             {
-                //Game Resume
                 _pausePanel.gameObject.SetActive(false);
                 Time.timeScale = 1.0f;
                 _pausePanelOpenBtn.interactable = true;
@@ -163,16 +178,28 @@ namespace GameScene.UI
 
             _pauseBtns[(int)PausePanelBtn.Home].OnClickAsObservable().Subscribe(_ =>
             {
-                //Home Scene Loading
+                _pausePanel.gameObject.SetActive(false);
+                Time.timeScale = 1.0f;
+                _audioService.Stop(AudioService.SoundType.BGM);
+                
+                _sceneloadPub.Publish(new SceneLoadEvent()
+                {
+                    Scene = SceneName.LobbyScene
+                });
+
             }).AddTo(_disposable);
 
             _pauseBtns[(int)PausePanelBtn.Sound].OnClickAsObservable().Subscribe(_ =>
             {
-                //Sound On / Off
+                //Button Image Alpha Control Here
+                _pref.SoundControl(_pauseBtns[(int)PausePanelBtn.Sound]);
+                
             }).AddTo(_disposable);
 
             _pauseBtns[(int)PausePanelBtn.Vibration].OnClickAsObservable().Subscribe(_ =>
             {
+                _pref.VibrateControl(_pauseBtns[(int)PausePanelBtn.Vibration]);
+                
                 //Vibration On / Off
             }).AddTo(_disposable);
         }
@@ -206,7 +233,7 @@ namespace GameScene.UI
 
             if (isRecord)
             {
-                //TODO : make DB and Save BestRecord and Compare it for this 
+                //TODO : make DB and Save BestRecord and Compare it for this
                 _newRecordImg.gameObject.SetActive(true);
             }
 
@@ -219,7 +246,7 @@ namespace GameScene.UI
 
             await UniTask.Delay(TimeSpan.FromMilliseconds(500));
 
-            foreach(Button btn in _gameOverBtns)
+            foreach (Button btn in _gameOverBtns)
             {
                 btn.gameObject.SetActive(true);
             }
@@ -243,7 +270,7 @@ namespace GameScene.UI
             public static readonly string PausePanel = "Pause";
 
             public static readonly string GameOverPanel = "GameOver";
-            public static readonly string ScoreText= "GameOver/Tr_Score/Text_Score";
+            public static readonly string ScoreText = "GameOver/Tr_Score/Text_Score";
             public static readonly string NewRecordImage = "GameOver/Tr_Score/Img_NewRecord";
             public static readonly string LevelText = "GameOver/Tr_Level/Text_Level";
             public static readonly string CoinText = "GameOver/Tr_Coin/Text_Coin";

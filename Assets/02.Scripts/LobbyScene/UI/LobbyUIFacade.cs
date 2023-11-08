@@ -57,14 +57,14 @@ namespace LobbyScene.UI
 
             _soundBtn.OnClickAsObservable().Subscribe(_ =>
             {
-                _audioService.Play(AudioService.AudioResources.Button, AudioService.SoundType.SFX);
                 pref.SoundControl(_soundBtn);
+                _audioService.Play(AudioService.AudioResources.Button, AudioService.SoundType.SFX);
             }).AddTo(_disposables);
 
             _vibrationBtn.OnClickAsObservable().Subscribe(_ =>
             {
-                _audioService.Play(AudioService.AudioResources.Button, AudioService.SoundType.SFX);
                 pref.VibrateControl(_vibrationBtn);
+                _audioService.Play(AudioService.AudioResources.Button, AudioService.SoundType.SFX);
             }).AddTo(_disposables);
 
             _rankingloadBtn.OnClickAsObservable().Subscribe(_ =>
