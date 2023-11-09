@@ -20,11 +20,10 @@ namespace GameScene.Rule
             _colObstacleSub = _container.Resolve<ISubscriber<ObstacleCrashEvent>>();
             return _colObstacleSub.Subscribe(data =>
             {
+                _audioService.Play(AudioService.AudioResources.Hitted, AudioService.SoundType.SFX);
                 _model.Life.Value -= 1;
                 _playerController.SetPlayerInvulnerable();
                 _uiController.LifeUIAction(lifeImg_order--);
-                //Sound Play 
-
             });
         }
     }

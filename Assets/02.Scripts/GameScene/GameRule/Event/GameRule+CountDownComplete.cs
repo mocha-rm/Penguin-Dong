@@ -19,6 +19,7 @@ namespace GameScene.Rule
             _countDownSub = _container.Resolve<ISubscriber<CountDownComplete>>();
             return _countDownSub.Subscribe(data =>
             {
+                _audioService.Play(AudioService.AudioResources.GO, AudioService.SoundType.SFX);
                 _model.GameState.Value = GameState.Playing;
             });
         }

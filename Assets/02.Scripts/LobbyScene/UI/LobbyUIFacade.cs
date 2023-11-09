@@ -47,6 +47,11 @@ namespace LobbyScene.UI
 
             var loader = _container.Resolve<SceneService>();
 
+            var preferences = _container.Resolve<Preferences>();
+
+            preferences.CheckSoundStatus(_soundBtn);
+            preferences.CheckVibrationStatus(_vibrationBtn);
+
             _startBtn.OnClickAsObservable().Subscribe(_ =>
             {
                 _audioService.Play(AudioService.AudioResources.Button, AudioService.SoundType.SFX);

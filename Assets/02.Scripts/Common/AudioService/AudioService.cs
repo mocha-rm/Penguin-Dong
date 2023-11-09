@@ -30,6 +30,7 @@ public class AudioService : IInitializable, IDisposable
         Fire_Impact,
         Fire_Shoot,
         GO,
+        Hitted,
         #endregion
     }
 

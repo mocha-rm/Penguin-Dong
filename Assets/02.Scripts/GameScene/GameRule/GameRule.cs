@@ -27,6 +27,8 @@ namespace GameScene.Rule
         IPublisher<GameOverEvent> _gameOverPub;
         double _reducedTime = 0;
 
+        AudioService _audioService;
+
         //Controller
         PlayerController _playerController;
         ObstacleController _obstacleController;
@@ -50,6 +52,7 @@ namespace GameScene.Rule
             _obstacleController = _container.Resolve<ObstacleController>();
             _uiController = _container.Resolve<InGameUIController>();
             _gameOverPub = _container.Resolve<IPublisher<GameOverEvent>>();
+            _audioService = _container.Resolve<AudioService>();
 
             GameRunning().Forget();
 
@@ -113,6 +116,7 @@ namespace GameScene.Rule
                 }
 
                 _obstacleController.SpawnObstacles(1);
+                //_audioService.Play(AudioService.AudioResources.Fire_Shoot, AudioService.SoundType.SFX);
             }
         }
 

@@ -28,6 +28,7 @@ namespace GameScene.Obstacle
             }
         }
         BLOC _bloc;
+        AudioService _audioService;
 
         Guid _id;
         FacadeModel _model = null;
@@ -59,6 +60,7 @@ namespace GameScene.Obstacle
         public void Init(Guid id, Vector3 pos, float endOfY)
         {
             _bloc = _container.Resolve<BLOC>();
+            _audioService = _container.Resolve<AudioService>();
             _scoreUpPub = _container.Resolve<IPublisher<ScoreUpEvent>>();
 
             if (_model == null)
@@ -69,6 +71,7 @@ namespace GameScene.Obstacle
             _id = id;
             transform.position = pos;
             _rigid.constraints = RigidbodyConstraints2D.None;
+            _collider.enabled = true;
             _endOfY = endOfY;
             _disposables?.Dispose();
             _disposables?.Clear();
@@ -105,6 +108,8 @@ namespace GameScene.Obstacle
         {
             _rigid.constraints = RigidbodyConstraints2D.FreezePositionY;
 
+            _collider.enabled = false;
+
             _ani.Play("Explosion");
 
             if (_aniRoutine != null)
@@ -112,6 +117,7 @@ namespace GameScene.Obstacle
                 StopCoroutine(_aniRoutine);
             }
             _aniRoutine = StartCoroutine(ExplosionAnimRoutine());
+            //_audioService.Play(AudioService.AudioResources.Fire_Impact, AudioService.SoundType.SFX);
         }
 
         private IEnumerator ExplosionAnimRoutine()

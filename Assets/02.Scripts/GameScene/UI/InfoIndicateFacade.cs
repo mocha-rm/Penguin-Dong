@@ -155,6 +155,7 @@ namespace GameScene.UI
             {
                 --_countNumber;
                 _countText.text = _countNumber.ToString();
+                _audioService.Play(AudioService.AudioResources.Count, AudioService.SoundType.SFX);
                 await UniTask.Delay(System.TimeSpan.FromMilliseconds(1000));
             }
 
