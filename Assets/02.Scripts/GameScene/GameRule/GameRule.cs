@@ -95,7 +95,7 @@ namespace GameScene.Rule
             {
                 await UniTask.Delay(TimeSpan.FromMilliseconds((Constants.DefaultTime - _reducedTime) * 1000));
 
-                levelGuage += 0.1f;
+                levelGuage += 0.1f; // Control Level Up Timing Here?
 
                 if(levelGuage >= 1.0f)
                 {
