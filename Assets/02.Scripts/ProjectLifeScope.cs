@@ -16,12 +16,13 @@ public enum SceneName
 {
     LobbyScene,
     GameScene,
+    TestScene,
     None,
 }
 
 public class ProjectLifeScope : LifetimeScope
 {
-    readonly SceneName StartScene = SceneName.LobbyScene;
+    readonly SceneName StartScene = SceneName.TestScene;
     #region SingleScope
 
 
@@ -34,7 +35,6 @@ public class ProjectLifeScope : LifetimeScope
         {
             _instance = this;
             DontDestroyOnLoad(this.gameObject);
-
         }
         else
         {
