@@ -4,15 +4,7 @@ using UnityEngine;
 
 public class ItemFacade : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    //Load 2 random items in list
+    //how to design the list? hmm
+    //abstract class or scriptable objects
 }

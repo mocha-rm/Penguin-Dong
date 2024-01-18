@@ -4,15 +4,11 @@ using UnityEngine;
 
 public class RoguelikeController : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    //communicate with upper class like model
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    //Roguelike System with VContainer..
+
+    //controller for send information about item using moments
+    //update there status in realtime
+    //and clear it if game is done   
 }
