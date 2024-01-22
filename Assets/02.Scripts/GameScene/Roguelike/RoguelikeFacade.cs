@@ -8,6 +8,8 @@ using VContainer;
 using VContainer.Unity;
 using MessagePipe;
 using Unity.Collections;
+using GameScene.Message;
+using Utility;
 
 namespace TestScene
 {
@@ -16,59 +18,167 @@ namespace TestScene
         //set container here
         [SerializeField] List<Item> _items;
 
-        //TestButton
+        Item _pickedItem = null;
+
+        //RefreshBtn
+        Button _refreshBtn;
 
         //Item1
-        
+        Button _item1Btn;
+        TextMeshProUGUI _item1Name;
+        Image _item1Img;
+        TextMeshProUGUI _item1Desc;
+
         //Item2
+        Button _item2Btn;
+        TextMeshProUGUI _item2Name;
+        Image _item2Img;
+        TextMeshProUGUI _item2Desc;
+
+        //Movement
+        RectTransform _rect;
+        int targetPosY = 0;
+        float smoothSpeed = 5f;
+
+        FacadeModel _model;
+
+        //IPublisher<RoguelikePayEvent> _roguePayPub; //action for press item (buy)
 
 
-
-
-        private FacadeModel _model;
-
-        
 
 
         public void RegistBehavior(IContainerBuilder builder)
         {
-            _items = new List<Item>();
+            _rect = GetComponent<RectTransform>();
             //UI Elements Register Here...
+
+            /*_refreshBtn = gameObject.GetHierachyPath<Button>(Hierachy.RefreshButton);
+
+            _item1Btn = gameObject.GetHierachyPath<Button>(Hierachy.Item1Btn);
+            _item1Name = gameObject.GetHierachyPath<TextMeshProUGUI>(Hierachy.Item1Name);
+            _item1Img = gameObject.GetHierachyPath<Image>(Hierachy.Item1Icon);
+            _item1Desc = gameObject.GetHierachyPath<TextMeshProUGUI>(Hierachy.Item1Desc);
+
+            _item2Btn = gameObject.GetHierachyPath<Button>(Hierachy.Item2Btn);
+            _item2Name = gameObject.GetHierachyPath<TextMeshProUGUI>(Hierachy.Item2Name);
+            _item2Img = gameObject.GetHierachyPath<Image>(Hierachy.Item2Icon);
+            _item2Desc = gameObject.GetHierachyPath<TextMeshProUGUI>(Hierachy.Item2Desc);*/
         }
 
         public override void Initialize()
         {
-            if(_model == null)
+            //_roguePayPub = _container.Resolve<IPublisher<RoguelikePayEvent>>();
+
+            if (_model == null)
             {
                 _model = CreateModel();
             }
 
-            SetItems();
+            //SetItems();
         }
 
         public override void Dispose()
         {
-            foreach(var item in _items)
+            foreach (var item in _items)
             {
                 item.Dispose();
             }
-            
+
             _model?.Dispose();
             _model = null;
         }
 
 
-        private void Clicked()
+        #region Public
+        public void SetOriginPosition()
         {
 
         }
 
-        //Load 2 random items in list
-        private void SetItems() //Set UI Elements on editor first
+        public void OpenAction()
         {
-            //set the values here
+            
         }
 
+
+        public int GetCoinInfo()
+        {
+            return _pickedItem.Cost;
+        }
+
+        public float GetItemValue()
+        {
+            return _pickedItem.Value;
+        }
+        #endregion
+
+
+        #region Private
+        private IEnumerator Movement()
+        {
+            while (_rect.position.y < targetPosY)
+            {
+                yield return null;
+            }
+        }
+
+        private void SetItems()
+        {
+            var items = GetRandom();
+
+
+        }
+
+        private (Item, Item) GetRandom()
+        {
+            var itemList = _items;
+
+            int index = 0;
+
+            Item[] items = new Item[2];
+
+            while (index < 2)
+            {
+                int rand = Random.Range(0, _items.Count);
+
+                Item temp = itemList[rand];
+
+                items[index] = temp;
+
+                itemList.Remove(temp);
+
+                index++;
+            }
+
+            return (items[0], items[1]);
+        }
+        #endregion
+
+
+
+
+        public static class Constants
+        {
+            public static readonly float originPosY = -2340f;
+        }
+
+        public static class Hierachy
+        {
+            public static readonly string Item1Btn;
+            public static readonly string Item1Name = "";
+            public static readonly string Item1Icon = "";
+            public static readonly string Item1Desc = "";
+            public static readonly string Item1Coin = "";
+
+
+            public static readonly string Item2Btn;
+            public static readonly string Item2Name = "";
+            public static readonly string Item2Icon = "";
+            public static readonly string Item2Desc = "";
+            public static readonly string Item2Coin = "";
+
+            public static readonly string RefreshButton = "";
+        }
 
 
         private static FacadeModel CreateModel()

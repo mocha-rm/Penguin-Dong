@@ -13,9 +13,4 @@ public class DirectHP : Item
     {
         throw new System.NotImplementedException();
     }
-
-    public override void Excute()
-    {
-        throw new System.NotImplementedException();
-    }
 }

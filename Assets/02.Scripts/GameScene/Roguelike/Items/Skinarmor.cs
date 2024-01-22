@@ -7,33 +7,21 @@ using Utility;
 
 public class Skinarmor : Item
 {
-    [SerializeField] Sprite _sprite;
-    private float _lessAmount = 0f;
-
-
-
     protected override void Init()
     {
-        Sprite = _sprite;
         Name = "Skin Upgrade";
+        Value = 0.1f;
         Cost = 300;
-        Desc = $"{_lessAmount} % Reduce damage";
-        Disposable = true;
+        Desc = $"{Value*100f} % Reduce damage";
+        Disposable = false;
     }
 
     public override void Dispose()
     {
         Sprite = null;
         Name = string.Empty;
+        Value = 0f;
         Cost = 0;
         Desc = string.Empty;
-        Disposable = false;
-
-        CustomLog.Log($"{this.name} Disposed");
-    }
-
-    public override void Excute()
-    {
-        
     }
 }

@@ -4,11 +4,12 @@ using UnityEngine;
 
 public abstract class Item : MonoBehaviour
 {
-    protected Sprite Sprite;
-    protected string Name;
-    protected int Cost;
-    protected string Desc;
-    protected bool Disposable;
+    public Sprite Sprite;
+    public string Name;
+    public float Value;
+    public int Cost;
+    public string Desc;
+    public bool Disposable; //is it justonetime? or not 
 
 
     private void Start()
@@ -20,7 +21,5 @@ public abstract class Item : MonoBehaviour
 
     protected abstract void Init();
 
-
     public abstract void Dispose();
-    public abstract void Excute();
 }

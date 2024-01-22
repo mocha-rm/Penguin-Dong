@@ -21,12 +21,12 @@ namespace TestScene
 
         private void RegisterController(IContainerBuilder builder)
         {
-
+            builder.RegisterEntryPoint<RoguelikeController>(Lifetime.Singleton).AsSelf();
         }
 
         private void RegisterFacade(IContainerBuilder builder)
         {
-        
+            builder.RegisterByHierarchy<RoguelikeFacade>(null, Hierarchy.RogueFacade);
         }
 
         private void RegisterMessage(IContainerBuilder builder)
@@ -37,7 +37,7 @@ namespace TestScene
 
         public static class Hierarchy
         {
-        
+            public static readonly string RogueFacade = "Canvas/RoguelikePanel/RoguelikeFacade";
         }
     }
 }

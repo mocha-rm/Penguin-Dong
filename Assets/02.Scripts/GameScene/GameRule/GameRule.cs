@@ -32,6 +32,7 @@ namespace GameScene.Rule
         //Controller
         PlayerController _playerController;
         ObstacleController _obstacleController;
+        RoguelikeController _roguelikeController;
         InGameUIController _uiController;
 
         //Sub
@@ -50,6 +51,7 @@ namespace GameScene.Rule
 
             _playerController = _container.Resolve<PlayerController>();
             _obstacleController = _container.Resolve<ObstacleController>();
+            _roguelikeController = _container.Resolve<RoguelikeController>();
             _uiController = _container.Resolve<InGameUIController>();
             _gameOverPub = _container.Resolve<IPublisher<GameOverEvent>>();
             _audioService = _container.Resolve<AudioService>();
@@ -81,6 +83,8 @@ namespace GameScene.Rule
             SubscribeSceneLoadEvent().AddTo(bag);
 
             SubscribeScoreUpEvent().AddTo(bag);
+
+            SubscribeRoguelikePayEvent().AddTo(bag);
             _disposable = bag.Build();
         }
 
@@ -91,7 +95,7 @@ namespace GameScene.Rule
 
             await UniTask.WaitUntil(() => _model.GameState.Value == GameState.Playing);
 
-            while (true)
+            while (_model.GameState.Value == GameState.Playing)
             {
                 await UniTask.Delay(TimeSpan.FromMilliseconds((Constants.DefaultTime - _reducedTime) * 1000));
 
@@ -102,10 +106,12 @@ namespace GameScene.Rule
                     _model.Level.Value += 1;
                     levelGuage -= 1.0f;
 
-                    if(_reducedTime < 0.8f)
+                    if (_reducedTime < 0.8f)
                     {
                         _reducedTime += 0.2f;
                     }
+
+                    OpenRoguelike();
                 }
 
                 _uiController.LevelUIAction(levelGuage, _model.Level.Value);
@@ -128,6 +134,15 @@ namespace GameScene.Rule
             _model?.Dispose();
             _model = null;
         }
+
+
+        private void OpenRoguelike()
+        {
+            _model.GameState.Value = GameState.Waiting;
+            _roguelikeController.ActiveRoguelike();
+            //Level Up Particle and sound?
+        }
+
 
 
         private GameModel CreateModel()

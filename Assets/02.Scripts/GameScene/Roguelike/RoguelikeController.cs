@@ -39,12 +39,28 @@ public class RoguelikeController : IInitializable, IDisposable
 
     public void Dispose()
     {
-        throw new NotImplementedException();
+        
     }
 
 
-    public void Buy()
+    public void ActiveRoguelike()
     {
-        
+        //Open Action
+    }
+
+    public void NonactiveRoguelike()
+    {
+        //Close Action
+    }
+
+
+    public int DisburseCoin()
+    {
+        return _rogueFacade.GetCoinInfo();
+    }
+
+    public float ApplyItemValue()
+    {
+        return _rogueFacade.GetItemValue();
     }
 }
