@@ -11,6 +11,7 @@ using Unity.Collections;
 using GameScene.Message;
 using Utility;
 
+
 namespace TestScene
 {
     public class RoguelikeFacade : BaseFacade, IRegistMonobehavior
@@ -37,8 +38,9 @@ namespace TestScene
 
         //Movement
         RectTransform _rect;
-        int targetPosY = 0;
         float smoothSpeed = 5f;
+        Coroutine _moveRoutine = null;
+        
 
         FacadeModel _model;
 
@@ -52,7 +54,7 @@ namespace TestScene
             _rect = GetComponent<RectTransform>();
             //UI Elements Register Here...
 
-            /*_refreshBtn = gameObject.GetHierachyPath<Button>(Hierachy.RefreshButton);
+            _refreshBtn = gameObject.GetHierachyPath<Button>(Hierachy.RefreshButton);
 
             _item1Btn = gameObject.GetHierachyPath<Button>(Hierachy.Item1Btn);
             _item1Name = gameObject.GetHierachyPath<TextMeshProUGUI>(Hierachy.Item1Name);
@@ -62,7 +64,7 @@ namespace TestScene
             _item2Btn = gameObject.GetHierachyPath<Button>(Hierachy.Item2Btn);
             _item2Name = gameObject.GetHierachyPath<TextMeshProUGUI>(Hierachy.Item2Name);
             _item2Img = gameObject.GetHierachyPath<Image>(Hierachy.Item2Icon);
-            _item2Desc = gameObject.GetHierachyPath<TextMeshProUGUI>(Hierachy.Item2Desc);*/
+            _item2Desc = gameObject.GetHierachyPath<TextMeshProUGUI>(Hierachy.Item2Desc);
         }
 
         public override void Initialize()
@@ -74,7 +76,8 @@ namespace TestScene
                 _model = CreateModel();
             }
 
-            //SetItems();
+            SetOriginPosition();
+            SetItems();
         }
 
         public override void Dispose()
@@ -92,12 +95,18 @@ namespace TestScene
         #region Public
         public void SetOriginPosition()
         {
-
+            _rect.offsetMin = new Vector2(_rect.offsetMin.x, -Screen.height);
+            _rect.offsetMax = new Vector2(_rect.offsetMax.x, -Screen.height);
         }
 
         public void OpenAction()
         {
-            
+            if(_moveRoutine != null)
+            {
+                StopCoroutine(_moveRoutine);
+            }
+
+            _moveRoutine = StartCoroutine(Movement());
         }
 
 
@@ -116,10 +125,23 @@ namespace TestScene
         #region Private
         private IEnumerator Movement()
         {
-            while (_rect.position.y < targetPosY)
+            Vector2 targetBottomPos = new Vector2(_rect.offsetMin.x, 0f);
+            Vector2 targetTopPos = new Vector2(_rect.offsetMax.x, 0f);
+
+
+            while(_rect.offsetMin.y <= 0f)
             {
+                Vector2 targetMinOffset = Vector2.Lerp(_rect.offsetMin, targetBottomPos, smoothSpeed * Time.deltaTime);
+                Vector2 targetMaxOffset = Vector2.Lerp(_rect.offsetMax, targetTopPos, smoothSpeed * Time.deltaTime);
+
+                _rect.offsetMin = targetMinOffset;
+                _rect.offsetMax = targetMaxOffset;
+
                 yield return null;
             }
+
+            _rect.offsetMin = targetBottomPos;
+            _rect.offsetMax = targetTopPos;
         }
 
         private void SetItems()
@@ -157,10 +179,6 @@ namespace TestScene
 
 
 
-        public static class Constants
-        {
-            public static readonly float originPosY = -2340f;
-        }
 
         public static class Hierachy
         {

@@ -1,18 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
-public class Exp : MonoBehaviour
+
+public class Exp : Item
 {
-    // Start is called before the first frame update
-    void Start()
+    protected override void Init()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        Name = "Exp";
+        Value = 1.2f;
+        Cost = 350;
+        Desc = $"Get x{Value} xp more";
+        Disposable = false;
     }
 }

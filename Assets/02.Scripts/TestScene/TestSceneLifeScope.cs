@@ -37,7 +37,7 @@ namespace TestScene
 
         public static class Hierarchy
         {
-            public static readonly string RogueFacade = "Canvas/RoguelikePanel/RoguelikeFacade";
+            public static readonly string RogueFacade = "Canvas/RoguelikeFacade";
         }
     }
 }

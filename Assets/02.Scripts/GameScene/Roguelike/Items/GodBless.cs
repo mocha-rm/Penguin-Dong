@@ -1,18 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
-public class GodBless : MonoBehaviour
+public class GodBless : Item
 {
-    // Start is called before the first frame update
-    void Start()
+    protected override void Init()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        Name = "God Bless";
+        Value = 3000f; //3Seconds
+        Cost = 800;
+        Desc = $"";
+        Disposable = true;
     }
 }

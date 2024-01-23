@@ -46,11 +46,7 @@ public class RoguelikeController : IInitializable, IDisposable
     public void ActiveRoguelike()
     {
         //Open Action
-    }
-
-    public void NonactiveRoguelike()
-    {
-        //Close Action
+        _rogueFacade.OpenAction();
     }
 
 

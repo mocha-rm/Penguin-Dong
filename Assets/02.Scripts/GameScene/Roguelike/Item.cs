@@ -1,6 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using Utility;
 
 public abstract class Item : MonoBehaviour
 {
@@ -18,8 +17,17 @@ public abstract class Item : MonoBehaviour
     }
 
 
-
     protected abstract void Init();
 
-    public abstract void Dispose();
+    public void Dispose()
+    {
+        Sprite = null;
+        Name = string.Empty;
+        Value = 0f;
+        Cost = 0;
+        Desc = string.Empty;
+        Disposable = false;
+
+        CustomLog.Log("Item disposed");
+    }
 }
