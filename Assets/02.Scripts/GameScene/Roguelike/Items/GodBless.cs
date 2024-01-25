@@ -1,7 +1,7 @@
 
 public class GodBless : Item
 {
-    protected override void Init()
+    public override void Init()
     {
         Name = "God Bless";
         Value = 3000f; //3Seconds

@@ -2,7 +2,7 @@
 
 public class SkinUpgrade : Item
 {
-    protected override void Init()
+    public override void Init()
     {
         Name = "Skin Upgrade";
         Value = 0.1f;

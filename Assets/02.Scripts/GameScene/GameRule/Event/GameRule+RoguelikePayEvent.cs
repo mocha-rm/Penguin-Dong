@@ -20,7 +20,14 @@ namespace GameScene.Rule
             _roguePaySub = _container.Resolve<ISubscriber<RoguelikePayEvent>>();
             return _roguePaySub.Subscribe(_ =>
             {
-                _model.Coin.Value -= _roguelikeController.DisburseCoin();
+                if(_roguelikeController.GetRefreshStatus() == true)
+                {
+                    _roguelikeController.SetRefreshStatus();
+                }
+                else
+                {
+                    _model.Coin.Value -= _roguelikeController.DisburseCoin();
+                }
             });
         }
     }

@@ -2,7 +2,7 @@
 
 public class Exp : Item
 {
-    protected override void Init()
+    public override void Init()
     {
         Name = "Exp";
         Value = 1.2f;

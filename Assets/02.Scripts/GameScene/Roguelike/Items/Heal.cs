@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Heal : Item
 {
-    protected override void Init()
+    public override void Init()
     {
         
     }

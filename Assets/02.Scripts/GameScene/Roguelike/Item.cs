@@ -1,5 +1,7 @@
 using UnityEngine;
 using Utility;
+using UniRx;
+
 
 public abstract class Item : MonoBehaviour
 {
@@ -11,13 +13,8 @@ public abstract class Item : MonoBehaviour
     public bool Disposable; //is it justonetime? or not 
 
 
-    private void Start()
-    {
-        Init();
-    }
 
-
-    protected abstract void Init();
+    public abstract void Init();
 
     public void Dispose()
     {

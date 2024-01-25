@@ -1,7 +1,7 @@
 
 public class Freeze : Item
 {
-    protected override void Init()
+    public override void Init()
     {
         Name = "Freeze";
         Value = 5000f; //5seconds
