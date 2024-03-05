@@ -1,18 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class Sheild : MonoBehaviour
+public class Shield : Item
 {
-    // Start is called before the first frame update
-    void Start()
+    public override void Init()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        Name = "Shield";
+        Value = 3.0f;
+        Cost = 650;
+        Desc = $"Protect Damage 3 times";
+        Disposable = true;
     }
 }

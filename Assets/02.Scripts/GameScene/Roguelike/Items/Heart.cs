@@ -1,18 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class Heart : MonoBehaviour
+public class Heart : Item
 {
-    // Start is called before the first frame update
-    void Start()
+    public override void Init()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        Name = "Heart";
+        Value = 15.0f;
+        Cost = 450;
+        Desc = $"Total HP +{(int)Value}";
+        Disposable = false;
     }
 }

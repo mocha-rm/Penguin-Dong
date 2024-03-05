@@ -10,7 +10,7 @@ public abstract class Item : MonoBehaviour
     public float Value;
     public int Cost;
     public string Desc;
-    public bool Disposable; //is it justonetime? or not 
+    public bool Disposable; //일회용 : true, 누적템 : false
 
 
 
