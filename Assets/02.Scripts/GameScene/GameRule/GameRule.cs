@@ -21,6 +21,7 @@ namespace GameScene.Rule
         public IGameModel Model { get { return _model; } }
 
         GameModel _model;
+        float levelGuage = 0f;
 
         [Inject] IObjectResolver _container;
 
@@ -85,23 +86,30 @@ namespace GameScene.Rule
             SubscribeScoreUpEvent().AddTo(bag);
 
             SubscribeRoguelikePayEvent().AddTo(bag);
+
+            SubscribeRoguelikeRefreshEvent().AddTo(bag);
+
             _disposable = bag.Build();
         }
 
         private async UniTaskVoid GameRunning()
         {
             _model.Level.Value = Constants.DefaultLevel;
-            float levelGuage = 0f;
-
+            
             await UniTask.WaitUntil(() => _model.GameState.Value == GameState.Playing);
 
+            CoreTask(levelGuage).Forget();
+        }
+
+        private async UniTaskVoid CoreTask(float levelGuage)
+        {
             while (_model.GameState.Value == GameState.Playing)
             {
                 await UniTask.Delay(TimeSpan.FromMilliseconds((Constants.DefaultTime - _reducedTime) * 1000));
 
                 levelGuage += 0.1f; // Control Level Up Timing Here?
 
-                if(levelGuage >= 1.0f)
+                if (levelGuage >= 1.0f)
                 {
                     _model.Level.Value += 1;
                     levelGuage -= 1.0f;
@@ -115,8 +123,8 @@ namespace GameScene.Rule
                 }
 
                 _uiController.LevelUIAction(levelGuage, _model.Level.Value);
-                
-                if (_model.GameState.Value == GameState.GameOver)
+
+                if (_model.GameState.Value == GameState.GameOver || _model.GameState.Value == GameState.Waiting)
                 {
                     break;
                 }
@@ -139,7 +147,7 @@ namespace GameScene.Rule
         private void OpenRoguelike()
         {
             _model.GameState.Value = GameState.Waiting;
-            _roguelikeController.ActiveRoguelike();
+            _roguelikeController.ActivateRoguelike();
             //Level Up Particle and sound?
         }
 
@@ -154,6 +162,7 @@ namespace GameScene.Rule
                 Coin = new ReactiveProperty<int>(0),
                 Level = new ReactiveProperty<int>(Constants.DefaultLevel),
                 GameState = new ReactiveProperty<GameState>(GameState.Waiting),
+                //
             };
         }
 

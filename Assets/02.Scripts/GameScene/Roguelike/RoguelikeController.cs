@@ -5,6 +5,7 @@ using UnityEngine;
 using VContainer;
 using VContainer.Unity;
 using UniRx;
+using GameScene;
 
 using System;
 
@@ -37,6 +38,8 @@ public class RoguelikeController : IInitializable, IDisposable
         }
 
         RefreshCost = 100;
+
+
     }
 
     public void Dispose()
@@ -45,16 +48,23 @@ public class RoguelikeController : IInitializable, IDisposable
     }
 
 
-    public void ActiveRoguelike()
+    public void ActivateRoguelike()
     {
         //Open Action
         _rogueFacade.OpenAction();
+    }
+
+    public void DeactivateRoguelike()
+    {
+        //Close Action
+        _rogueFacade.CloseAction();
     }
 
     public void Refresh()
     {
         RefreshCost *= 2;
         _rogueFacade.SetItems();
+        _rogueFacade.SetRefreshCostValue(RefreshCost);
     }
 
     public bool GetRefreshStatus()
@@ -68,12 +78,12 @@ public class RoguelikeController : IInitializable, IDisposable
     }
 
 
-    public int DisburseCoin()
+    public int GetItemCost()
     {
         return _rogueFacade.GetCoinInfo();
     }
 
-    public float ApplyItemValue()
+    public float GetItemValue()
     {
         return _rogueFacade.GetItemValue();
     }

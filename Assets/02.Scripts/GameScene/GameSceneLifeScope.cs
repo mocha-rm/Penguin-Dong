@@ -65,6 +65,7 @@ namespace GameScene
             builder.RegisterEntryPoint<PlayerController>(Lifetime.Singleton).AsSelf();
             builder.RegisterEntryPoint<ObstacleController>(Lifetime.Singleton).AsSelf();
             builder.RegisterEntryPoint<InGameUIController>(Lifetime.Singleton).AsSelf();
+            builder.RegisterEntryPoint<RoguelikeController>(Lifetime.Singleton).AsSelf();
         }
 
         private void RegisterFacade(IContainerBuilder builder)
@@ -74,6 +75,7 @@ namespace GameScene
             builder.RegisterByHierarchy<EnvironmentFacade>(null, Hierarchy.EnvironmentFacade);
             builder.RegisterByHierarchy<InfoIndicateFacade>(null, Hierarchy.InfoIndicateFacade);
             builder.RegisterByHierarchy<InteractionFacade>(null, Hierarchy.InteractionFacade);
+            builder.RegisterByHierarchy<RoguelikeFacade>(null, Hierarchy.RoguelikeFacade);
         }
 
         private void RegisterMessage(IContainerBuilder builder)
@@ -86,6 +88,8 @@ namespace GameScene
             builder.RegisterMessageBroker<SceneLoadEvent>(option);
             builder.RegisterMessageBroker<ObstacleCrashEvent>(option);
             builder.RegisterMessageBroker<ScoreUpEvent>(option);
+            builder.RegisterMessageBroker<RoguelikePayEvent>(option);
+            builder.RegisterMessageBroker<RoguelikeRefreshEvent>(option);
         }
 
 
@@ -95,9 +99,11 @@ namespace GameScene
             
             public static readonly string EnvironmentFacade = "EnvironmentFacade";
 
+
             #region UI
             public static readonly string InfoIndicateFacade = "UI/InfoIndicate";
             public static readonly string InteractionFacade = "UI/Interaction";
+            public static readonly string RoguelikeFacade = "UI/RoguelikeFacade";
             #endregion
         }
     }

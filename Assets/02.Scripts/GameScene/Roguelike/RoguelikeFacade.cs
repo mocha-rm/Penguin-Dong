@@ -12,7 +12,7 @@ using GameScene.Message;
 using Utility;
 
 
-namespace TestScene
+namespace GameScene
 {
     public class RoguelikeFacade : BaseFacade, IRegistMonobehavior
     {
@@ -20,13 +20,15 @@ namespace TestScene
 
         //set container here
         [SerializeField] List<Item> _items;
+        Item _pickedItem;
 
-        Item _pickedItem = null;
 
         //RefreshBtn
-        Button _refreshBtn; //again Cost is will be increase when it use 
+        Button _refreshBtn;
+        TextMeshProUGUI _refreshCostText;
 
         //Item1
+        Item _item1;
         Button _item1Btn;
         TextMeshProUGUI _item1Name;
         Image _item1Img;
@@ -34,6 +36,7 @@ namespace TestScene
         TextMeshProUGUI _item1Cost;
 
         //Item2
+        Item _item2;
         Button _item2Btn;
         TextMeshProUGUI _item2Name;
         Image _item2Img;
@@ -50,8 +53,9 @@ namespace TestScene
 
         CompositeDisposable _disposable;
 
-        //IPublisher<RoguelikePayEvent> _roguePayPub; //action for press item (buy)
+        IPublisher<RoguelikePayEvent> _roguePayPub; //action for press item (buy)
 
+        IPublisher<RoguelikeRefreshEvent> _rogueRefreshPub; //action for refresh item
 
 
 
@@ -60,6 +64,7 @@ namespace TestScene
             _rect = GetComponent<RectTransform>();
             
             _refreshBtn = gameObject.GetHierachyPath<Button>(Hierachy.RefreshButton);
+            _refreshCostText = gameObject.GetHierachyPath<TextMeshProUGUI>(Hierachy.RefreshCostText);
 
             _item1Btn = gameObject.GetHierachyPath<Button>(Hierachy.Item1Btn);
             _item1Name = gameObject.GetHierachyPath<TextMeshProUGUI>(Hierachy.Item1Name);
@@ -77,7 +82,10 @@ namespace TestScene
         public override void Initialize()
         {
             _disposable = new CompositeDisposable();
-            //_roguePayPub = _container.Resolve<IPublisher<RoguelikePayEvent>>();
+            _roguePayPub = _container.Resolve<IPublisher<RoguelikePayEvent>>();
+            _rogueRefreshPub = _container.Resolve<IPublisher<RoguelikeRefreshEvent>>();
+
+
             if (_model == null)
             {
                 _model = CreateModel();
@@ -89,25 +97,36 @@ namespace TestScene
 
             SetItems();
 
-            Invoke(nameof(OpenAction), 3.0f);//Only TestScene
 
             _item1Btn.OnClickAsObservable().Subscribe(_ =>
             {
-
-                //call Buy Event
+                _pickedItem = _item1;
+                _roguePayPub.Publish(new RoguelikePayEvent()
+                {
+                    
+                });
                 CustomLog.Log("Item1 Buy");
             }).AddTo(_disposable);
 
             _item2Btn.OnClickAsObservable().Subscribe(_ =>
             {
-                //call Buy Event
+                _pickedItem = _item2;
+                _roguePayPub.Publish(new RoguelikePayEvent()
+                {
+
+                });
                 CustomLog.Log("Item2 Buy");
             }).AddTo(_disposable);
 
             _refreshBtn.OnClickAsObservable().Subscribe(_ =>
             {
-                //call Refresh Event
                 _model._isRefresh.Value = true;
+
+                _rogueRefreshPub.Publish(new RoguelikeRefreshEvent()
+                {
+
+                });
+
                 CustomLog.Log("Refresh");
             }).AddTo(_disposable);
         }
@@ -132,6 +151,10 @@ namespace TestScene
         {
             _rect.offsetMin = new Vector2(_rect.offsetMin.x, -Screen.height);
             _rect.offsetMax = new Vector2(_rect.offsetMax.x, -Screen.height);
+
+            _item1Btn.enabled = false;
+            _item2Btn.enabled = false;
+            _refreshBtn.enabled = false;
         }
 
         public void OpenAction()
@@ -144,15 +167,22 @@ namespace TestScene
             _moveRoutine = StartCoroutine(Movement());
         }
 
+        public void CloseAction()
+        {
+            SetOriginPosition();
+        }
+
         public void SetItems()
         {
             var items = GetRandom();
 
+            _item1 = items.Item1;
             _item1Img.sprite = items.Item1.Sprite;
             _item1Name.text = items.Item1.Name;
             _item1Desc.text = items.Item1.Desc;
             _item1Cost.text = items.Item1.Cost.ToString();
 
+            _item2 = items.Item2;
             _item2Img.sprite = items.Item2.Sprite;
             _item2Name.text = items.Item2.Name;
             _item2Desc.text = items.Item2.Desc;
@@ -167,6 +197,11 @@ namespace TestScene
         public float GetItemValue()
         {
             return _pickedItem.Value;
+        }
+
+        public void SetRefreshCostValue(int cost)
+        {
+            _refreshCostText.text = $"Again / {cost} Coin";
         }
         #endregion
 
@@ -188,6 +223,9 @@ namespace TestScene
 
                 yield return null;
             }
+            _item1Btn.enabled = true;
+            _item2Btn.enabled = true;
+            _refreshBtn.enabled = true;
 
             _rect.offsetMin = targetBottomPos;
             _rect.offsetMax = targetTopPos;
@@ -196,21 +234,30 @@ namespace TestScene
 
         private (Item, Item) GetRandom()
         {
-            var itemList = _items;
+            var copyItemList = _items;
 
             int index = 0;
 
+            int prevRand = -1;
+
             Item[] items = new Item[2];
+
 
             while (index < 2)
             {
                 int rand = Random.Range(0, _items.Count);
 
-                Item temp = itemList[rand];
+                if(prevRand.Equals(rand))
+                {
+                    continue;
+                }
+
+                prevRand = rand;
+
+                Item temp = copyItemList[rand];
 
                 items[index] = temp;
 
-                itemList.Remove(temp);
 
                 index++;
             }
@@ -247,6 +294,7 @@ namespace TestScene
             public static readonly string Item2Cost = "Item2/Coin/Cost";
 
             public static readonly string RefreshButton = "Refresh";
+            public static readonly string RefreshCostText = "Refresh/Cost";
         }
 
 

@@ -20,14 +20,10 @@ namespace GameScene.Rule
             _roguePaySub = _container.Resolve<ISubscriber<RoguelikePayEvent>>();
             return _roguePaySub.Subscribe(_ =>
             {
-                if(_roguelikeController.GetRefreshStatus() == true)
-                {
-                    _roguelikeController.SetRefreshStatus();
-                }
-                else
-                {
-                    _model.Coin.Value -= _roguelikeController.DisburseCoin();
-                }
+                _model.GameState.Value = GameState.Playing;
+                _model.Coin.Value -= _roguelikeController.GetItemCost();
+                _roguelikeController.DeactivateRoguelike();
+                CoreTask(levelGuage).Forget();
             });
         }
     }
@@ -37,7 +33,7 @@ namespace GameScene.Message
 {
     class RoguelikePayEvent
     {
-
+        
     }
 }
 

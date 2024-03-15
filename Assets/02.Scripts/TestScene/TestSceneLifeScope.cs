@@ -1,8 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using GameScene;
 using VContainer.Unity;
 using VContainer;
+using MessagePipe;
 
 
 
@@ -31,7 +33,10 @@ namespace TestScene
 
         private void RegisterMessage(IContainerBuilder builder)
         {
+            var option = builder.RegisterMessagePipe();
 
+            builder.RegisterMessageBroker<GameScene.Message.RoguelikePayEvent>(option);
+            builder.RegisterMessageBroker<GameScene.Message.RoguelikeRefreshEvent>(option);
         }
 
 

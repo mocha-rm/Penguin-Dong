@@ -22,7 +22,7 @@ public enum SceneName
 
 public class ProjectLifeScope : LifetimeScope
 {
-    readonly SceneName StartScene = SceneName.TestScene;
+    readonly SceneName StartScene = SceneName.LobbyScene;
     #region SingleScope
 
 

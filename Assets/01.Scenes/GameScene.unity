@@ -3263,7 +3263,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1718363284266306738, guid: 407cabcf415db7540973b48943c0a93c, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -2220
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1718363284266306738, guid: 407cabcf415db7540973b48943c0a93c, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -3280,6 +3280,26 @@ PrefabInstance:
     - target: {fileID: 1718363284266306739, guid: 407cabcf415db7540973b48943c0a93c, type: 3}
       propertyPath: m_Name
       value: RoguelikeFacade
+      objectReference: {fileID: 0}
+    - target: {fileID: 1718363284759564992, guid: 407cabcf415db7540973b48943c0a93c, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1718363284759565006, guid: 407cabcf415db7540973b48943c0a93c, type: 3}
+      propertyPath: m_Interactable
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1718363285027913146, guid: 407cabcf415db7540973b48943c0a93c, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1718363285027913147, guid: 407cabcf415db7540973b48943c0a93c, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1718363285138587930, guid: 407cabcf415db7540973b48943c0a93c, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 407cabcf415db7540973b48943c0a93c, type: 3}
