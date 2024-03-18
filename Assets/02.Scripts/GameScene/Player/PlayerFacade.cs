@@ -159,6 +159,11 @@ namespace GameScene.Player
             _model._isInvul.Value = false;
         }
 
+        public void InvulStatus_Roguelike(bool isActivate)
+        {
+            _model._isInvul.Value = isActivate;
+        }
+
 
 
 

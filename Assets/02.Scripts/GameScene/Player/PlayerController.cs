@@ -58,6 +58,11 @@ namespace GameScene.Player
             _player.IsInvulnerable();
         }
 
+        public void SetPlayerInvulnerable(bool isActivate)
+        {
+            _player.InvulStatus_Roguelike(isActivate);
+        }
+
         public bool IsPlayerInvul()
         {
             return _player.Model.Isinvul.Value;

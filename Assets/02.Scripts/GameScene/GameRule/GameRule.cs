@@ -107,7 +107,7 @@ namespace GameScene.Rule
             {
                 await UniTask.Delay(TimeSpan.FromMilliseconds((Constants.DefaultTime - _reducedTime) * 1000));
 
-                levelGuage += 0.1f; // Control Level Up Timing Here?
+                levelGuage += (Constants.DefaultLevelAmount / _model.LevelProperty.Value);
 
                 if (levelGuage >= 1.0f)
                 {
@@ -116,7 +116,7 @@ namespace GameScene.Rule
 
                     if (_reducedTime < 0.8f)
                     {
-                        _reducedTime += 0.2f;
+                        _reducedTime += 0.1f;
                     }
 
                     OpenRoguelike();
@@ -130,7 +130,7 @@ namespace GameScene.Rule
                 }
 
                 _obstacleController.SpawnObstacles(1);
-                //_audioService.Play(AudioService.AudioResources.Fire_Shoot, AudioService.SoundType.SFX);
+                _audioService.Play(AudioService.AudioResources.Fire_Shoot, AudioService.SoundType.SFX);
             }
         }
 
@@ -148,7 +148,8 @@ namespace GameScene.Rule
         {
             _model.GameState.Value = GameState.Waiting;
             _roguelikeController.ActivateRoguelike();
-            //Level Up Particle and sound?
+            _playerController.SetPlayerInvulnerable(true);
+             //Level Up Particle and sound?
         }
 
 
@@ -174,6 +175,7 @@ namespace GameScene.Rule
             public static int DefaultLevel = 1;
 
             public static double DefaultTime = 1.0;
+            public static float DefaultLevelAmount = 0.1f; 
         }
     }
 }

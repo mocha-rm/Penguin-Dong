@@ -20,10 +20,14 @@ namespace GameScene.Rule
             _roguePaySub = _container.Resolve<ISubscriber<RoguelikePayEvent>>();
             return _roguePaySub.Subscribe(_ =>
             {
-                _model.GameState.Value = GameState.Playing;
-                _model.Coin.Value -= _roguelikeController.GetItemCost();
-                _roguelikeController.DeactivateRoguelike();
-                CoreTask(levelGuage).Forget();
+                if(_model.GameState.Value != GameState.GameOver)
+                {
+                    _model.GameState.Value = GameState.Playing;
+                    _model.Coin.Value -= _roguelikeController.GetItemCost();
+                    _roguelikeController.DeactivateRoguelike();
+                    _playerController.SetPlayerInvulnerable(false);
+                    CoreTask(levelGuage).Forget();
+                }
             });
         }
     }
