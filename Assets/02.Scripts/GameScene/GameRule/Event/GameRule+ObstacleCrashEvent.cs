@@ -13,7 +13,7 @@ namespace GameScene.Rule
     {
         ISubscriber<ObstacleCrashEvent> _colObstacleSub;
 
-        int lifeImg_order = 2;
+        float _damage = 20.0f;
 
         IDisposable SubscribeObstacleCrashEvent()
         {
@@ -21,9 +21,9 @@ namespace GameScene.Rule
             return _colObstacleSub.Subscribe(data =>
             {
                 _audioService.Play(AudioService.AudioResources.Hitted, AudioService.SoundType.SFX);
-                _model.Life.Value -= 1;
+                _model.Life.Value -= _damage - _model.Abilities["SkinUpgrade"];
                 _playerController.SetPlayerInvulnerable();
-                _uiController.LifeUIAction(lifeImg_order--);
+                _uiController.LifeUIAction(_damage - _model.Abilities["SkinUpgrade"], _model.Abilities["Heart"]);
             });
         }
     }

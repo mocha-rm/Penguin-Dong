@@ -18,6 +18,9 @@ namespace GameScene.Rule
 
     public partial class GameRule : IInitializable, IDisposable
     {
+        //TestCoin
+        public int _testCoin = 99999;
+
         public IGameModel Model { get { return _model; } }
 
         GameModel _model;
@@ -57,10 +60,12 @@ namespace GameScene.Rule
             _gameOverPub = _container.Resolve<IPublisher<GameOverEvent>>();
             _audioService = _container.Resolve<AudioService>();
 
+            _model.SetAbilities();
+
             GameRunning().Forget();
 
             _model.Life.AsObservable()
-                .Where(_ => _model.Life.Value <= 0)
+                .Where(_ => _model.Life.Value <= 0f)
                 .Subscribe(_ =>
                 {
                     _gameOverPub.Publish(new GameOverEvent()
@@ -152,6 +157,13 @@ namespace GameScene.Rule
              //Level Up Particle and sound?
         }
 
+        private void SetAbilityDic()
+        {
+            Utility.CustomLog.Log(_roguelikeController.GetItemName());
+            Utility.CustomLog.Log(_roguelikeController.GetItemValue());
+            _model.Abilities[_roguelikeController.GetItemName()] = _roguelikeController.GetItemValue();
+        }
+
 
 
         private GameModel CreateModel()
@@ -159,11 +171,10 @@ namespace GameScene.Rule
             return new GameModel()
             {
                 Score = new ReactiveProperty<int>(0),
-                Life = new ReactiveProperty<int>(Constants.DefaultLifeCount),
+                Life = new ReactiveProperty<float>(Constants.DefaultHP),
                 Coin = new ReactiveProperty<int>(0),
                 Level = new ReactiveProperty<int>(Constants.DefaultLevel),
                 GameState = new ReactiveProperty<GameState>(GameState.Waiting),
-                //
             };
         }
 
@@ -171,11 +182,11 @@ namespace GameScene.Rule
 
         public static class Constants
         {
-            public static int DefaultLifeCount = 3;
+            public static float DefaultHP = 100.0f;
             public static int DefaultLevel = 1;
 
             public static double DefaultTime = 1.0;
-            public static float DefaultLevelAmount = 0.1f; 
+            public static float DefaultLevelAmount = 0.1f;
         }
     }
 }

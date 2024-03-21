@@ -22,8 +22,12 @@ namespace GameScene.Rule
             {
                 if(_model.GameState.Value != GameState.GameOver)
                 {
+                    //Apply
                     _model.GameState.Value = GameState.Playing;
                     _model.Coin.Value -= _roguelikeController.GetItemCost();
+                    SetAbilityDic();
+
+                    //Restart Game
                     _roguelikeController.DeactivateRoguelike();
                     _playerController.SetPlayerInvulnerable(false);
                     CoreTask(levelGuage).Forget();
@@ -32,6 +36,7 @@ namespace GameScene.Rule
         }
     }
 }
+
 
 namespace GameScene.Message
 {

@@ -87,4 +87,10 @@ public class RoguelikeController : IInitializable, IDisposable
     {
         return _rogueFacade.GetItemValue();
     }
+
+    public string GetItemName()
+    {
+        return _rogueFacade.GetItemName();
+    }
+
 }

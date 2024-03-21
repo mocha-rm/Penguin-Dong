@@ -101,9 +101,12 @@ namespace GameScene
             _item1Btn.OnClickAsObservable().Subscribe(_ =>
             {
                 _pickedItem = _item1;
+
+                _pickedItem.Action();
+                
                 _roguePayPub.Publish(new RoguelikePayEvent()
                 {
-                    
+                   
                 });
                 CustomLog.Log("Item1 Buy");
             }).AddTo(_disposable);
@@ -111,10 +114,14 @@ namespace GameScene
             _item2Btn.OnClickAsObservable().Subscribe(_ =>
             {
                 _pickedItem = _item2;
+
+                _pickedItem.Action();
+
                 _roguePayPub.Publish(new RoguelikePayEvent()
                 {
-
-                });
+                    
+                });;
+               
                 CustomLog.Log("Item2 Buy");
             }).AddTo(_disposable);
 
@@ -197,6 +204,11 @@ namespace GameScene
         public float GetItemValue()
         {
             return _pickedItem.Value;
+        }
+
+        public string GetItemName()
+        {
+            return _pickedItem.Name;
         }
 
         public void SetRefreshCostValue(int cost)

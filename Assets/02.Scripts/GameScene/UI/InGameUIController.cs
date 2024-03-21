@@ -40,9 +40,9 @@ namespace GameScene.UI
             _infoIndicateFacade.IndicateLevelStatus(guage, level);
         }
 
-        public void LifeUIAction(int order)
+        public void LifeUIAction(float damage, float ability)
         {
-            _infoIndicateFacade.IndicateLifeStatus(order);
+            _infoIndicateFacade.IndicateLifeStatus(damage, ability);
         }
 
         #region Interaction Part

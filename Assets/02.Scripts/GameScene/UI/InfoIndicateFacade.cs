@@ -26,11 +26,14 @@ namespace GameScene.UI
         //Register
         TextMeshProUGUI _scoreText;
         TextMeshProUGUI _countText;
-        Transform _lifeTr;
+        
         Transform _levelTr;
 
         //Use
-        Image[] _lifeImages;
+        float _curHP;
+        Image _hpBar;
+        TextMeshProUGUI _hpText;
+
         Image _levelProceedImage;
         TextMeshProUGUI _currentLevelText;
 
@@ -49,7 +52,10 @@ namespace GameScene.UI
         {
             _scoreText = gameObject.GetHierachyPath<TextMeshProUGUI>(Hierarchy.ScoreText);
             _countText = gameObject.GetHierachyPath<TextMeshProUGUI>(Hierarchy.CountText);
-            _lifeTr = gameObject.GetHierachyPath<Transform>(Hierarchy.LifeTr);
+
+            _hpBar = gameObject.GetHierachyPath<Image>(Hierarchy.HPBar);
+            _hpText = gameObject.GetHierachyPath<TextMeshProUGUI>(Hierarchy.HPText);
+
             _levelTr = gameObject.GetHierachyPath<Transform>(Hierarchy.LevelTr);
         }
 
@@ -57,15 +63,13 @@ namespace GameScene.UI
         public override void Initialize()
         {
             _audioService = _container.Resolve<AudioService>();
+            
 
             _scoreText.text = "0";
 
-            _lifeImages = new Image[Constants.lifeCount];
-
-            for (int i = 0; i < _lifeTr.childCount; i++)
-            {
-                _lifeImages[i] = _lifeTr.GetChild(i).GetComponent<Image>();
-            }
+            _hpBar.fillAmount = 1.0f;
+            _curHP = Constants.DefaultHP;
+            _hpText.text = $"{_curHP} / {Constants.DefaultHP}";
 
             _levelProceedImage = _levelTr.GetChild((int)Constants.LevelChild.ProceedImage).GetComponent<Image>();
             _currentLevelText = _levelTr.GetChild((int)Constants.LevelChild.LevelText).GetComponent<TextMeshProUGUI>();
@@ -91,13 +95,14 @@ namespace GameScene.UI
             _prevScore = score;
         }
 
-        public void IndicateLifeStatus(int order)
+        public void IndicateLifeStatus(float damage, float ability)
         {
-            if (order >= 0)
-            {
-                //maybe can use Animation
-                _lifeImages[order].gameObject.SetActive(false);
-            }
+            _curHP -= damage;
+
+            //hpbar action
+            _hpBar.fillAmount -= damage * 0.01f;
+            //hptext action
+            _hpText.text = $"{_curHP} / {Constants.DefaultHP + ability}";
         }
 
         public void IndicateLevelStatus(float guage, int level)
@@ -169,7 +174,7 @@ namespace GameScene.UI
 
             await UniTask.Delay(System.TimeSpan.FromMilliseconds(1000));
 
-            _audioService.Play(AudioService.AudioResources.GameScene_1, AudioService.SoundType.BGM);
+            //_audioService.Play(AudioService.AudioResources.GameScene_1, AudioService.SoundType.BGM);
 
             _countText.gameObject.SetActive(false);
         }
@@ -181,9 +186,9 @@ namespace GameScene.UI
 
         public static class Constants
         {
-            public static readonly int countdown = 3;
+            public static readonly float DefaultHP = 100.0f;
 
-            public static readonly int lifeCount = 3;
+            public static readonly int countdown = 3;
 
             public enum LevelChild
             {
@@ -200,7 +205,10 @@ namespace GameScene.UI
         {
             public static readonly string ScoreText = "Text_Score";
             public static readonly string CountText = "CountDown";
-            public static readonly string LifeTr = "Life";
+
+            public static readonly string HPBar = "Life/HP_Background/HP_RealBar";
+            public static readonly string HPText = "Life/HP_Background/HP_Text";
+            
             public static readonly string LevelTr = "Level";
         }
     }

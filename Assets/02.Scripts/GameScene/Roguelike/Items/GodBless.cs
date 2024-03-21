@@ -1,6 +1,11 @@
 
 public class GodBless : Item
 {
+    public override void Action()
+    {
+        throw new System.NotImplementedException();
+    }
+
     public override void Init()
     {
         Name = "God Bless";
