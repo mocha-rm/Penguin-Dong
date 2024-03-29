@@ -24,7 +24,7 @@ namespace GameScene.Rule
                 {
                     //Apply
                     _model.GameState.Value = GameState.Playing;
-                    _model.Coin.Value -= _roguelikeController.GetItemCost();
+                    _model.Coin.Value -= _roguelikeController.GetItem().Cost;
                     SetAbilityDic();
 
                     //Restart Game

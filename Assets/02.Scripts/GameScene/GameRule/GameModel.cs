@@ -8,7 +8,6 @@ public enum AbilityNames
 {
     Exp,
     Freeze,
-    GodBless,
     Heal,
     Heart,
     Lotto,
@@ -36,6 +35,7 @@ namespace GameScene.Rule
         public IReadOnlyReactiveProperty<float> LifeProperty { get => Life; }
         public IReadOnlyReactiveProperty<int> LevelProperty { get => Level; }
         public IReadOnlyReactiveProperty<GameState> GameStateProperty { get => GameState; }
+        public Dictionary<string, float> AbilitiesProperty { get => Abilities; }
 
         public void Dispose()
         {
@@ -44,15 +44,15 @@ namespace GameScene.Rule
             Life?.Dispose();
             Level?.Dispose();
             GameState?.Dispose();
+            Abilities?.Clear();
         }
 
         public void SetAbilities()
         {
             Abilities = new Dictionary<string, float>()
             {
-                {AbilityNames.Exp.ToString(), 0f },
+                {AbilityNames.Exp.ToString(), 1.0f },
                 {AbilityNames.Freeze.ToString(), 0f },
-                {AbilityNames.GodBless.ToString(), 0f },
                 {AbilityNames.Heal.ToString(), 0f },
                 {AbilityNames.Heart.ToString(), 0f },
                 {AbilityNames.Lotto.ToString(), 0f },
@@ -71,6 +71,7 @@ namespace GameScene.Rule
         public IReadOnlyReactiveProperty<float> LifeProperty { get; }
         public IReadOnlyReactiveProperty<int> LevelProperty { get; }
         public IReadOnlyReactiveProperty<GameState> GameStateProperty { get; }
+        public Dictionary<string, float> AbilitiesProperty { get; }
     }
 }
 

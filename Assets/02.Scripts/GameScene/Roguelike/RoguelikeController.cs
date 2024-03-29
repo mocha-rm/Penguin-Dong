@@ -52,6 +52,7 @@ public class RoguelikeController : IInitializable, IDisposable
     {
         //Open Action
         _rogueFacade.OpenAction();
+        _rogueFacade.SetItems();
     }
 
     public void DeactivateRoguelike()
@@ -77,20 +78,8 @@ public class RoguelikeController : IInitializable, IDisposable
         _rogueFacade.Model.ReturnRefreshStatus();
     }
 
-
-    public int GetItemCost()
+    public Item GetItem()
     {
-        return _rogueFacade.GetCoinInfo();
+        return _rogueFacade.GetPickedItem();
     }
-
-    public float GetItemValue()
-    {
-        return _rogueFacade.GetItemValue();
-    }
-
-    public string GetItemName()
-    {
-        return _rogueFacade.GetItemName();
-    }
-
 }

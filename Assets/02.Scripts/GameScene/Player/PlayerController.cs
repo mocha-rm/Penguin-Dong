@@ -67,5 +67,22 @@ namespace GameScene.Player
         {
             return _player.Model.Isinvul.Value;
         }
+
+        //Shield Section
+
+        public bool IsPlayerHasShield()
+        {
+            return _player.Model.IsShieldHave.Value;
+        }
+
+        public void ShieldActivate(int count)
+        {
+            _player.ShieldActivate(count);
+        }
+
+        public void ShieldDamage()
+        {
+            _player.ShieldDamage();
+        }
     }
 }

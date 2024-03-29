@@ -5,7 +5,7 @@ public class SkinUpgrade : Item
     public override void Action()
     {
         Value *= Disposable ? 1 : Upgrade;
-        Upgrade++;
+        Upgrade++; 
     }
 
     public override void Init()

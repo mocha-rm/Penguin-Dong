@@ -71,6 +71,7 @@ namespace GameScene.Obstacle
             _id = id;
             transform.position = pos;
             _rigid.constraints = RigidbodyConstraints2D.None;
+            _rigid.gravityScale = GetFeeze();
             _collider.enabled = true;
             _endOfY = endOfY;
             _disposables?.Dispose();
@@ -128,6 +129,19 @@ namespace GameScene.Obstacle
 
             _model._isAlilve.Value = false;
         }
+
+        private float GetFeeze()
+        {
+            if (_bloc.GameModel.AbilitiesProperty[AbilityNames.Freeze.ToString()] != 0)
+            {
+                return 0.3f;
+            }
+
+            return 1.0f;
+        }
+
+
+
 
         FacadeModel CreateModel()
         {

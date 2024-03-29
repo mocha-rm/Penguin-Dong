@@ -30,6 +30,7 @@ namespace GameScene.UI
         Transform _levelTr;
 
         //Use
+        float _totalHP;
         float _curHP;
         Image _hpBar;
         TextMeshProUGUI _hpText;
@@ -99,10 +100,25 @@ namespace GameScene.UI
         {
             _curHP -= damage;
 
-            //hpbar action
-            _hpBar.fillAmount -= damage * 0.01f;
             //hptext action
-            _hpText.text = $"{_curHP} / {Constants.DefaultHP + ability}";
+            _totalHP = Constants.DefaultHP + ability;
+            _hpText.text = $"{_curHP} / {_totalHP}";
+
+            //hpbar action
+            //_hpBar.fillAmount -= damage * 0.01f;
+            _hpBar.fillAmount = _curHP / _totalHP;
+        }
+
+        public void IndicateLifeStatus(float heal)
+        {
+            if (_curHP < _totalHP)
+            {
+                _curHP += _totalHP * heal;
+                _hpText.text = $"{_curHP} / {_totalHP}";
+
+                //_hpBar.fillAmount += heal * 0.01f;
+                _hpBar.fillAmount = _curHP / _totalHP;
+            }
         }
 
         public void IndicateLevelStatus(float guage, int level)

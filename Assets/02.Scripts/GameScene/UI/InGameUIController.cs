@@ -45,6 +45,11 @@ namespace GameScene.UI
             _infoIndicateFacade.IndicateLifeStatus(damage, ability);
         }
 
+        public void HealUIAction(float heal)
+        {
+            _infoIndicateFacade.IndicateLifeStatus(heal);
+        }
+
         #region Interaction Part
         public void GameOverUIAction(bool isRecord, int score, int level, int coin)
         {

@@ -31,6 +31,7 @@ public class AudioService : IInitializable, IDisposable
         Fire_Shoot,
         GO,
         Hitted,
+        BulletMetal1, //Shield Hitted Sound
         #endregion
     }
 

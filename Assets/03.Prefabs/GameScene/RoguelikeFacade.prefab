@@ -619,7 +619,6 @@ MonoBehaviour:
   _items:
   - {fileID: 182551069128288353, guid: f8cadf3c7abc2994fbe53e08e034a692, type: 3}
   - {fileID: 1871957187644600016, guid: 8ea67ac48be52264b97b9e0ebed73925, type: 3}
-  - {fileID: 7505490916142859301, guid: c45a5963ade32d941ad66047b29619e9, type: 3}
   - {fileID: 57251377014787685, guid: 88656b150501a9143ad9cb19aeaf5268, type: 3}
   - {fileID: 352557247618554463, guid: 369c91e291d29480ca9cfafbfe8800a8, type: 3}
   - {fileID: 417137848720285837, guid: 1a6f6dd326ef44519b93130e2f439c79, type: 3}

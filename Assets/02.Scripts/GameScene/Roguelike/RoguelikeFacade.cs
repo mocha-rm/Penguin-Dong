@@ -196,20 +196,25 @@ namespace GameScene
             _item2Cost.text = items.Item2.Cost.ToString();
         }
 
-        public int GetCoinInfo()
+        public Item GetPickedItem()
         {
-            return _pickedItem.Cost;
+            return _pickedItem;
         }
 
-        public float GetItemValue()
-        {
-            return _pickedItem.Value;
-        }
+        //public int GetCoinInfo()
+        //{
+        //    return _pickedItem.Cost;
+        //}
 
-        public string GetItemName()
-        {
-            return _pickedItem.Name;
-        }
+        //public float GetItemValue()
+        //{
+        //    return _pickedItem.Value;
+        //}
+
+        //public string GetItemName()
+        //{
+        //    return _pickedItem.Name;
+        //}
 
         public void SetRefreshCostValue(int cost)
         {

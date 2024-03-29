@@ -19,7 +19,7 @@ namespace GameScene.Rule
     public partial class GameRule : IInitializable, IDisposable
     {
         //TestCoin
-        public int _testCoin = 99999;
+        public int _testCoin = 10000;
 
         public IGameModel Model { get { return _model; } }
 
@@ -112,7 +112,7 @@ namespace GameScene.Rule
             {
                 await UniTask.Delay(TimeSpan.FromMilliseconds((Constants.DefaultTime - _reducedTime) * 1000));
 
-                levelGuage += (Constants.DefaultLevelAmount / _model.LevelProperty.Value);
+                levelGuage += (Constants.DefaultLevelAmount/ _model.LevelProperty.Value) * _model.Abilities[AbilityNames.Exp.ToString()];
 
                 if (levelGuage >= 1.0f)
                 {
@@ -148,6 +148,7 @@ namespace GameScene.Rule
             _model = null;
         }
 
+        #region Roguelike
 
         private void OpenRoguelike()
         {
@@ -159,11 +160,52 @@ namespace GameScene.Rule
 
         private void SetAbilityDic()
         {
-            Utility.CustomLog.Log(_roguelikeController.GetItemName());
-            Utility.CustomLog.Log(_roguelikeController.GetItemValue());
-            _model.Abilities[_roguelikeController.GetItemName()] = _roguelikeController.GetItemValue();
+            Utility.CustomLog.Log(_roguelikeController.GetItem().Name);
+            Utility.CustomLog.Log(_roguelikeController.GetItem().Value);
+            _model.Abilities[_roguelikeController.GetItem().Name] = _roguelikeController.GetItem().Value;
+
+            //만약에 벨류가 일회용이면 벨류 만큼 있다가 다시 0으로 초기화 하기
+            if (_roguelikeController.GetItem().Disposable)
+            {
+                DisposableAbilityActions(_roguelikeController.GetItem().Name);
+                ResetAbilityValue(_roguelikeController.GetItem()).Forget();
+            } 
+        }
+         
+        private async UniTaskVoid ResetAbilityValue(Item item)
+        {
+            await UniTask.Delay(TimeSpan.FromMilliseconds(item.Value));
+            _model.Abilities[item.Name] = 0;
+            Utility.CustomLog.Log($"{item.Name} : {_model.Abilities[item.Name]}");
         }
 
+        private void DisposableAbilityActions(string name)
+        {
+            switch (name)
+            {
+                case "Lotto":
+                    if(UnityEngine.Random.Range(0f, 1f) < 0.5f) //누적코인 가지고 도박
+                    {
+                        _testCoin *= 2;
+                    }
+                    else
+                    {
+                        _testCoin /= 2;
+                    }
+
+                    Utility.CustomLog.Log(_testCoin);
+                    break;
+
+                case "Heal":
+                    _uiController.HealUIAction(_roguelikeController.GetItem().Value);
+                    break;
+
+                case "Shield":
+                    _playerController.ShieldActivate((int)_roguelikeController.GetItem().Value);
+                    break;
+            }
+        }
+        #endregion
 
 
         private GameModel CreateModel()

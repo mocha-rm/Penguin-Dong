@@ -20,10 +20,19 @@ namespace GameScene.Rule
             _colObstacleSub = _container.Resolve<ISubscriber<ObstacleCrashEvent>>();
             return _colObstacleSub.Subscribe(data =>
             {
-                _audioService.Play(AudioService.AudioResources.Hitted, AudioService.SoundType.SFX);
-                _model.Life.Value -= _damage - _model.Abilities["SkinUpgrade"];
-                _playerController.SetPlayerInvulnerable();
-                _uiController.LifeUIAction(_damage - _model.Abilities["SkinUpgrade"], _model.Abilities["Heart"]);
+                if (_playerController.IsPlayerHasShield())
+                {
+                    _playerController.ShieldDamage();
+                    _audioService.Play(AudioService.AudioResources.BulletMetal1, AudioService.SoundType.SFX);
+                    
+                }
+                else
+                {
+                    _audioService.Play(AudioService.AudioResources.Hitted, AudioService.SoundType.SFX);
+                    _model.Life.Value -= _damage - _model.Abilities[AbilityNames.SkinUpgrade.ToString()];
+                    _uiController.LifeUIAction(_damage - _model.Abilities[AbilityNames.SkinUpgrade.ToString()], _model.Abilities[AbilityNames.Heart.ToString()]);
+                    _playerController.SetPlayerInvulnerable();
+                }
             });
         }
     }

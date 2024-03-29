@@ -121,7 +121,7 @@ MonoBehaviour:
   m_MinSize: {x: 400, y: 200}
   m_MaxSize: {x: 32384, y: 16192}
   vertical: 0
-  controlID: 102
+  controlID: 16
 --- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -146,7 +146,7 @@ MonoBehaviour:
   m_MinSize: {x: 100, y: 200}
   m_MaxSize: {x: 8096, y: 16192}
   vertical: 1
-  controlID: 103
+  controlID: 17
 --- !u!114 &7
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -357,9 +357,9 @@ MonoBehaviour:
       floating: 0
       collapsed: 0
       displayed: 1
-      snapOffset: {x: 0, y: -174}
+      snapOffset: {x: 0, y: 19}
       snapOffsetDelta: {x: 0, y: 0}
-      snapCorner: 2
+      snapCorner: 0
       id: unity-transform-toolbar
       index: 0
       layout: 2
@@ -560,9 +560,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 1506.0693, y: 309.4976, z: -2.4640136}
+    m_Target: {x: -17.489002, y: 3.0671258, z: -0.052959606}
     speed: 2
-    m_Value: {x: 1506.0693, y: 309.4976, z: -2.4640136}
+    m_Value: {x: -17.489002, y: 3.0671258, z: -0.052959606}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -613,9 +613,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
-    m_Target: 359.53726
+    m_Target: 15.928609
     speed: 2
-    m_Value: 359.53726
+    m_Value: 15.928609
   m_Ortho:
     m_Target: 1
     speed: 2
@@ -830,21 +830,21 @@ MonoBehaviour:
       scrollPos: {x: 0, y: 0}
       m_SelectedIDs: 
       m_LastClickedID: 0
-      m_ExpandedIDs: c66cffffea6dffff4873ffff56acffff84e5ffff06edffff26fbfffff4ed0000
+      m_ExpandedIDs: 58dbffffb4efffff26fbffff68b60000
       m_RenameOverlay:
         m_UserAcceptedRename: 0
-        m_Name: Btn_Direction
-        m_OriginalName: Btn_Direction
+        m_Name: 
+        m_OriginalName: 
         m_EditFieldRect:
           serializedVersion: 2
           x: 0
           y: 0
           width: 0
           height: 0
-        m_UserData: 47420
+        m_UserData: 0
         m_IsWaitingForDelay: 0
         m_IsRenaming: 0
-        m_OriginalEventType: 0
+        m_OriginalEventType: 11
         m_IsRenamingFilename: 0
         m_ClientGUIView: {fileID: 9}
       m_SearchString: 
@@ -895,7 +895,7 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/01.Scenes
+    - Assets/02.Scripts/GameScene/Roguelike/Items
     m_Globs: []
     m_OriginalText: 
   m_ViewMode: 0
@@ -909,7 +909,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 1e390000
     m_LastClickedID: 14622
-    m_ExpandedIDs: 000000009a7600009c7600009e760000a0760000a2760000a4760000a6760000a8760000aa760000ac760000ae760000b0760000b2760000b4760000b6760000b8760000ba760000bc760000be760000c0760000c2760000c4760000c6760000c8760000ca760000cc760000ce760000d0760000d2760000d4760000d6760000
+    m_ExpandedIDs: 000000008a7600008c7600008e76000090760000927600009476000096760000987600009a7600009c7600009e760000a0760000a2760000a4760000a6760000a8760000aa760000ac760000ae760000b0760000b2760000b4760000b6760000b8760000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -937,18 +937,18 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: ffffffff000000009a7600009c7600009e760000a0760000a2760000a4760000a6760000aa760000ac760000b6760000b8760000ba760000be760000c0760000c2760000c4760000c6760000c8760000ca760000cc760000d0760000d2760000d67600001eaa0000
+    m_ExpandedIDs: ffffffff000000008a7600008c7600008e76000090760000927600009476000096760000987600009a7600009c7600009e760000a0760000a2760000a4760000a6760000a8760000aa760000ac760000ae760000b0760000b2760000b4760000b6760000b8760000707700007677000080770000a07700005e820000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
-      m_Name: GameModel
-      m_OriginalName: GameModel
+      m_Name: ObstacleFacade
+      m_OriginalName: ObstacleFacade
       m_EditFieldRect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 0
         height: 0
-      m_UserData: 12030
+      m_UserData: 44516
       m_IsWaitingForDelay: 0
       m_IsRenaming: 0
       m_OriginalEventType: 0

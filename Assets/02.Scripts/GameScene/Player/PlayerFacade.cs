@@ -36,6 +36,8 @@ namespace GameScene.Player
 
         //Component (��ǰ)
         PlayerBehaviour _pBehaviour;
+        ShieldBehaviour _shield;
+        //ReactiveProperty<int> _shieldCount;
 
         //Model
         FacadeModel _model;
@@ -51,6 +53,7 @@ namespace GameScene.Player
             try
             {
                 _pBehaviour = transform.GetChild(0).GetComponent<PlayerBehaviour>();
+                _shield = _pBehaviour.transform.GetChild(0).GetComponent<ShieldBehaviour>();
             }
             catch (Exception e)
             {
@@ -71,6 +74,8 @@ namespace GameScene.Player
             }
 
             _pBehaviour.Init(Constants.maxSpeed, Constants.originPos);
+
+            _shield.Init();
 
             _model._isInvul.AsObservable()
                 .Subscribe(_ =>
@@ -104,6 +109,16 @@ namespace GameScene.Player
 
                     });
                 });
+
+            _model._shieldCount.AsObservable().Where(_ => _model._isShieldHave.Value == true).
+                Subscribe(_ =>
+            {
+                if(_model._shieldCount.Value <= 0)
+                {
+                    _shield.ExplosionAction();
+                    _model._isShieldHave.Value = false;
+                }
+            });
         }
 
 
@@ -165,7 +180,21 @@ namespace GameScene.Player
         }
 
 
+        public void ShieldActivate(int count)
+        {
+            _shield.gameObject.SetActive(true);
+            _model._shieldCount.Value = count;
+            _model._isShieldHave.Value = true;
+        }
 
+        public void ShieldDamage()
+        {
+            if(_model._isShieldHave.Value == true)
+            {
+                _model._shieldCount.Value -= 1;
+                _shield.HittedParticleAction();
+            }
+        }
 
 
 
@@ -181,7 +210,9 @@ namespace GameScene.Player
         {
             return new FacadeModel()
             {
+                _shieldCount = new ReactiveProperty<int>(0),
                 _isInvul = new ReactiveProperty<bool>(false),
+                _isShieldHave = new ReactiveProperty<bool>(false)
             };
         }
 
@@ -193,20 +224,32 @@ namespace GameScene.Player
 
         public class FacadeModel : IPlayerModel
         {
+            public ReactiveProperty<int> _shieldCount;
+
             public ReactiveProperty<bool> _isInvul;
+
+            public ReactiveProperty<bool> _isShieldHave;
+
+            public IReadOnlyReactiveProperty<int> ShieldCount { get => _shieldCount; }
 
             public IReadOnlyReactiveProperty<bool> Isinvul { get => _isInvul; }
 
+            public IReadOnlyReactiveProperty<bool> IsShieldHave { get => _isShieldHave; }
+
             public void Dispose()
             {
+                _shieldCount?.Dispose();
                 _isInvul?.Dispose();
+                _isShieldHave?.Dispose();
             }
         }
     }
 
     public interface IPlayerModel
     {
+        public IReadOnlyReactiveProperty<int> ShieldCount { get; }
         public IReadOnlyReactiveProperty<bool> Isinvul { get; }
+        public IReadOnlyReactiveProperty<bool> IsShieldHave { get; }
     }
 }
 
