@@ -121,6 +121,11 @@ namespace GameScene.UI
             }
         }
 
+        public void SetLifeStatus(float setValue)
+        {
+            _hpText.text = setValue.ToString();
+        }
+
         public void IndicateLevelStatus(float guage, int level)
         {
             LevelGaugeUp(guage, level).Forget();

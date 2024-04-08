@@ -152,10 +152,13 @@ namespace GameScene.Rule
 
         private void OpenRoguelike()
         {
-            _model.GameState.Value = GameState.Waiting;
-            _roguelikeController.ActivateRoguelike();
-            _playerController.SetPlayerInvulnerable(true);
-             //Level Up Particle and sound?
+            if (_model.GameState.Value != GameState.GameOver)
+            {
+                _model.GameState.Value = GameState.Waiting;
+                _roguelikeController.ActivateRoguelike();
+                _playerController.SetPlayerInvulnerable(true);
+                 //Level Up Particle and sound?
+            }
         }
 
         private void SetAbilityDic()
@@ -198,6 +201,7 @@ namespace GameScene.Rule
 
                 case "Heal":
                     _uiController.HealUIAction(_roguelikeController.GetItem().Value);
+                    _model.Life.Value += (Constants.DefaultHP + _model.Abilities[AbilityNames.Heart.ToString()]) * 0.1f;
                     break;
 
                 case "Shield":
