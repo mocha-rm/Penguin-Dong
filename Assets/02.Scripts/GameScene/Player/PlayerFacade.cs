@@ -136,7 +136,8 @@ namespace GameScene.Player
 
         public void DirectionControlAction()
         {
-            _pBehaviour.SetDirection();
+            float icyValue = _bloc.GameModel.AbilitiesProperty[AbilityNames.Shoes.ToString()];
+            _pBehaviour.SetDirection(icyValue);
         }
 
         public void IsInvulnerable() //1

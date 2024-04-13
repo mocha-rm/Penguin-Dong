@@ -702,7 +702,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8dc217d79c0741889582d416ebaa14a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _explosion: {fileID: 21300000, guid: 99e36729618df468b8a418b22c04d92d, type: 3}
 --- !u!95 &447576840
 Animator:
   serializedVersion: 5
@@ -3737,34 +3736,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 9181211723151623812}
     m_Modifications:
-    - target: {fileID: 1718363284266306737, guid: 407cabcf415db7540973b48943c0a93c, type: 3}
-      propertyPath: _items.Array.size
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 1718363284266306737, guid: 407cabcf415db7540973b48943c0a93c, type: 3}
-      propertyPath: _items.Array.data[2]
-      value: 
-      objectReference: {fileID: 57251377014787685, guid: 88656b150501a9143ad9cb19aeaf5268, type: 3}
-    - target: {fileID: 1718363284266306737, guid: 407cabcf415db7540973b48943c0a93c, type: 3}
-      propertyPath: _items.Array.data[3]
-      value: 
-      objectReference: {fileID: 352557247618554463, guid: 369c91e291d29480ca9cfafbfe8800a8, type: 3}
-    - target: {fileID: 1718363284266306737, guid: 407cabcf415db7540973b48943c0a93c, type: 3}
-      propertyPath: _items.Array.data[4]
-      value: 
-      objectReference: {fileID: 417137848720285837, guid: 1a6f6dd326ef44519b93130e2f439c79, type: 3}
-    - target: {fileID: 1718363284266306737, guid: 407cabcf415db7540973b48943c0a93c, type: 3}
-      propertyPath: _items.Array.data[5]
-      value: 
-      objectReference: {fileID: 8220572771381015593, guid: 267ed505b2a424a4db01a9d93e92307c, type: 3}
-    - target: {fileID: 1718363284266306737, guid: 407cabcf415db7540973b48943c0a93c, type: 3}
-      propertyPath: _items.Array.data[6]
-      value: 
-      objectReference: {fileID: 8804485402179533995, guid: aa56607706f3643c295e2a42f29cd9e6, type: 3}
-    - target: {fileID: 1718363284266306737, guid: 407cabcf415db7540973b48943c0a93c, type: 3}
-      propertyPath: _items.Array.data[7]
-      value: 
-      objectReference: {fileID: 5145083590733369282, guid: a134367466ac91d4cbf0588ea3e7fb36, type: 3}
     - target: {fileID: 1718363284266306738, guid: 407cabcf415db7540973b48943c0a93c, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -3852,30 +3823,6 @@ PrefabInstance:
     - target: {fileID: 1718363284266306739, guid: 407cabcf415db7540973b48943c0a93c, type: 3}
       propertyPath: m_Name
       value: RoguelikeFacade
-      objectReference: {fileID: 0}
-    - target: {fileID: 1718363284266306739, guid: 407cabcf415db7540973b48943c0a93c, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1718363284759564992, guid: 407cabcf415db7540973b48943c0a93c, type: 3}
-      propertyPath: m_RaycastTarget
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1718363284759565006, guid: 407cabcf415db7540973b48943c0a93c, type: 3}
-      propertyPath: m_Interactable
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1718363285027913146, guid: 407cabcf415db7540973b48943c0a93c, type: 3}
-      propertyPath: m_RaycastTarget
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1718363285027913147, guid: 407cabcf415db7540973b48943c0a93c, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1718363285138587930, guid: 407cabcf415db7540973b48943c0a93c, type: 3}
-      propertyPath: m_RaycastTarget
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 407cabcf415db7540973b48943c0a93c, type: 3}

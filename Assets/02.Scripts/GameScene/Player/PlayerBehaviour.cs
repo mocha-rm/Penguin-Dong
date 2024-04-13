@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 
 using UniRx;
@@ -42,7 +43,7 @@ namespace GameScene.Player
 
             transform.position = pos;
 
-            if (Random.Range(0f, 1f) > 0.5f)
+            if (UnityEngine.Random.Range(0f, 1f) > 0.5f)
             {
                 _speed = maxSpeed;
             }
@@ -79,7 +80,7 @@ namespace GameScene.Player
             transform.position += Vector3.right * Time.deltaTime * _speed;
         }
 
-        public void SetDirection()
+        public void SetDirection(float icyValue)
         {
             var state = _ani.GetCurrentAnimatorStateInfo(0);
 
@@ -90,7 +91,7 @@ namespace GameScene.Player
                     StopCoroutine(_routine);
                 }
 
-                _routine = StartCoroutine(_speed > 0 ? IcyTurnLeft() : IcyTurnRight());
+                _routine = StartCoroutine(_speed > 0 ? IcyTurnLeft(icyValue) : IcyTurnRight(icyValue));
             }
         }
 
@@ -112,14 +113,23 @@ namespace GameScene.Player
             _ani.Play("GameOver");
         }
 
-
-        private IEnumerator IcyTurnLeft()
+        private IEnumerator IcyTurnLeft(float iceValue)
         {
             transform.localScale = new Vector3(-1f, 1f, 1f);
 #if UNITY_EDITOR
-            float controlValue = 0.1f;
+            float controlValue = 0.02f;
+
+            if (iceValue > 0f)
+            {
+                controlValue = (float)Math.Round((0.02f + iceValue), 2);
+            }
 #else
-            float controlValue = 0.7f;
+             float controlValue = 0.62f;
+
+            if (iceValue > 0f)
+            {
+                controlValue = (float)Math.Round((0.62f + iceValue), 2);
+            }
 #endif
 
             while (true)
@@ -135,15 +145,25 @@ namespace GameScene.Player
             yield return null;
         }
 
-        private IEnumerator IcyTurnRight()
+        private IEnumerator IcyTurnRight(float iceValue)
         {
             transform.localScale = Vector3.one;
 #if UNITY_EDITOR
-            float controlValue = 0.1f;
+            float controlValue = 0.02f;
+
+            if (iceValue > 0f)
+            {
+                controlValue = (float)Math.Round((0.02f + iceValue), 2);
+            }
 #else
-            float controlValue = 0.7f;
+            float controlValue = 0.62f;
+
+            if (iceValue > 0f)
+            {
+                controlValue = (float)Math.Round((0.62f + iceValue), 2);
+            }
 #endif
-            
+
             while (true)
             {
                 _speed += controlValue;
