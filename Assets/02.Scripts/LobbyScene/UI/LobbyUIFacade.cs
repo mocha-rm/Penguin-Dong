@@ -13,11 +13,6 @@ namespace LobbyScene.UI
 {
     public class LobbyUIFacade : BaseFacade, IRegistMonobehavior
     {
-        #region Login
-        /*Button _googleLoginBtn;
-        Button _guestLoginBtn;*/
-        #endregion
-
         Button _startBtn;
 
         Button _soundBtn;
@@ -58,6 +53,8 @@ namespace LobbyScene.UI
                 loader.LoadScene(SceneName.GameScene).Forget();
             }).AddTo(_disposables);
 
+            _startBtn.transform.parent.gameObject.SetActive(false);
+
             var pref = _container.Resolve<Preferences>();
 
             _soundBtn.OnClickAsObservable().Subscribe(_ =>
@@ -91,14 +88,13 @@ namespace LobbyScene.UI
         }
 
 
-
         public static class Hierarchy
         {
             public static readonly string GameStartButton = "Background/Start/GameStart";
 
             public static readonly string SoundControlButton = "Background/Preferences/Sound";
             public static readonly string VibrationControlButton = "Background/Preferences/Vibration";
-            public static readonly string RankingLoadButton = "Background/Preferences/RankingLoad";
+            public static readonly string RankingLoadButton = "Background/Preferences/RankingLoad";           
         }
     }
 }

@@ -6,18 +6,52 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UniRx;
 using UnityEngine;
+using UnityEngine.UI;
 using EntityKey = PlayFab.ProfilesModels.EntityKey;
 
 
 
-public class PlayfabManager : MonoBehaviour
+public class LoginService : MonoBehaviour
 {
+    //
+    [SerializeField] GameObject _start;
+
+    [SerializeField] Button _guest;
+    [SerializeField] Button _google;
+
+
+
     static string customId = "";
     static string playfabId = "";
 
     private string entityId;
     private string entityType;
+
+    public bool IsLoginSuccess { get => isLoginSuccess; }
+    private bool isLoginSuccess;
+
+
+
+    private void Awake()
+    {
+        _guest.OnClickAsObservable().Subscribe(_ =>
+        {
+            OnClickGuestLogin();
+        });
+
+        _google.OnClickAsObservable().Subscribe(_ =>
+        {
+            //Google Login
+        });
+
+        //Check First Login And Auto Login System Here
+        if (PlayerPrefs.GetInt("FIRSTLOGIN") == 1)
+        {
+            LoginGuestId();
+        }
+    }
 
 
     public void OnClickGuestLogin() //게스트 로그인 버튼
@@ -39,11 +73,15 @@ public class PlayfabManager : MonoBehaviour
             CreateAccount = true
         }, result =>
         {
+            PlayerPrefs.SetInt("FIRSTLOGIN", 1);
+            PlayerPrefs.SetString("GUESTID", customId);
             OnLoginSuccess(result);
         }, error =>
         {
+            PlayerPrefs.SetInt("FIRSTLOGIN", 0);
             Debug.LogError("Login Fail - Guest");
         });
+
     }
 
 
@@ -59,6 +97,8 @@ public class PlayfabManager : MonoBehaviour
     private void LoginGuestId() //게스트 로그인
     {
         Debug.Log("Guest Login");
+
+        customId = PlayerPrefs.GetString("GUESTID");
 
         PlayFabClientAPI.LoginWithCustomID(new LoginWithCustomIDRequest()
         {
@@ -77,6 +117,9 @@ public class PlayfabManager : MonoBehaviour
     public void OnLoginSuccess(LoginResult result) //로그인 결과
     {
         Debug.Log("Playfab Login Success");
+        _start.SetActive(true);
+        _guest.gameObject.SetActive(false);
+        _google.gameObject.SetActive(false);
 
         playfabId = result.PlayFabId;
         entityId = result.EntityToken.Entity.Id;
