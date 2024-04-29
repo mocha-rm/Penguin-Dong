@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TitleId: 2147D
   DeveloperSecretKey: NECZPDZCDFO7UJCWSECRZPXWSUPNFAEOEPQCFBZYNTAHCZSZ4B
-  ProductionEnvironmentUrl: 
+  ProductionEnvironmentUrl: 'https://2147D.playfabapi.com '
   RequestType: 0
   DisableDeviceInfo: 0
   DisableFocusTimeCollection: 0

@@ -71,6 +71,8 @@ public class ProjectLifeScope : LifetimeScope
         builder.Register<AudioService>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
         builder.Register<Preferences>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
         builder.Register<VibrationService>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
+        builder.Register<LoginService>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
+        builder.Register<DBService>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
     }
 
     private void OnApplicationQuit()

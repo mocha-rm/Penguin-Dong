@@ -1,5 +1,14 @@
+//using GooglePlayGames;
+//using GooglePlayGames.BasicApi;
+//using GooglePlayGames.BasicApi.Events;
+//using GooglePlayGames.BasicApi.Nearby;
+//using GooglePlayGames.BasicApi.SavedGame;
+//using GooglePlayGames.Android;
+//using GooglePlayGames.Editor;
+//using GooglePlayGames.OurUtils;
 using PlayFab;
 using PlayFab.ClientModels;
+using PlayFab.AuthenticationModels;
 using PlayFab.Json;
 using PlayFab.ProfilesModels;
 using System;
@@ -9,22 +18,26 @@ using System.Linq;
 using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
+using VContainer;
+using VContainer.Unity;
 using EntityKey = PlayFab.ProfilesModels.EntityKey;
 
 
 
-public class LoginService : MonoBehaviour
+public class LoginService : IInitializable, IDisposable
 {
-    //
-    [SerializeField] GameObject _start;
+    [Inject] IObjectResolver _container;
 
-    [SerializeField] Button _guest;
-    [SerializeField] Button _google;
+    //GameObject _start;
+
+    //Button _guest;
+    //Button _google; 
 
 
 
     static string customId = "";
     static string playfabId = "";
+    public string PLAYFABID { get => playfabId; } 
 
     private string entityId;
     private string entityType;
@@ -32,27 +45,35 @@ public class LoginService : MonoBehaviour
     public bool IsLoginSuccess { get => isLoginSuccess; }
     private bool isLoginSuccess;
 
+    IDisposable _disposable;
 
 
-    private void Awake()
+
+    public void Initialize()
     {
-        _guest.OnClickAsObservable().Subscribe(_ =>
-        {
-            OnClickGuestLogin();
-        });
+        isLoginSuccess = false;
 
-        _google.OnClickAsObservable().Subscribe(_ =>
-        {
-            //Google Login
-        });
+        //_guest.OnClickAsObservable().Subscribe(_ =>
+        //{
+        //    OnClickGuestLogin();
+        //});
 
-        //Check First Login And Auto Login System Here
-        if (PlayerPrefs.GetInt("FIRSTLOGIN") == 1)
-        {
-            LoginGuestId();
-        }
+        //_google.OnClickAsObservable().Subscribe(_ =>
+        //{
+        //    //Google Login
+        //    //GoogleActivate();
+        //});
     }
 
+    public void Dispose()
+    {
+        _disposable?.Dispose();
+        _disposable = null;
+    }
+
+
+
+    #region GuestLogin
 
     public void OnClickGuestLogin() //게스트 로그인 버튼
     {
@@ -113,13 +134,11 @@ public class LoginService : MonoBehaviour
         });
     }
 
+    #endregion
 
     public void OnLoginSuccess(LoginResult result) //로그인 결과
     {
         Debug.Log("Playfab Login Success");
-        _start.SetActive(true);
-        _guest.gameObject.SetActive(false);
-        _google.gameObject.SetActive(false);
 
         playfabId = result.PlayFabId;
         entityId = result.EntityToken.Entity.Id;
