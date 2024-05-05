@@ -90,6 +90,7 @@ namespace GameScene
             builder.RegisterMessageBroker<ScoreUpEvent>(option);
             builder.RegisterMessageBroker<RoguelikePayEvent>(option);
             builder.RegisterMessageBroker<RoguelikeRefreshEvent>(option);
+            builder.RegisterMessageBroker<RoguelikeSkipEvent>(option);
         }
 
 

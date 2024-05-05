@@ -28,12 +28,6 @@ public class LoginService : IInitializable, IDisposable
 {
     [Inject] IObjectResolver _container;
 
-    //GameObject _start;
-
-    //Button _guest;
-    //Button _google; 
-
-
 
     static string customId = "";
     static string playfabId = "";
@@ -53,16 +47,10 @@ public class LoginService : IInitializable, IDisposable
     {
         isLoginSuccess = false;
 
-        //_guest.OnClickAsObservable().Subscribe(_ =>
-        //{
-        //    OnClickGuestLogin();
-        //});
-
-        //_google.OnClickAsObservable().Subscribe(_ =>
-        //{
-        //    //Google Login
-        //    //GoogleActivate();
-        //});
+        if (PlayerPrefs.GetInt("FIRSTLOGIN") == 1)
+        {
+            LoginGuestId();
+        }
     }
 
     public void Dispose()

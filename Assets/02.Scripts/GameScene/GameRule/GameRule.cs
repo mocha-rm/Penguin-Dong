@@ -94,6 +94,8 @@ namespace GameScene.Rule
 
             SubscribeRoguelikeRefreshEvent().AddTo(bag);
 
+            SubscribeRoguelikeSkipEvent().AddTo(bag);
+
             _disposable = bag.Build();
         }
 

@@ -27,6 +27,9 @@ namespace GameScene
         Button _refreshBtn;
         TextMeshProUGUI _refreshCostText;
 
+        //SkipBtn
+        Button _skipBtn;
+
         //Item1
         Item _item1;
         Button _item1Btn;
@@ -57,6 +60,8 @@ namespace GameScene
 
         IPublisher<RoguelikeRefreshEvent> _rogueRefreshPub; //action for refresh item
 
+        IPublisher<RoguelikeSkipEvent> _rogueSkipPub; //action for skip
+
 
 
         public void RegistBehavior(IContainerBuilder builder)
@@ -65,6 +70,8 @@ namespace GameScene
             
             _refreshBtn = gameObject.GetHierachyPath<Button>(Hierachy.RefreshButton);
             _refreshCostText = gameObject.GetHierachyPath<TextMeshProUGUI>(Hierachy.RefreshCostText);
+
+            _skipBtn = gameObject.GetHierachyPath<Button>(Hierachy.SkipButton);
 
             _item1Btn = gameObject.GetHierachyPath<Button>(Hierachy.Item1Btn);
             _item1Name = gameObject.GetHierachyPath<TextMeshProUGUI>(Hierachy.Item1Name);
@@ -84,6 +91,7 @@ namespace GameScene
             _disposable = new CompositeDisposable();
             _roguePayPub = _container.Resolve<IPublisher<RoguelikePayEvent>>();
             _rogueRefreshPub = _container.Resolve<IPublisher<RoguelikeRefreshEvent>>();
+            _rogueSkipPub = _container.Resolve<IPublisher<RoguelikeSkipEvent>>();
 
 
             if (_model == null)
@@ -136,10 +144,24 @@ namespace GameScene
 
                 CustomLog.Log("Refresh");
             }).AddTo(_disposable);
+
+            _skipBtn.OnClickAsObservable().Subscribe(_ =>
+            {
+                _rogueSkipPub.Publish(new RoguelikeSkipEvent()
+                {
+
+                });
+
+                CustomLog.Log("Skip");
+            }).AddTo(_disposable);
         }
 
         public override void Dispose()
         {
+            _refreshBtn.onClick.RemoveAllListeners();
+            _skipBtn.onClick.RemoveAllListeners();
+            _item1Btn.onClick.RemoveAllListeners();
+            _item2Btn.onClick.RemoveAllListeners();
             _disposable?.Dispose();
             _disposable = null;
 
@@ -162,6 +184,7 @@ namespace GameScene
             _item1Btn.enabled = false;
             _item2Btn.enabled = false;
             _refreshBtn.enabled = false;
+            _skipBtn.enabled = false;
         }
 
         public void OpenAction()
@@ -243,6 +266,7 @@ namespace GameScene
             _item1Btn.enabled = true;
             _item2Btn.enabled = true;
             _refreshBtn.enabled = true;
+            _skipBtn.enabled = true;
 
             _rect.offsetMin = targetBottomPos;
             _rect.offsetMax = targetTopPos;
@@ -312,6 +336,8 @@ namespace GameScene
 
             public static readonly string RefreshButton = "Refresh";
             public static readonly string RefreshCostText = "Refresh/Cost";
+
+            public static readonly string SkipButton = "SkipBtn";
         }
 
 
