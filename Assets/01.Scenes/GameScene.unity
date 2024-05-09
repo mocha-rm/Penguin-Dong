@@ -3824,6 +3824,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: RoguelikeFacade
       objectReference: {fileID: 0}
+    - target: {fileID: 1718363285815793452, guid: 407cabcf415db7540973b48943c0a93c, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1718363285815793452, guid: 407cabcf415db7540973b48943c0a93c, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1718363285815793452, guid: 407cabcf415db7540973b48943c0a93c, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1718363285815793452, guid: 407cabcf415db7540973b48943c0a93c, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 407cabcf415db7540973b48943c0a93c, type: 3}
 --- !u!224 &2003317266 stripped

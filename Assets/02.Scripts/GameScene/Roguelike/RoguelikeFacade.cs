@@ -54,6 +54,8 @@ namespace GameScene
 
         FacadeModel _model;
 
+        OwnItemViewer _ownItemViewer;
+
         CompositeDisposable _disposable;
 
         IPublisher<RoguelikePayEvent> _roguePayPub; //action for press item (buy)
@@ -67,7 +69,9 @@ namespace GameScene
         public void RegistBehavior(IContainerBuilder builder)
         {
             _rect = GetComponent<RectTransform>();
-            
+
+            _ownItemViewer = gameObject.GetHierachyPath<OwnItemViewer>(Hierachy.OwnItemViewer);
+
             _refreshBtn = gameObject.GetHierachyPath<Button>(Hierachy.RefreshButton);
             _refreshCostText = gameObject.GetHierachyPath<TextMeshProUGUI>(Hierachy.RefreshCostText);
 
@@ -105,10 +109,14 @@ namespace GameScene
 
             SetItems();
 
+            _ownItemViewer.Init();
+
 
             _item1Btn.OnClickAsObservable().Subscribe(_ =>
             {
                 _pickedItem = _item1;
+
+                _ownItemViewer.SetImageAndLevel(_pickedItem);
 
                 _pickedItem.Action();
                 
@@ -122,6 +130,8 @@ namespace GameScene
             _item2Btn.OnClickAsObservable().Subscribe(_ =>
             {
                 _pickedItem = _item2;
+
+                _ownItemViewer.SetImageAndLevel(_pickedItem);
 
                 _pickedItem.Action();
 
@@ -321,6 +331,8 @@ namespace GameScene
 
         public static class Hierachy
         {
+            public static readonly string OwnItemViewer = "OwnItems";
+
             public static readonly string Item1Btn = "Item1";
             public static readonly string Item1Name = "Item1/Name";
             public static readonly string Item1Icon = "Item1/Icon";

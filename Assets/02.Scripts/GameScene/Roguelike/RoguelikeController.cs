@@ -37,9 +37,7 @@ public class RoguelikeController : IInitializable, IDisposable
             Debug.Log("RoguelikeController Init Error");
         }
 
-        RefreshCost = 100;
-
-
+        InitializeRefreshCoinValue();
     }
 
     public void Dispose()
@@ -51,6 +49,7 @@ public class RoguelikeController : IInitializable, IDisposable
     public void ActivateRoguelike()
     {
         //Open Action
+        InitializeRefreshCoinValue();
         _rogueFacade.OpenAction();
         _rogueFacade.SetItems();
     }
@@ -81,5 +80,11 @@ public class RoguelikeController : IInitializable, IDisposable
     public Item GetItem()
     {
         return _rogueFacade.GetPickedItem();
+    }
+
+
+    private void InitializeRefreshCoinValue()
+    {
+        RefreshCost = 100;
     }
 }
