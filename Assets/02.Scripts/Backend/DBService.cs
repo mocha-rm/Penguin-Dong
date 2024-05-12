@@ -15,9 +15,12 @@ public class DBService : IInitializable, IDisposable
 {
     [Inject] IObjectResolver _container;
 
-    LoginService _loginService;
-
     IDisposable _disposable;
+
+    //DATA
+    public string NickName { get; private set; }
+    public int TotalCoin { get; private set; }
+    public int BestScore { get; private set; }
 
 
 
@@ -28,6 +31,7 @@ public class DBService : IInitializable, IDisposable
 
     public void Dispose()
     {
+        //게임 종료시 최종 데이터 저장
         _disposable?.Dispose();
         _disposable = null;
     }
@@ -63,25 +67,48 @@ public class DBService : IInitializable, IDisposable
     }
 
 
-    public void GetUserData()
+    public void GetUserData(string playfabID)
     {
-        var request = new GetUserDataRequest() { PlayFabId = _loginService .PLAYFABID};
+        var request = new GetUserDataRequest() { PlayFabId = playfabID};
         PlayFabClientAPI.GetUserData(request, (result) =>
         {
             foreach (var eachData in result.Data)
             {
                 string key = eachData.Key;
 
+                if (key.Contains("NickName"))
+                {
+                    Debug.Log($"NicName : {eachData.Value.Value}");
+                    NickName = eachData.Value.Value;
+                }
+
                 if (key.Contains("TotalCoin"))
                 {
-                    
+                    Debug.Log($"TotalCoin : {eachData.Value.Value}");
+                    string totalCoinString = eachData.Value.Value;
+                    if (int.TryParse(totalCoinString, out int totalCoinValue))
+                    {
+                        TotalCoin = totalCoinValue;
+                    }
+                    else
+                    {
+                        Debug.LogError("Parsing Fail");
+                    }
                 }
 
-                if (key.Contains("BsetScore"))
+                if (key.Contains("BestScore"))
                 {
-
+                    Debug.Log($"BestCoin : {eachData.Value.Value}");
+                    string bestScoreString = eachData.Value.Value;
+                    if (int.TryParse(bestScoreString, out int bestScoreValue))
+                    {
+                        BestScore = bestScoreValue;
+                    }
+                    else
+                    {
+                        Debug.LogError("Parsing Fail");
+                    }
                 }
-
             }
 
         }, DisplayPlayfabError);

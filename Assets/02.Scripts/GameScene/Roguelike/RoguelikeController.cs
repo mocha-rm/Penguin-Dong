@@ -21,7 +21,6 @@ public class RoguelikeController : IInitializable, IDisposable
 
     [Inject] IObjectResolver _container;
 
-    public int RefreshCost { get; private set; }
     RoguelikeFacade _rogueFacade = null;
 
 
@@ -36,20 +35,17 @@ public class RoguelikeController : IInitializable, IDisposable
             Debug.Log(e.Message);
             Debug.Log("RoguelikeController Init Error");
         }
-
-        InitializeRefreshCoinValue();
     }
 
     public void Dispose()
     {
-        RefreshCost = 0;
+        
     }
 
 
     public void ActivateRoguelike()
     {
         //Open Action
-        InitializeRefreshCoinValue();
         _rogueFacade.OpenAction();
         _rogueFacade.SetItems();
     }
@@ -62,9 +58,8 @@ public class RoguelikeController : IInitializable, IDisposable
 
     public void Refresh()
     {
-        RefreshCost *= 2;
         _rogueFacade.SetItems();
-        _rogueFacade.SetRefreshCostValue(RefreshCost);
+        _rogueFacade.SetRefreshCostValue();
     }
 
     public bool GetRefreshStatus()
@@ -77,14 +72,13 @@ public class RoguelikeController : IInitializable, IDisposable
         _rogueFacade.Model.ReturnRefreshStatus();
     }
 
+    public int GetRefreshFee()
+    {
+        return _rogueFacade.refreshFee;
+    }
+
     public Item GetItem()
     {
         return _rogueFacade.GetPickedItem();
-    }
-
-
-    private void InitializeRefreshCoinValue()
-    {
-        RefreshCost = 100;
     }
 }

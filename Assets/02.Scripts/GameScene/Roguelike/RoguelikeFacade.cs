@@ -16,6 +16,10 @@ namespace GameScene
 {
     public class RoguelikeFacade : BaseFacade, IRegistMonobehavior
     {
+        //DB
+        public int Coin { get; private set; }
+
+
         public IRoguelikeModel Model { get { return _model; } }
 
         //set container here
@@ -24,6 +28,7 @@ namespace GameScene
 
 
         //RefreshBtn
+        public int refreshFee { get; private set; }
         Button _refreshBtn;
         TextMeshProUGUI _refreshCostText;
 
@@ -103,6 +108,8 @@ namespace GameScene
                 _model = CreateModel();
             }
 
+            InitializeRefreshFee();
+
             InitItems();
 
             SetOriginPosition();
@@ -116,43 +123,65 @@ namespace GameScene
             {
                 _pickedItem = _item1;
 
-                _ownItemViewer.SetImageAndLevel(_pickedItem);
-
-                _pickedItem.Action();
-                
-                _roguePayPub.Publish(new RoguelikePayEvent()
+                if (Coin >= _pickedItem.Cost)
                 {
+                    _ownItemViewer.SetImageAndLevel(_pickedItem);
+
+                    _pickedItem.Action();
+                
+                    _roguePayPub.Publish(new RoguelikePayEvent()
+                    {
                    
-                });
-                CustomLog.Log("Item1 Buy");
+                    });
+                    CustomLog.Log("Item1 Buy");
+                }
+                else
+                {
+                    CustomLog.Log("Can`t Buy");
+                }
+
             }).AddTo(_disposable);
 
             _item2Btn.OnClickAsObservable().Subscribe(_ =>
             {
                 _pickedItem = _item2;
 
-                _ownItemViewer.SetImageAndLevel(_pickedItem);
-
-                _pickedItem.Action();
-
-                _roguePayPub.Publish(new RoguelikePayEvent()
+                if (Coin >= _pickedItem.Cost)
                 {
+                    _ownItemViewer.SetImageAndLevel(_pickedItem);
+
+                    _pickedItem.Action();
+
+                    _roguePayPub.Publish(new RoguelikePayEvent()
+                    {
                     
-                });;
+                    });;
                
-                CustomLog.Log("Item2 Buy");
+                    CustomLog.Log("Item2 Buy");
+                }
+                else
+                {
+                    CustomLog.Log("Can`t Buy");
+                }
+
             }).AddTo(_disposable);
 
             _refreshBtn.OnClickAsObservable().Subscribe(_ =>
             {
-                _model._isRefresh.Value = true;
-
-                _rogueRefreshPub.Publish(new RoguelikeRefreshEvent()
+                if (Coin >= refreshFee)
                 {
+                    _model._isRefresh.Value = true;
 
-                });
+                    refreshFee *= 2;
 
-                CustomLog.Log("Refresh");
+                    _rogueRefreshPub.Publish(new RoguelikeRefreshEvent()
+                    {
+
+                    });
+
+                    CustomLog.Log("Refresh");
+                }
+
             }).AddTo(_disposable);
 
             _skipBtn.OnClickAsObservable().Subscribe(_ =>
@@ -234,29 +263,17 @@ namespace GameScene
             return _pickedItem;
         }
 
-        //public int GetCoinInfo()
-        //{
-        //    return _pickedItem.Cost;
-        //}
-
-        //public float GetItemValue()
-        //{
-        //    return _pickedItem.Value;
-        //}
-
-        //public string GetItemName()
-        //{
-        //    return _pickedItem.Name;
-        //}
-
-        public void SetRefreshCostValue(int cost)
+        public void SetRefreshCostValue()
         {
-            _refreshCostText.text = $"Again / {cost} Coin";
+            _refreshCostText.text = $"Again / {refreshFee} Coin";
         }
         #endregion
 
 
         #region Private
+        private void InitializeRefreshFee() => refreshFee = 100;
+
+
         private IEnumerator Movement()
         {
             Vector2 targetBottomPos = new Vector2(_rect.offsetMin.x, 0f);

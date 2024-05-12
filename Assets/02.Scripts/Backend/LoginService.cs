@@ -22,12 +22,19 @@ using VContainer;
 using VContainer.Unity;
 using EntityKey = PlayFab.ProfilesModels.EntityKey;
 
+public enum LoginStatus
+{
+    FIRST,
+    USED,
+    NONE
+}
+
 
 
 public class LoginService : IInitializable, IDisposable
 {
     [Inject] IObjectResolver _container;
-
+    DBService _dbService;
 
     static string customId = "";
     static string playfabId = "";
@@ -45,9 +52,11 @@ public class LoginService : IInitializable, IDisposable
 
     public void Initialize()
     {
+        _dbService = _container.Resolve<DBService>();
+
         isLoginSuccess = false;
 
-        if (PlayerPrefs.GetInt("FIRSTLOGIN") == 1)
+        if (PlayerPrefs.GetInt("LOGIN") == (int)LoginStatus.USED)
         {
             LoginGuestId();
         }
@@ -55,6 +64,7 @@ public class LoginService : IInitializable, IDisposable
 
     public void Dispose()
     {
+        PlayerPrefs.SetInt("LOGIN", (int)LoginStatus.USED);
         _disposable?.Dispose();
         _disposable = null;
     }
@@ -82,12 +92,12 @@ public class LoginService : IInitializable, IDisposable
             CreateAccount = true
         }, result =>
         {
-            PlayerPrefs.SetInt("FIRSTLOGIN", 1);
+            PlayerPrefs.SetInt("LOGIN", (int)LoginStatus.FIRST);
             PlayerPrefs.SetString("GUESTID", customId);
             OnLoginSuccess(result);
         }, error =>
         {
-            PlayerPrefs.SetInt("FIRSTLOGIN", 0);
+            PlayerPrefs.SetInt("LOGIN", (int)LoginStatus.NONE);
             Debug.LogError("Login Fail - Guest");
         });
 
@@ -115,6 +125,7 @@ public class LoginService : IInitializable, IDisposable
             CreateAccount = false
         }, result =>
         {
+            Debug.Log("Normal Login - Guest");
             OnLoginSuccess(result);
         }, error =>
         {
@@ -131,5 +142,19 @@ public class LoginService : IInitializable, IDisposable
         playfabId = result.PlayFabId;
         entityId = result.EntityToken.Entity.Id;
         entityType = result.EntityToken.Entity.Type;
+
+        isLoginSuccess = true;
+
+
+        if (PlayerPrefs.GetInt("LOGIN") == (int)LoginStatus.FIRST) //First time Login
+        {
+            _dbService.SetPlayerData("NickName", playfabId);
+            _dbService.SetPlayerData("TotalCoin", "5000");
+            _dbService.SetPlayerData("BestScore", "0");
+        }
+        else if (PlayerPrefs.GetInt("LOGIN") == (int)LoginStatus.USED) // Load Data
+        {
+            _dbService.GetUserData(playfabId);
+        }
     }
 }

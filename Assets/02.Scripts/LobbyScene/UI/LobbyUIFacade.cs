@@ -102,7 +102,7 @@ namespace LobbyScene.UI
             }).AddTo(_disposables);
 
 
-            Observable.EveryUpdate().Where(_ => _loginService.PLAYFABID.Length > 0)
+            Observable.EveryUpdate().Where(_ => _loginService.IsLoginSuccess)
                 .Subscribe(_ =>
                 {
                     _guestBtn.transform.parent.gameObject.SetActive(false);

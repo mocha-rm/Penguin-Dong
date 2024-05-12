@@ -18,7 +18,7 @@ namespace GameScene.Rule
 
     public partial class GameRule : IInitializable, IDisposable
     {
-        //TestCoin
+        
         public int _testCoin = 10000;
 
         public IGameModel Model { get { return _model; } }
@@ -32,6 +32,8 @@ namespace GameScene.Rule
         double _reducedTime = 0;
 
         AudioService _audioService;
+        DBService _dbService;
+        LoginService _loginService;
 
         //Controller
         PlayerController _playerController;
@@ -52,13 +54,14 @@ namespace GameScene.Rule
 
         public void Initialize()
         {
-
             _playerController = _container.Resolve<PlayerController>();
             _obstacleController = _container.Resolve<ObstacleController>();
             _roguelikeController = _container.Resolve<RoguelikeController>();
             _uiController = _container.Resolve<InGameUIController>();
             _gameOverPub = _container.Resolve<IPublisher<GameOverEvent>>();
             _audioService = _container.Resolve<AudioService>();
+            _loginService = _container.Resolve<LoginService>();
+            _dbService = _container.Resolve<DBService>();
 
             _model.SetAbilities();
 
