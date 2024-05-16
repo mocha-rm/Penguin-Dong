@@ -3211,7 +3211,7 @@ GameObject:
   - component: {fileID: 3709711007770310236}
   - component: {fileID: 2673631597682618306}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3265,7 +3265,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 50,000
+  m_text: 0
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5ff6488940aa0e94199582981a51d091, type: 2}
   m_sharedMaterial: {fileID: 4060977770994697769, guid: 5ff6488940aa0e94199582981a51d091, type: 2}

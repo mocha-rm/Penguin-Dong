@@ -17,8 +17,9 @@ namespace GameScene
     public class RoguelikeFacade : BaseFacade, IRegistMonobehavior
     {
         //DB
-        public int Coin { get; private set; }
-
+        private int _dbCoin = 0; //Get DB`s Coin Info at FirstTime
+        public int useCoin { get; private set; }
+        DBService _dbService;
 
         public IRoguelikeModel Model { get { return _model; } }
 
@@ -50,6 +51,9 @@ namespace GameScene
         Image _item2Img;
         TextMeshProUGUI _item2Desc;
         TextMeshProUGUI _item2Cost;
+
+        //Current CoinInfo
+        TextMeshProUGUI _currentCoinText;
 
         //Movement
         RectTransform _rect;
@@ -93,6 +97,8 @@ namespace GameScene
             _item2Img = gameObject.GetHierachyPath<Image>(Hierachy.Item2Icon);
             _item2Desc = gameObject.GetHierachyPath<TextMeshProUGUI>(Hierachy.Item2Desc);
             _item2Cost = gameObject.GetHierachyPath<TextMeshProUGUI>(Hierachy.Item2Cost);
+
+            _currentCoinText = gameObject.GetHierachyPath<TextMeshProUGUI>(Hierachy.CurrentCoinInfoText);
         }
 
         public override void Initialize()
@@ -101,12 +107,19 @@ namespace GameScene
             _roguePayPub = _container.Resolve<IPublisher<RoguelikePayEvent>>();
             _rogueRefreshPub = _container.Resolve<IPublisher<RoguelikeRefreshEvent>>();
             _rogueSkipPub = _container.Resolve<IPublisher<RoguelikeSkipEvent>>();
+            _dbService = _container.Resolve<DBService>();
 
 
             if (_model == null)
             {
                 _model = CreateModel();
             }
+
+            _dbCoin = _dbService.TotalCoin;
+
+            useCoin = _dbCoin;
+
+            SyncCurrentCoinforUI();
 
             InitializeRefreshFee();
 
@@ -123,7 +136,7 @@ namespace GameScene
             {
                 _pickedItem = _item1;
 
-                if (Coin >= _pickedItem.Cost)
+                if (useCoin >= _pickedItem.Cost)
                 {
                     _ownItemViewer.SetImageAndLevel(_pickedItem);
 
@@ -146,7 +159,7 @@ namespace GameScene
             {
                 _pickedItem = _item2;
 
-                if (Coin >= _pickedItem.Cost)
+                if (useCoin >= _pickedItem.Cost)
                 {
                     _ownItemViewer.SetImageAndLevel(_pickedItem);
 
@@ -168,11 +181,10 @@ namespace GameScene
 
             _refreshBtn.OnClickAsObservable().Subscribe(_ =>
             {
-                if (Coin >= refreshFee)
+                if (useCoin >= refreshFee)
                 {
                     _model._isRefresh.Value = true;
 
-                    refreshFee *= 2;
 
                     _rogueRefreshPub.Publish(new RoguelikeRefreshEvent()
                     {
@@ -180,6 +192,10 @@ namespace GameScene
                     });
 
                     CustomLog.Log("Refresh");
+                }
+                else
+                {
+                    CustomLog.Log("Can`t Refresh");
                 }
 
             }).AddTo(_disposable);
@@ -228,6 +244,8 @@ namespace GameScene
 
         public void OpenAction()
         {
+            //GetCurrentCoinValue
+
             if (_moveRoutine != null)
             {
                 StopCoroutine(_moveRoutine);
@@ -263,15 +281,47 @@ namespace GameScene
             return _pickedItem;
         }
 
+        public void SyncCurrentCoinforUI()
+        {
+            _currentCoinText.text = useCoin.ToString();
+        }
+
         public void SetRefreshCostValue()
         {
             _refreshCostText.text = $"Again / {refreshFee} Coin";
+        }
+
+        public void InceaseRefreshFee()
+        {
+            refreshFee *= 2;
+        }
+
+        public void AddCoinValue(int add)
+        {
+            useCoin += add;
+        }
+
+        public void MinusCoinValue(int minus)
+        {
+            useCoin -= minus;
+        }
+
+        public void LotteryAction()
+        {
+            if (UnityEngine.Random.Range(0f, 1f) < 0.5f) //누적코인 가지고 도박
+            {
+                useCoin *= 2;
+            }
+            else
+            {
+                useCoin /= 2;
+            }
         }
         #endregion
 
 
         #region Private
-        private void InitializeRefreshFee() => refreshFee = 100;
+        public void InitializeRefreshFee() => refreshFee = 100;
 
 
         private IEnumerator Movement()
@@ -367,6 +417,8 @@ namespace GameScene
             public static readonly string RefreshCostText = "Refresh/Cost";
 
             public static readonly string SkipButton = "SkipBtn";
+
+            public static readonly string CurrentCoinInfoText = "MyCoinInfo/Background/Text";
         }
 
 

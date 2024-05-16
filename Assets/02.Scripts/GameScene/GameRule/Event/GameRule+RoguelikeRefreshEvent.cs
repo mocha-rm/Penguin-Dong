@@ -24,7 +24,7 @@ namespace GameScene.Rule
                     _roguelikeController.SetRefreshStatus();
                 }
 
-                _model.Coin.Value -= _roguelikeController.GetRefreshFee();
+                _roguelikeController.MinusCoin(_roguelikeController.GetRefreshFee());
                 _roguelikeController.Refresh();
             });
         }

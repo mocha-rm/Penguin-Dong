@@ -18,9 +18,6 @@ namespace GameScene.Rule
 
     public partial class GameRule : IInitializable, IDisposable
     {
-        
-        public int _testCoin = 10000;
-
         public IGameModel Model { get { return _model; } }
 
         GameModel _model;
@@ -192,16 +189,7 @@ namespace GameScene.Rule
             switch (name)
             {
                 case "Lotto":
-                    if(UnityEngine.Random.Range(0f, 1f) < 0.5f) //누적코인 가지고 도박
-                    {
-                        _testCoin *= 2;
-                    }
-                    else
-                    {
-                        _testCoin /= 2;
-                    }
-
-                    Utility.CustomLog.Log(_testCoin);
+                    _roguelikeController.LotteryAction();
                     break;
 
                 case "Heal":

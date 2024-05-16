@@ -98,7 +98,7 @@ public class DBService : IInitializable, IDisposable
 
                 if (key.Contains("BestScore"))
                 {
-                    Debug.Log($"BestCoin : {eachData.Value.Value}");
+                    Debug.Log($"BestScore : {eachData.Value.Value}");
                     string bestScoreString = eachData.Value.Value;
                     if (int.TryParse(bestScoreString, out int bestScoreValue))
                     {

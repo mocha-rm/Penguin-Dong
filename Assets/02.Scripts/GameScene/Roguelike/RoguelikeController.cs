@@ -46,6 +46,9 @@ public class RoguelikeController : IInitializable, IDisposable
     public void ActivateRoguelike()
     {
         //Open Action
+        _rogueFacade.SyncCurrentCoinforUI();
+        _rogueFacade.InitializeRefreshFee();
+        _rogueFacade.SetRefreshCostValue();
         _rogueFacade.OpenAction();
         _rogueFacade.SetItems();
     }
@@ -59,7 +62,9 @@ public class RoguelikeController : IInitializable, IDisposable
     public void Refresh()
     {
         _rogueFacade.SetItems();
+        _rogueFacade.InceaseRefreshFee();
         _rogueFacade.SetRefreshCostValue();
+        _rogueFacade.SyncCurrentCoinforUI();
     }
 
     public bool GetRefreshStatus()
@@ -72,6 +77,11 @@ public class RoguelikeController : IInitializable, IDisposable
         _rogueFacade.Model.ReturnRefreshStatus();
     }
 
+    public int GetCoin()
+    {
+        return _rogueFacade.useCoin;
+    }
+
     public int GetRefreshFee()
     {
         return _rogueFacade.refreshFee;
@@ -80,5 +90,22 @@ public class RoguelikeController : IInitializable, IDisposable
     public Item GetItem()
     {
         return _rogueFacade.GetPickedItem();
+    }
+
+    public void LotteryAction()
+    {
+        _rogueFacade.LotteryAction();
+    }
+
+    public void AddCoin(int add)
+    {
+        _rogueFacade.AddCoinValue(add);
+        Utility.CustomLog.Log(_rogueFacade.useCoin.ToString());
+    }
+
+    public void MinusCoin(int minus)
+    {
+        _rogueFacade.MinusCoinValue(minus);
+        Utility.CustomLog.Log(_rogueFacade.useCoin.ToString());
     }
 }
