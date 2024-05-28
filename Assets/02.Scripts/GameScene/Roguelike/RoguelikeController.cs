@@ -100,7 +100,7 @@ public class RoguelikeController : IInitializable, IDisposable
     public void AddCoin(int add)
     {
         _rogueFacade.AddCoinValue(add);
-        Utility.CustomLog.Log(_rogueFacade.useCoin.ToString());
+        Utility.CustomLog.Log(_rogueFacade.useCoin.ToString() + add);
     }
 
     public void MinusCoin(int minus)
