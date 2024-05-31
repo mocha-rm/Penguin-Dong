@@ -298,11 +298,13 @@ namespace GameScene
 
         public void AddCoinValue(int add)
         {
+            Debug.Log($"Current Coin : {useCoin} / AddCoin : {add}");
             useCoin += add;
         }
 
         public void MinusCoinValue(int minus)
         {
+            Debug.Log($"Current Coin : {useCoin} / MinusCoin : {minus}");
             useCoin -= minus;
         }
 

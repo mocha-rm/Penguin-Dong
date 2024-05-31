@@ -21,6 +21,7 @@ namespace GameScene.Rule
         public IGameModel Model { get { return _model; } }
 
         GameModel _model;
+        bool isGameOver;
         float levelGuage = 0f;
 
         [Inject] IObjectResolver _container;
@@ -62,12 +63,16 @@ namespace GameScene.Rule
 
             _model.SetAbilities();
 
+            isGameOver = false;
+
             GameRunning().Forget();
 
             _model.Life.AsObservable()
-                .Where(_ => _model.Life.Value <= 0f)
+                .Where(_ => _model.Life.Value <= 0f).Where(_ => !isGameOver)
                 .Subscribe(_ =>
                 {
+                    isGameOver = true;
+
                     _gameOverPub.Publish(new GameOverEvent()
                     {
 

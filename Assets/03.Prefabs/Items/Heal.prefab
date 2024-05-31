@@ -47,6 +47,7 @@ MonoBehaviour:
   Sprite: {fileID: -651057808, guid: 080cb6d98b00c2645b2c41df5f69bc78, type: 3}
   Name: 
   Value: 0
+  Upgrade: 1
   Cost: 0
   Desc: 
   Disposable: 0

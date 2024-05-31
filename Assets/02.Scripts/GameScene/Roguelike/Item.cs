@@ -21,14 +21,9 @@ public abstract class Item : MonoBehaviour
 
     public void Dispose()
     {
-        Sprite = null;
-        Name = string.Empty;
         Value = 0f;
         Upgrade = 1;
-        Cost = 0;
-        Desc = string.Empty;
-        Disposable = false;
 
-        CustomLog.Log("Item disposed");
+        CustomLog.Log("Item Reset");
     }
 }

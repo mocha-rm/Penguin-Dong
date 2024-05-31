@@ -18,6 +18,8 @@ namespace GameScene.UI
     public class InteractionFacade : BaseFacade, IRegistMonobehavior
     {
         AudioService _audioService;
+        DBService _dbService;
+        LoginService _loginService;
         Preferences _pref;
         
 
@@ -78,6 +80,10 @@ namespace GameScene.UI
         {
             _audioService = _container.Resolve<AudioService>();
 
+            _dbService = _container.Resolve<DBService>();
+
+            _loginService = _container.Resolve<LoginService>();
+
             _pref = _container.Resolve<Preferences>();
 
             _disposable = new CompositeDisposable();
@@ -121,6 +127,9 @@ namespace GameScene.UI
             {
                 _audioService.Stop(AudioService.SoundType.BGM);
 
+                //Get Lastest UserInfo Here
+                _dbService.GetUserData(_loginService.PLAYFABID);
+
                 //go to lobby scene
                 _sceneloadPub.Publish(new SceneLoadEvent()
                 {
@@ -132,6 +141,8 @@ namespace GameScene.UI
             _gameOverBtns[(int)GameOverPanelBtn.AdContinue].OnClickAsObservable().Subscribe(_ =>
             {
                 _audioService.Stop(AudioService.SoundType.BGM);
+
+                _dbService.GetUserData(_loginService.PLAYFABID);
 
                 //Input AdMob Codes Here
 
