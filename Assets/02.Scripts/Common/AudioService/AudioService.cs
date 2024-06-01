@@ -6,6 +6,7 @@ using VContainer;
 using VContainer.Unity;
 using UniRx;
 using MoreMountains.Feedbacks;
+using static UnityEngine.RuleTile.TilingRuleOutput;
 
 
 public class AudioService : IInitializable, IDisposable
@@ -144,5 +145,21 @@ public class AudioService : IInitializable, IDisposable
 
         _disposable?.Dispose();
         _disposable = null;
+    }
+
+
+    //Seperate Stereo
+
+    private float panRange = 10f;
+
+    public void StereoSetting(Vector3 pos)
+    {
+        // 오브젝트의 x 위치를 기준으로 panStereo 값을 설정
+        float xPos = pos.x;
+
+        // panRange를 기준으로 -1에서 1 사이로 pan 값을 설정
+        float panValue = Mathf.Clamp(xPos / panRange, -1f, 1f);
+
+        _audioSources[(int)SoundType.SFX].panStereo = panValue;
     }
 }

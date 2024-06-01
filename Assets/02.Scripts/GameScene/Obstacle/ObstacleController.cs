@@ -25,6 +25,7 @@ namespace GameScene.Obstacle
         }
 
         EnvironmentFacade _environment;
+        AudioService _audioService;
         
 
         MiniPool _obastaclePool;
@@ -33,6 +34,9 @@ namespace GameScene.Obstacle
         public void Initialize()
         {
             Debug.Log("Initialize ObstacleController");
+
+            _audioService = _container.Resolve<AudioService>();
+
             var poolGet = _container.Resolve<Func<string, MiniPool>>();
             _obastaclePool = poolGet(ObstacleFacade.Constants.PoolId);
             
@@ -72,6 +76,8 @@ namespace GameScene.Obstacle
             var endPosy = _environment.GetGroundY();
 
             facade.Init(id, pos, endPosy);
+
+            _audioService.StereoSetting(pos);
 
             facade.Model.IsAlive.Subscribe(bAlive =>
             {
