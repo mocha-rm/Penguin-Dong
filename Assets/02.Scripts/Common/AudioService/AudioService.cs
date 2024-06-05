@@ -15,24 +15,27 @@ public class AudioService : IInitializable, IDisposable
     {
         BGM,
         SFX,
+        OBJ,
         End //for counting
     }
 
     public enum AudioResources //If resources more added you have to edit code again.. so this is not a good idea..
     {
         #region BGM
-        GameScene_1,
-        GameScene_2,
+        //ASMR Background
+        
+
         #endregion
 
         #region SFX
         Button,
         Count,
-        Fire_Impact,
-        Fire_Shoot,
         GO,
         Hitted,
         BulletMetal1, //Shield Hitted Sound
+
+        //Object Sounds
+        Fire_Shoot,
         #endregion
     }
 
@@ -43,9 +46,12 @@ public class AudioService : IInitializable, IDisposable
     AudioSource[] _audioSources = new AudioSource[(int)SoundType.End];
     float[] _volumes = new float[(int)SoundType.End];
 
-    Dictionary<string, AudioClip> _audioClips = new Dictionary<string, AudioClip>();
+    List<AudioClip> _bgmClips = new List<AudioClip>();
+    List<AudioClip> _sfxClips = new List<AudioClip>();
+    List<AudioClip> _objClips = new List<AudioClip>();
 
     IDisposable _disposable;
+
 
 
     public void Initialize()
@@ -72,21 +78,29 @@ public class AudioService : IInitializable, IDisposable
         {
             Debug.LogError($"Audio Service Make Twice!! Please Check");
         }
+
+        _audioSources[(int)SoundType.OBJ].volume = 0.7f;
     }
 
     private void LoadSoundResource()
     {
         AudioClip[] bgm = Resources.LoadAll<AudioClip>("Sounds/BGM");
         AudioClip[] sfx = Resources.LoadAll<AudioClip>("Sounds/SFX");
+        AudioClip[] obj = Resources.LoadAll<AudioClip>("Sounds/Object");
 
         for (int i = 0; i < bgm.Length; i++)
         {
-            _audioClips[bgm[i].name] = bgm[i];
+            _bgmClips[i] = bgm[i];
         }
 
         for (int i = 0; i < sfx.Length; i++)
         {
-            _audioClips[sfx[i].name] = sfx[i];
+            _sfxClips[i] = sfx[i];
+        }
+
+        for (int i = 0; i < obj.Length; i++)
+        {
+            _objClips[i] = obj[i];
         }
     }
 
@@ -120,12 +134,12 @@ public class AudioService : IInitializable, IDisposable
     {
         if (soundType == SoundType.BGM)
         {
-            _audioSources[(int)soundType].clip = _audioClips[resourceName.ToString()];
-            _audioSources[(int)soundType].Play();
+            //_audioSources[(int)soundType].clip = _audioClips[resourceName.ToString()];
+            //_audioSources[(int)soundType].Play();
         }
         else
         {
-            _audioSources[(int)soundType].PlayOneShot(_audioClips[resourceName.ToString()]);
+            //_audioSources[(int)soundType].PlayOneShot(_audioClips[resourceName.ToString()]);
         }
     }
 
@@ -160,6 +174,6 @@ public class AudioService : IInitializable, IDisposable
         // panRange를 기준으로 -1에서 1 사이로 pan 값을 설정
         float panValue = Mathf.Clamp(xPos / panRange, -1f, 1f);
 
-        _audioSources[(int)SoundType.SFX].panStereo = panValue;
+        _audioSources[(int)SoundType.OBJ].panStereo = panValue;
     }
 }

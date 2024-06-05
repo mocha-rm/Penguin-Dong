@@ -28,7 +28,7 @@ namespace GameScene.Rule
                 }
                 else
                 {
-                    _audioService.Play(AudioService.AudioResources.Hitted, AudioService.SoundType.SFX);
+                    //_audioService.Play(AudioService.AudioResources.Hitted, AudioService.SoundType.SFX);
                     _model.Life.Value -= _damage - _model.Abilities[AbilityNames.SkinUpgrade.ToString()];
                     _uiController.LifeUIAction(_damage - _model.Abilities[AbilityNames.SkinUpgrade.ToString()], _model.Abilities[AbilityNames.Heart.ToString()]);
                     _playerController.SetPlayerInvulnerable();
