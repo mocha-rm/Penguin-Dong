@@ -131,6 +131,9 @@ namespace GameScene.Rule
                         _reducedTime += 0.1f;
                     }
 
+                    _audioService.Stop(AudioService.SoundType.BGM);
+                    _audioService.SetRandomObjectClip();
+
                     OpenRoguelike();
                 }
 
@@ -142,7 +145,8 @@ namespace GameScene.Rule
                 }
 
                 _obstacleController.SpawnObstacles(1);
-                _audioService.Play(AudioService.AudioResources.Fire_Shoot, AudioService.SoundType.SFX);
+                _audioService.RandomObjectPlay();
+                //_audioService.Play(AudioService.AudioResources.Fire_Shoot);
             }
         }
 

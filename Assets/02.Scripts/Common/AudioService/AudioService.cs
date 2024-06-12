@@ -7,6 +7,7 @@ using VContainer.Unity;
 using UniRx;
 using MoreMountains.Feedbacks;
 using static UnityEngine.RuleTile.TilingRuleOutput;
+using static AudioService;
 
 
 public class AudioService : IInitializable, IDisposable
@@ -32,10 +33,10 @@ public class AudioService : IInitializable, IDisposable
         Count,
         GO,
         Hitted,
-        BulletMetal1, //Shield Hitted Sound
+        Shield, //Shield Hitted Sound
 
         //Object Sounds
-        Fire_Shoot,
+        
         #endregion
     }
 
@@ -46,8 +47,9 @@ public class AudioService : IInitializable, IDisposable
     AudioSource[] _audioSources = new AudioSource[(int)SoundType.End];
     float[] _volumes = new float[(int)SoundType.End];
 
+    Dictionary<string, AudioClip> _sfxDic = new Dictionary<string, AudioClip>();
+
     List<AudioClip> _bgmClips = new List<AudioClip>();
-    List<AudioClip> _sfxClips = new List<AudioClip>();
     List<AudioClip> _objClips = new List<AudioClip>();
 
     IDisposable _disposable;
@@ -79,7 +81,8 @@ public class AudioService : IInitializable, IDisposable
             Debug.LogError($"Audio Service Make Twice!! Please Check");
         }
 
-        _audioSources[(int)SoundType.OBJ].volume = 0.7f;
+        _audioSources[(int)SoundType.OBJ].volume = 0.2f;
+        SetRandomObjectClip();
     }
 
     private void LoadSoundResource()
@@ -90,17 +93,17 @@ public class AudioService : IInitializable, IDisposable
 
         for (int i = 0; i < bgm.Length; i++)
         {
-            _bgmClips[i] = bgm[i];
+            _bgmClips.Add(bgm[i]);
         }
 
         for (int i = 0; i < sfx.Length; i++)
         {
-            _sfxClips[i] = sfx[i];
+            _sfxDic[sfx[i].name] = sfx[i];
         }
 
         for (int i = 0; i < obj.Length; i++)
         {
-            _objClips[i] = obj[i];
+            _objClips.Add(obj[i]);
         }
     }
 
@@ -130,18 +133,31 @@ public class AudioService : IInitializable, IDisposable
     }
 
 
-    public void Play(AudioResources resourceName, SoundType soundType)
+    public void Play(AudioResources resourceName)
     {
-        if (soundType == SoundType.BGM)
-        {
-            //_audioSources[(int)soundType].clip = _audioClips[resourceName.ToString()];
-            //_audioSources[(int)soundType].Play();
-        }
-        else
-        {
-            //_audioSources[(int)soundType].PlayOneShot(_audioClips[resourceName.ToString()]);
-        }
+        //SFX
+        _audioSources[(int)SoundType.SFX].clip = _sfxDic[resourceName.ToString()];
+        _audioSources[(int)SoundType.SFX].Play();
     }
+
+
+    //Call when Level Up
+    public void RandomBGMPlay()
+    {
+        //BGM
+        AudioClip bgm = _bgmClips[UnityEngine.Random.Range(0, _bgmClips.Count)];
+        _audioSources[(int)SoundType.BGM].clip = bgm;
+        _audioSources[(int)SoundType.BGM].Play();
+    }
+
+    public void SetRandomObjectClip()
+    {
+        //OBJ
+        AudioClip obj = _objClips[UnityEngine.Random.Range(0, _objClips.Count)];
+        _audioSources[(int)SoundType.OBJ].clip = obj;
+    }
+
+    public void RandomObjectPlay() => _audioSources[(int)SoundType.OBJ].PlayOneShot(_audioSources[(int)SoundType.OBJ].clip);
 
 
     public void Dispose()

@@ -75,7 +75,7 @@ namespace LobbyScene.UI
 
             _startBtn.OnClickAsObservable().Subscribe(_ =>
             {
-                _audioService.Play(AudioService.AudioResources.Button, AudioService.SoundType.SFX);
+                _audioService.Play(AudioService.AudioResources.Button);
                 loader.LoadScene(SceneName.GameScene).Forget();
             }).AddTo(_disposables);
 
@@ -86,18 +86,18 @@ namespace LobbyScene.UI
             _soundBtn.OnClickAsObservable().Subscribe(_ =>
             {
                 pref.SoundControl(_soundBtn);
-                _audioService.Play(AudioService.AudioResources.Button, AudioService.SoundType.SFX);
+                _audioService.Play(AudioService.AudioResources.Button);
             }).AddTo(_disposables);
 
             _vibrationBtn.OnClickAsObservable().Subscribe(_ =>
             {
                 pref.VibrateControl(_vibrationBtn);
-                _audioService.Play(AudioService.AudioResources.Button, AudioService.SoundType.SFX);
+                _audioService.Play(AudioService.AudioResources.Button);
             }).AddTo(_disposables);
 
             _rankingloadBtn.OnClickAsObservable().Subscribe(_ =>
             {
-                _audioService.Play(AudioService.AudioResources.Button, AudioService.SoundType.SFX);
+                _audioService.Play(AudioService.AudioResources.Button);
                 //Ranking Board Open
             }).AddTo(_disposables);
 

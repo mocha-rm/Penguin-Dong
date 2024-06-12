@@ -25,6 +25,7 @@ namespace GameScene.Rule
                     _model.GameState.Value = GameState.Playing;
                     _roguelikeController.DeactivateRoguelike();
                     _playerController.SetPlayerInvulnerable(false);
+                    _audioService.RandomBGMPlay();
                     CoreTask(levelGuage).Forget();
                 }
             });

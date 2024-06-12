@@ -23,12 +23,12 @@ namespace GameScene.Rule
                 if (_playerController.IsPlayerHasShield())
                 {
                     _playerController.ShieldDamage();
-                    _audioService.Play(AudioService.AudioResources.BulletMetal1, AudioService.SoundType.SFX);
+                    _audioService.Play(AudioService.AudioResources.Shield);
                     
                 }
                 else
                 {
-                    //_audioService.Play(AudioService.AudioResources.Hitted, AudioService.SoundType.SFX);
+                    _audioService.Play(AudioService.AudioResources.Hitted);
                     _model.Life.Value -= _damage - _model.Abilities[AbilityNames.SkinUpgrade.ToString()];
                     _uiController.LifeUIAction(_damage - _model.Abilities[AbilityNames.SkinUpgrade.ToString()], _model.Abilities[AbilityNames.Heart.ToString()]);
                     _playerController.SetPlayerInvulnerable();

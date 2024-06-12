@@ -31,6 +31,7 @@ namespace GameScene.Rule
                     //Restart Game
                     _roguelikeController.DeactivateRoguelike();
                     _playerController.SetPlayerInvulnerable(false);
+                    _audioService.RandomBGMPlay();
                     CoreTask(levelGuage).Forget();
                 }
             });

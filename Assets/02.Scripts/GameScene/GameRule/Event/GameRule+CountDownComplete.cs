@@ -20,7 +20,8 @@ namespace GameScene.Rule
             return _countDownSub.Subscribe(data =>
             {
                 _model.GameState.Value = GameState.Playing;
-                _audioService.Play(AudioService.AudioResources.GO, AudioService.SoundType.SFX);
+                //_audioService.Play(AudioService.AudioResources.GO);
+                _audioService.RandomBGMPlay();
             });
         }
     }

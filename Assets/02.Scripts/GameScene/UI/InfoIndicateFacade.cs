@@ -180,7 +180,7 @@ namespace GameScene.UI
             while (_countNumber > 0)
             {
                 _countText.text = _countNumber.ToString();
-                _audioService.Play(AudioService.AudioResources.Count, AudioService.SoundType.SFX);
+                //_audioService.Play(AudioService.AudioResources.Count);
                 --_countNumber;
 
                 await UniTask.Delay(System.TimeSpan.FromMilliseconds(1000));
@@ -193,9 +193,7 @@ namespace GameScene.UI
 
             _countText.text = $"Go!";
 
-            await UniTask.Delay(System.TimeSpan.FromMilliseconds(1000));
-
-            //_audioService.Play(AudioService.AudioResources.GameScene_1, AudioService.SoundType.BGM);
+            await UniTask.Delay(System.TimeSpan.FromMilliseconds(1000));          
 
             _countText.gameObject.SetActive(false);
         }
