@@ -50,7 +50,7 @@ public class Preferences : VContainer.Unity.IInitializable, IDisposable
             btn.image.color = Color.white;
             _audioService.SetVolume(AudioService.SoundType.BGM, 1f);
             _audioService.SetVolume(AudioService.SoundType.SFX, 1f);
-            _audioService.SetVolume(AudioService.SoundType.OBJ, 0.7f);
+            _audioService.SetVolume(AudioService.SoundType.OBJ, 0.1f);
         }
     }
 

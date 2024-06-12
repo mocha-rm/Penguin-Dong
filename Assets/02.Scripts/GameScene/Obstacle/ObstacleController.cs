@@ -14,6 +14,20 @@ namespace GameScene.Obstacle
 {
     public class ObstacleController : IInitializable, IDisposable
     {
+        Color[] _colors = new Color[]
+        {
+            new Color (1f, 1f, 1f, 1f),
+            new Color (1f,0f,1f,1f),
+            new Color (0f, 0.2f, 1f, 1f),
+            new Color (0f, 1f, 0.9f, 1f),
+            new Color (0f, 1f, 0f, 1f),
+            new Color (0f, 0f, 0f, 1f),
+        };
+
+        public Color ObjectColor { get; set; } = new Color(1f, 1f, 1f, 1f);
+
+
+
         [Inject] IObjectResolver _container;
 
         public IObstacleControllerModel Model
@@ -49,7 +63,6 @@ namespace GameScene.Obstacle
             {
                 Debug.Log(obj.Model.IsAlive);
             }
-
         }
         public void Dispose()
         {
@@ -66,6 +79,13 @@ namespace GameScene.Obstacle
             }
         }
 
+        public void GetRandomColor() //Call when Level up // Init = Original Color
+        {
+            var color = _colors[UnityEngine.Random.Range(0, _colors.Length)];
+
+            ObjectColor = color;
+        }
+
 
         void SpawnObstacle()
         {
@@ -73,9 +93,11 @@ namespace GameScene.Obstacle
             
             var id = Guid.NewGuid();
             var pos = _environment.GetRandomObstacleSpawnPos();
-            var endPosy = _environment.GetGroundY();
+            var endPosy = _environment.GetGroundY();            
 
             facade.Init(id, pos, endPosy);
+
+            facade.SetRandomColor(ObjectColor);
 
             _audioService.StereoSetting(pos);
 

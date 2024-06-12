@@ -81,7 +81,7 @@ public class AudioService : IInitializable, IDisposable
             Debug.LogError($"Audio Service Make Twice!! Please Check");
         }
 
-        _audioSources[(int)SoundType.OBJ].volume = 0.2f;
+        _audioSources[(int)SoundType.OBJ].volume = 0.1f;
         SetRandomObjectClip();
     }
 

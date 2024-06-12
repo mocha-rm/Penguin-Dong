@@ -37,6 +37,7 @@ namespace GameScene.Obstacle
         Rigidbody2D _rigid;
         CircleCollider2D _collider;
         Animator _ani;
+        SpriteRenderer _renderer;
         Coroutine _aniRoutine = null;
 
         CompositeDisposable _disposables;
@@ -49,6 +50,7 @@ namespace GameScene.Obstacle
             _ani = GetComponent<Animator>();
             _rigid = GetComponent<Rigidbody2D>();
             _collider = GetComponent<CircleCollider2D>();
+            _renderer = GetComponent<SpriteRenderer>();
         }
 
         public override void Initialize()
@@ -105,6 +107,11 @@ namespace GameScene.Obstacle
             _disposables = null;
         }
 
+        public void SetRandomColor(Color color)
+        {
+            _renderer.color = color;
+        }
+
         public void ExplosionAnim()
         {
             _rigid.constraints = RigidbodyConstraints2D.FreezePositionY;
@@ -117,8 +124,7 @@ namespace GameScene.Obstacle
             {
                 StopCoroutine(_aniRoutine);
             }
-            _aniRoutine = StartCoroutine(ExplosionAnimRoutine());
-            //_audioService.Play(AudioService.AudioResources.Fire_Impact, AudioService.SoundType.SFX);
+            _aniRoutine = StartCoroutine(ExplosionAnimRoutine());            
         }
 
         private IEnumerator ExplosionAnimRoutine()

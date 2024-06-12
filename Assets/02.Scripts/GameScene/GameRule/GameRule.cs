@@ -134,6 +134,8 @@ namespace GameScene.Rule
                     _audioService.Stop(AudioService.SoundType.BGM);
                     _audioService.SetRandomObjectClip();
 
+                    _obstacleController.GetRandomColor();
+
                     OpenRoguelike();
                 }
 
