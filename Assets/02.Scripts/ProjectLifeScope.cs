@@ -27,6 +27,8 @@ public class ProjectLifeScope : LifetimeScope
 
 
     static ProjectLifeScope _instance;
+
+
     protected override void Awake()
     {
         base.Awake();
@@ -73,6 +75,7 @@ public class ProjectLifeScope : LifetimeScope
         builder.Register<VibrationService>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
         builder.Register<LoginService>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
         builder.Register<DBService>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
+        builder.Register<RankingService>(Lifetime.Singleton).AsImplementedInterfaces().AsSelf();
     }
 
     private void OnApplicationQuit()

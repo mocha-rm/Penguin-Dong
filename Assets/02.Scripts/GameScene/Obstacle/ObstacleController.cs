@@ -166,5 +166,4 @@ namespace GameScene.Obstacle
         public IObservable<int> ObserveCount();
         public ObstacleFacade.IObstacleModel GetFacadeObservable(Guid id);
     }
-
 }
