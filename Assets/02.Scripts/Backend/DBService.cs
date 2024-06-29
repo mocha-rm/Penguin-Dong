@@ -19,7 +19,7 @@ public class DBService : IInitializable, IDisposable
 
     //DATA
     public string NickName { get; private set; }
-    public int TotalCoin { get; private set; }
+    public int TotalCoin { get; private set; } = 5000;
     public int BestScore { get; private set; }
 
 

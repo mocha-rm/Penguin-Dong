@@ -20,6 +20,10 @@ using UnityEngine;
 using UnityEngine.UI;
 using VContainer;
 using VContainer.Unity;
+using Cysharp.Threading;
+using System.Threading;
+using Cysharp.Threading.Tasks;
+
 using EntityKey = PlayFab.ProfilesModels.EntityKey;
 
 public enum LoginStatus
@@ -56,15 +60,15 @@ public class LoginService : IInitializable, IDisposable
 
         isLoginSuccess = false;
 
-        if (PlayerPrefs.GetInt("LOGIN") == (int)LoginStatus.USED)
+        if (PlayerPrefs.HasKey("GUESTID"))
         {
+            customId = PlayerPrefs.GetString("GUESTID");
             LoginGuestId();
         }
     }
 
     public void Dispose()
     {
-        PlayerPrefs.SetInt("LOGIN", (int)LoginStatus.USED);
         _disposable?.Dispose();
         _disposable = null;
     }
@@ -92,12 +96,12 @@ public class LoginService : IInitializable, IDisposable
             CreateAccount = true
         }, result =>
         {
-            PlayerPrefs.SetInt("LOGIN", (int)LoginStatus.FIRST);
             PlayerPrefs.SetString("GUESTID", customId);
+            PlayerPrefs.Save();
+            UpdatePlayerData().Forget();
             OnLoginSuccess(result);
         }, error =>
-        {
-            PlayerPrefs.SetInt("LOGIN", (int)LoginStatus.NONE);
+        {           
             Debug.LogError("Login Fail - Guest");
         });
 
@@ -117,8 +121,6 @@ public class LoginService : IInitializable, IDisposable
     {
         Debug.Log("Guest Login");
 
-        customId = PlayerPrefs.GetString("GUESTID");
-
         PlayFabClientAPI.LoginWithCustomID(new LoginWithCustomIDRequest()
         {
             CustomId = customId,
@@ -126,6 +128,7 @@ public class LoginService : IInitializable, IDisposable
         }, result =>
         {
             Debug.Log("Normal Login - Guest");
+            _dbService.GetUserData(playfabId);
             OnLoginSuccess(result);
         }, error =>
         {
@@ -142,19 +145,16 @@ public class LoginService : IInitializable, IDisposable
         playfabId = result.PlayFabId;
         entityId = result.EntityToken.Entity.Id;
         entityType = result.EntityToken.Entity.Type;
-
         isLoginSuccess = true;
+    }
 
 
-        if (PlayerPrefs.GetInt("LOGIN") == (int)LoginStatus.FIRST) //First time Login
-        {
-            _dbService.SetPlayerData("NickName", playfabId);
-            _dbService.SetPlayerData("TotalCoin", "5000");
-            _dbService.SetPlayerData("BestScore", "0");
-        }
-        else if (PlayerPrefs.GetInt("LOGIN") == (int)LoginStatus.USED) // Load Data
-        {
-            _dbService.GetUserData(playfabId);
-        }
+    private async UniTaskVoid UpdatePlayerData()
+    {
+        _dbService.SetPlayerData("NickName", customId);
+        await UniTask.Delay(System.TimeSpan.FromMilliseconds(500));
+  
+        _dbService.SetPlayerData("BestScore", "0");
+        await UniTask.Delay(System.TimeSpan.FromMilliseconds(500));
     }
 }
