@@ -10,7 +10,7 @@ using PlayFab;
 using PlayFab.ClientModels;
 using PlayFab.Json;
 using PlayFab.ProfilesModels;
-
+using System.Threading.Tasks;
 
 public class RankingService : IInitializable, IDisposable
 {
@@ -22,7 +22,7 @@ public class RankingService : IInitializable, IDisposable
 
     public void Initialize()
     {
-        //GetLeaderboarder("BestScore", SetRanking); // call when push leaderboard button at lobbyscene
+        
     }
 
 
@@ -33,29 +33,22 @@ public class RankingService : IInitializable, IDisposable
     }
 
 
-    private void DisplayPlayfabError(PlayFabError error) => Debug.LogError("error : " + error.GenerateErrorReport());
+    //Read from Leaderboard
 
-    public void GetLeaderboarder(string name, Action<GetLeaderboardResult> callBack)
+    public void RequestLeaderboard()
     {
-        var requestLeaderboard = new GetLeaderboardRequest
+        PlayFabClientAPI.GetLeaderboard(new GetLeaderboardRequest
         {
+
+            StatisticName = "BestScore",
             StartPosition = 0,
-            StatisticName = name,
-            MaxResultsCount = 100,
+            MaxResultsCount = 10,
 
-            ProfileConstraints = new PlayerProfileViewConstraints()
-            {
-                ShowLocations = true,
-                ShowDisplayName = true,
-                ShowStatistics = true
-            }
-        };
-
-        PlayFabClientAPI.GetLeaderboard(requestLeaderboard, callBack, DisplayPlayfabError);
+        }, result => SetRanking(result), FailureCallback);
     }
 
 
-    public void SetRanking(GetLeaderboardResult result)
+    private void SetRanking(GetLeaderboardResult result)
     {
         var curBoard = result.Leaderboard;
 
@@ -74,6 +67,8 @@ public class RankingService : IInitializable, IDisposable
     }
 
 
+
+    //Write to Leaderboard
 
     public void SubmitScore(int playerScore) //call when gameoverEvent if get a bestscore
     {

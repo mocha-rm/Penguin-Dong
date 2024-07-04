@@ -38,6 +38,7 @@ namespace GameScene.Rule
                 {
                     isRecord = true;
                     _dbService.SetPlayerData("BestScore", _model.Score.Value.ToString());
+                    _rankService.SubmitScore(_model.Score.Value);
                 }
 
                 _uiController.GameOverUIAction(isRecord, _model.Score.Value, _model.Level.Value, _model.Coin.Value); //boolian value is for compare new record or not

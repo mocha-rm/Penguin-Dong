@@ -32,6 +32,7 @@ namespace GameScene.Rule
         AudioService _audioService;
         DBService _dbService;
         LoginService _loginService;
+        RankingService _rankService;
 
         //Controller
         PlayerController _playerController;
@@ -60,6 +61,7 @@ namespace GameScene.Rule
             _audioService = _container.Resolve<AudioService>();
             _loginService = _container.Resolve<LoginService>();
             _dbService = _container.Resolve<DBService>();
+            _rankService = _container.Resolve<RankingService>();
 
             _model.SetAbilities();
 

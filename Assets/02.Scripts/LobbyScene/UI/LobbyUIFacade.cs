@@ -27,6 +27,7 @@ namespace LobbyScene.UI
         #endregion
 
         AudioService _audioService;
+        RankingService _rankService;
 
 
         CompositeDisposable _disposables;
@@ -50,6 +51,8 @@ namespace LobbyScene.UI
             _audioService = _container.Resolve<AudioService>();
 
             _loginService = _container.Resolve<LoginService>();
+
+            _rankService = _container.Resolve<RankingService>();
 
             _disposables = new CompositeDisposable();
 
@@ -99,6 +102,7 @@ namespace LobbyScene.UI
             {
                 _audioService.Play(AudioService.AudioResources.Button);
                 //Ranking Board Open
+                _rankService.RequestLeaderboard();
             }).AddTo(_disposables);
 
 
