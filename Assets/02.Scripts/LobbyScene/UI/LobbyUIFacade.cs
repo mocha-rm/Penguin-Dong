@@ -5,14 +5,17 @@ using UnityEngine;
 using VContainer;
 using VContainer.Unity;
 using UnityEngine.UI;
+using TMPro;
 
 using UniRx;
-
+using Cysharp.Threading.Tasks;
 
 namespace LobbyScene.UI
 {
     public class LobbyUIFacade : BaseFacade, IRegistMonobehavior
     {
+        TextMeshProUGUI _myInfo;
+
         Button _startBtn;
 
         Button _soundBtn;
@@ -21,6 +24,7 @@ namespace LobbyScene.UI
 
         #region Login
         LoginService _loginService;
+        DBService _dbService;
 
         Button _guestBtn;
         Button _googleBtn;
@@ -28,6 +32,8 @@ namespace LobbyScene.UI
 
         AudioService _audioService;
         RankingService _rankService;
+        RankingBoard _rankBoard;
+        GameObject _loadingPanel;
 
 
         CompositeDisposable _disposables;
@@ -36,10 +42,14 @@ namespace LobbyScene.UI
 
         public void RegistBehavior(IContainerBuilder builder)
         {
+            _myInfo = gameObject.GetHierachyPath<TextMeshProUGUI>(Hierarchy.MyInfo);
+
             _startBtn = gameObject.GetHierachyPath<Button>(Hierarchy.GameStartButton);
             _soundBtn = gameObject.GetHierachyPath<Button>(Hierarchy.SoundControlButton);
             _vibrationBtn = gameObject.GetHierachyPath<Button>(Hierarchy.VibrationControlButton);
+
             _rankingloadBtn = gameObject.GetHierachyPath<Button>(Hierarchy.RankingLoadButton);
+            _rankBoard = gameObject.GetHierachyPath<RankingBoard>(Hierarchy.RankingBoard);
 
             _guestBtn = gameObject.GetHierachyPath<Button>(Hierarchy.GuestLoginButton);
             _googleBtn = gameObject.GetHierachyPath<Button>(Hierarchy.GoogleLoginButton);
@@ -52,7 +62,10 @@ namespace LobbyScene.UI
 
             _loginService = _container.Resolve<LoginService>();
 
+            _dbService = _container.Resolve<DBService>();
+
             _rankService = _container.Resolve<RankingService>();
+
 
             _disposables = new CompositeDisposable();
 
@@ -62,6 +75,8 @@ namespace LobbyScene.UI
 
             preferences.CheckSoundStatus(_soundBtn);
             preferences.CheckVibrationStatus(_vibrationBtn);
+
+            _loadingPanel = _rankBoard.transform.GetChild(1).gameObject;
 
 
             _guestBtn.OnClickAsObservable().Subscribe(_ =>
@@ -101,16 +116,24 @@ namespace LobbyScene.UI
             _rankingloadBtn.OnClickAsObservable().Subscribe(_ =>
             {
                 _audioService.Play(AudioService.AudioResources.Button);
-                //Ranking Board Open
-                _rankService.RequestLeaderboard();
+                _rankBoard.gameObject.SetActive(true);
+                _rankService.RequestLeaderboard(_loadingPanel);
+
+                IndicateRankTMP().Forget();
+
             }).AddTo(_disposables);
 
 
-            Observable.EveryUpdate().Where(_ => _loginService.IsLoginSuccess)
+            
+            Observable.EveryUpdate().Where(_ => _loginService.IsLoginSuccess).Where(_ => !_myInfo.gameObject.activeInHierarchy)
                 .Subscribe(_ =>
                 {
                     _guestBtn.transform.parent.gameObject.SetActive(false);
                     _startBtn.transform.parent.gameObject.SetActive(true);
+                    _myInfo.gameObject.SetActive(true);
+
+                    GetMyInfo(_myInfo);
+                    
                 }).AddTo(_disposables);
         }
 
@@ -127,15 +150,39 @@ namespace LobbyScene.UI
             _disposables = null;
         }
 
+        private async UniTaskVoid IndicateRankTMP()
+        {
+            await UniTask.Delay(TimeSpan.FromMilliseconds(500f));
+
+            if (!_loadingPanel.activeInHierarchy)
+            {
+                _rankBoard.SetTMP(_rankService.GetRankInfo());
+            }
+        }
+
+        private void GetMyInfo(TextMeshProUGUI tmp)
+        {
+            int myRank = 0;
+
+            _rankService.GetMyRanking(_loginService.PLAYFABID, position => myRank = position, error => Debug.LogError("Error:" + error));
+            
+
+            tmp.text = $"Name : {_dbService.NickName}\nScore : {_dbService.BestScore}\nRank : {myRank + 1}";//시작이 0이라서 1더해주기
+        }
+
 
 
         public static class Hierarchy
         {
+            public static readonly string MyInfo = "Background/SubText";
+
             public static readonly string GameStartButton = "Background/Start/GameStart";
 
             public static readonly string SoundControlButton = "Background/Preferences/Sound";
             public static readonly string VibrationControlButton = "Background/Preferences/Vibration";
+
             public static readonly string RankingLoadButton = "Background/Preferences/RankingLoad";
+            public static readonly string RankingBoard = "RankingBoard";
 
             public static readonly string GuestLoginButton = "Background/Login/GuestLogin";
             public static readonly string GoogleLoginButton = "Background/Login/GoogleLogin";
