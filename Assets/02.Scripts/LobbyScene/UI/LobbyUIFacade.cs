@@ -9,6 +9,9 @@ using TMPro;
 
 using UniRx;
 using Cysharp.Threading.Tasks;
+using TingleAvoid.AD;
+using TingleAvoid;
+
 
 namespace LobbyScene.UI
 {
@@ -34,6 +37,9 @@ namespace LobbyScene.UI
         RankingService _rankService;
         RankingBoard _rankBoard;
         GameObject _loadingPanel;
+
+        //Admob
+        AdmobService _admob;
 
 
         CompositeDisposable _disposables;
@@ -65,6 +71,12 @@ namespace LobbyScene.UI
             _dbService = _container.Resolve<DBService>();
 
             _rankService = _container.Resolve<RankingService>();
+
+            _admob = new AdmobService();
+            _admob.Init();
+
+            _admob.RequestAd(new AdActions());
+            _admob.ShowAd(AdType.Banner);
 
 
             _disposables = new CompositeDisposable();
@@ -148,6 +160,9 @@ namespace LobbyScene.UI
 
             _disposables?.Dispose();
             _disposables = null;
+
+            _admob.Clear();
+            _admob.DestroyADs();
         }
 
         private async UniTaskVoid IndicateRankTMP()
