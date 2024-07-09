@@ -11,12 +11,16 @@ using UniRx;
 using System;
 using MessagePipe;
 using GameScene.Message;
+using TingleAvoid;
+using TingleAvoid.AD;
 
 
 namespace GameScene.UI
 {
     public class InteractionFacade : BaseFacade, IRegistMonobehavior
     {
+        AdmobService _admob;
+
         AudioService _audioService;
         DBService _dbService;
         LoginService _loginService;
@@ -86,6 +90,9 @@ namespace GameScene.UI
 
             _pref = _container.Resolve<Preferences>();
 
+            _admob = new AdmobService();
+            _admob.Init();
+
             _disposable = new CompositeDisposable();
 
             _pauseBtns = new Button[Constants.PausePanelButtonCount];
@@ -115,7 +122,7 @@ namespace GameScene.UI
             }).AddTo(_disposable);
 
             _pausePanelOpenBtn.OnClickAsObservable().Subscribe(_ =>
-            {
+            {                
                 _pausePanel.gameObject.SetActive(true);
                 _pref.CheckSoundStatus(_pauseBtns[(int)PausePanelBtn.Sound]);
                 _pref.CheckVibrationStatus(_pauseBtns[(int)PausePanelBtn.Vibration]);
@@ -130,13 +137,48 @@ namespace GameScene.UI
                 //Get Lastest UserInfo Here
                 _dbService.GetUserData(_loginService.PLAYFABID);
 
-                //go to lobby scene
-                _sceneloadPub.Publish(new SceneLoadEvent()
+                if (UnityEngine.Random.Range(0f, 1f) <= 0.4f)
                 {
-                    Scene = SceneName.LobbyScene
-                });
+                    //Show Ad
+                    var adActions = new AdActions
+                    {
+                        _type = AdType.FullScreen,
 
-            }).AddTo(_disposable);
+                        _onOpen = () =>
+                        {
+                            Debug.Log("Ad is opened");
+                        },
+                        _onClose = () =>
+                        {
+                            Debug.Log("Ad is closed");
+                            // 전면 광고가 닫혔을 때 씬 이동
+                            _sceneloadPub.Publish(new SceneLoadEvent()
+                            {
+                                Scene = SceneName.LobbyScene
+                            });
+                        },
+                        _onError = (error) =>
+                        {
+                            Debug.LogError("Ad failed with error: " + error);
+                            // 광고 로드 실패 시에도 씬 이동을 원하면 여기에 추가
+                            _sceneloadPub.Publish(new SceneLoadEvent()
+                            {
+                                Scene = SceneName.LobbyScene
+                            });
+                        }
+                    };
+
+                    _admob.RequestAd(adActions);
+                }
+                else
+                {
+                    //Skip Ad
+                    _sceneloadPub.Publish(new SceneLoadEvent()
+                    {
+                        Scene = SceneName.LobbyScene
+                    });
+                }                
+            }).AddTo(_disposable); 
 
             _gameOverBtns[(int)GameOverPanelBtn.AdContinue].OnClickAsObservable().Subscribe(_ =>
             {
@@ -164,6 +206,8 @@ namespace GameScene.UI
             _disposable?.Dispose();
             _disposable?.Clear();
             _disposable = null;
+            _admob.Clear();
+            _admob.DestroyADs();
         }
 
         #region Public Methods
@@ -192,12 +236,48 @@ namespace GameScene.UI
                 _pausePanel.gameObject.SetActive(false);
                 Time.timeScale = 1.0f;
                 _audioService.Stop(AudioService.SoundType.BGM);
-                
-                _sceneloadPub.Publish(new SceneLoadEvent()
-                {
-                    Scene = SceneName.LobbyScene
-                });
 
+                if (UnityEngine.Random.Range(0f, 1f) <= 0.2f)
+                {
+                    //Show Ad
+                    var adActions = new AdActions
+                    {
+                        _type = AdType.FullScreen,
+
+                        _onOpen = () =>
+                        {
+                            Debug.Log("Ad is opened");
+                        },
+                        _onClose = () =>
+                        {
+                            Debug.Log("Ad is closed");
+                            // 전면 광고가 닫혔을 때 씬 이동
+                            _sceneloadPub.Publish(new SceneLoadEvent()
+                            {
+                                Scene = SceneName.LobbyScene
+                            });
+                        },
+                        _onError = (error) =>
+                        {
+                            Debug.LogError("Ad failed with error: " + error);
+                            // 광고 로드 실패 시에도 씬 이동을 원하면 여기에 추가
+                            _sceneloadPub.Publish(new SceneLoadEvent()
+                            {
+                                Scene = SceneName.LobbyScene
+                            });
+                        }
+                    };
+
+                    _admob.RequestAd(adActions);
+                }
+                else
+                {
+                    //Skip Ad
+                    _sceneloadPub.Publish(new SceneLoadEvent()
+                    {
+                        Scene = SceneName.LobbyScene
+                    });
+                }
             }).AddTo(_disposable);
 
             _pauseBtns[(int)PausePanelBtn.Sound].OnClickAsObservable().Subscribe(_ =>

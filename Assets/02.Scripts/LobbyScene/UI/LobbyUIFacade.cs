@@ -75,8 +75,13 @@ namespace LobbyScene.UI
             _admob = new AdmobService();
             _admob.Init();
 
-            _admob.RequestAd(new AdActions());
-            _admob.ShowAd(AdType.Banner);
+            var adAction = new AdActions()
+            {
+                _type = AdType.Banner,                
+            };
+
+            _admob.RequestAd(adAction);
+            
 
 
             _disposables = new CompositeDisposable();
