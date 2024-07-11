@@ -133,6 +133,7 @@ namespace GameScene.Player
         {
             transform.position = Constants.originPos;
             _pBehaviour.Idle();
+            _model._isInvul.Value = false;
         }
 
         public void MoveAction()
@@ -152,6 +153,7 @@ namespace GameScene.Player
             {
                 if (_bloc.GameModel.GameStateProperty.Value == GameState.GameOver)
                 {
+                    _model._isInvul.Value = true;
                     _pBehaviour.GameOverAnimate();
                 }
                 else

@@ -117,6 +117,8 @@ namespace GameScene.Player
 
         public void GameOverAnimate()
         {
+            _ani.SetBool("Idle", false);
+            _ani.SetBool("Run", false);
             _ani.Play("GameOver");
         }
 

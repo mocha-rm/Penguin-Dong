@@ -13,6 +13,7 @@ using MessagePipe;
 using GameScene.Message;
 using TingleAvoid;
 using TingleAvoid.AD;
+using UnityEngine.SocialPlatforms.Impl;
 
 
 namespace GameScene.UI
@@ -116,6 +117,8 @@ namespace GameScene.UI
                 _gameOverBtns[i] = _gameoverPanel.GetChild(Constants.GameOverPanelButtonsKeys[i]).GetComponent<Button>();
             }
 
+            PausePanelButtonsSetting();
+
             _directionBtn.OnClickAsObservable().Subscribe(_ =>
             {
                 _directionPub.Publish(new DirectionButtonClick()
@@ -185,6 +188,7 @@ namespace GameScene.UI
 
             _gameOverBtns[(int)GameOverPanelBtn.AdContinue].OnClickAsObservable().Subscribe(_ =>
             {
+                _pausePanelOpenBtn.interactable = true;
                 //부활 => 게임오버시 코인 2배로 획득
                 var adActions = new AdActions
                 {
@@ -225,10 +229,6 @@ namespace GameScene.UI
                 _gameoverPanel.gameObject.SetActive(false);
                 _admob.RequestAd(adActions);
             }).AddTo(_disposable);
-
-            PausePanelButtonsSetting();
-
-            GameOverPanelButtonsSetting();
         }
 
         public override void Dispose()
@@ -250,7 +250,27 @@ namespace GameScene.UI
 
         public void NonactiveAdContinueButton()
         {
-            _gameOverBtns[(int)GameOverPanelBtn.AdContinue].enabled = false;
+            _gameOverBtns[(int)GameOverPanelBtn.AdContinue].interactable = false;
+        }
+
+        public void ResetResultUIElements()
+        {
+            _scoreText.transform.parent.gameObject.SetActive(false);
+            _scoreText.gameObject.SetActive(false);
+
+            _levelText.transform.parent.gameObject.SetActive(false);
+            _levelText.gameObject.SetActive(false);
+            
+            _newRecordImg.gameObject.SetActive(false);
+            
+            _coinText.transform.parent.gameObject.SetActive(false);
+            _coinText.gameObject.SetActive(false);
+            _coinImg.gameObject.SetActive(false);
+                       
+            foreach (Button btn in _gameOverBtns)
+            {
+                btn.gameObject.SetActive(false);
+            }                                                                               
         }
         #endregion
 
@@ -326,19 +346,6 @@ namespace GameScene.UI
                 _pref.VibrateControl(_pauseBtns[(int)PausePanelBtn.Vibration]);
                 
                 //Vibration On / Off
-            }).AddTo(_disposable);
-        }
-
-        private void GameOverPanelButtonsSetting()
-        {
-            _gameOverBtns[(int)GameOverPanelBtn.Home].OnClickAsObservable().Subscribe(_ =>
-            {
-                //Home Scene Loading
-            }).AddTo(_disposable);
-
-            _gameOverBtns[(int)GameOverPanelBtn.AdContinue].OnClickAsObservable().Subscribe(_ =>
-            {
-                //After Ad and Resume Game
             }).AddTo(_disposable);
         }
 

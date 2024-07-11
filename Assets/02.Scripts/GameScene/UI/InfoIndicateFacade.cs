@@ -124,6 +124,7 @@ namespace GameScene.UI
         public void ResetLifeStatus()
         {
             _hpBar.fillAmount = 1.0f;
+            _hpText.text = $"{_curHP = 100.0f} / {Constants.DefaultHP}";
         }
 
         public void SetLifeStatus(float setValue)

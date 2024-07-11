@@ -18,10 +18,12 @@ namespace GameScene.Rule
             _getRewardSub = _container.Resolve<ISubscriber<GetRewardAndContinueEvent>>();
             return _getRewardSub.Subscribe(data =>
             {
+                isGameOver = false;
                 _model.IsGetReward.Value = data.isRewardGet;
                 _model.Life.Value = 100.0f;
                 _uiController.LifeUIAction(_model.Life.Value);
                 _uiController.ResetHpBar();
+                _uiController.ResetGameOverPanelUIElements();
                 _uiController.NonactiveAdContinueBtn();
                 _model.GameState.Value = GameState.Waiting;
 

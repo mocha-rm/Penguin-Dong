@@ -75,6 +75,11 @@ namespace GameScene.UI
         {
             _interactionFacade.NonactiveAdContinueButton();
         }
+
+        public void ResetGameOverPanelUIElements()
+        {
+            _interactionFacade.ResetResultUIElements();
+        }
         #endregion
     }
 }
