@@ -129,6 +129,12 @@ namespace GameScene.Player
             _model = null;
         }
 
+        public void IdleAction()
+        {
+            transform.position = Constants.originPos;
+            _pBehaviour.Idle();
+        }
+
         public void MoveAction()
         {
             _pBehaviour.Move();

@@ -27,6 +27,7 @@ namespace GameScene.Rule
         public ReactiveProperty<int> Coin;
         public ReactiveProperty<float> Life;
         public ReactiveProperty<int> Level;
+        public ReactiveProperty<bool> IsGetReward;
         public ReactiveProperty<GameState> GameState;
 
 
@@ -34,6 +35,7 @@ namespace GameScene.Rule
         public IReadOnlyReactiveProperty<int> CoinProperty { get => Coin; }
         public IReadOnlyReactiveProperty<float> LifeProperty { get => Life; }
         public IReadOnlyReactiveProperty<int> LevelProperty { get => Level; }
+        public IReadOnlyReactiveProperty<bool> GetRewardProperty { get => IsGetReward; }
         public IReadOnlyReactiveProperty<GameState> GameStateProperty { get => GameState; }
         public Dictionary<string, float> AbilitiesProperty { get => Abilities; }
 
@@ -43,6 +45,7 @@ namespace GameScene.Rule
             Coin?.Dispose();
             Life?.Dispose();
             Level?.Dispose();
+            IsGetReward.Dispose();
             GameState?.Dispose();
             Abilities?.Clear();
         }
@@ -70,6 +73,7 @@ namespace GameScene.Rule
         public IReadOnlyReactiveProperty<int> CoinProperty { get; }
         public IReadOnlyReactiveProperty<float> LifeProperty { get; }
         public IReadOnlyReactiveProperty<int> LevelProperty { get; }
+        public IReadOnlyReactiveProperty<bool> GetRewardProperty { get; }
         public IReadOnlyReactiveProperty<GameState> GameStateProperty { get; }
         public Dictionary<string, float> AbilitiesProperty { get; }
     }

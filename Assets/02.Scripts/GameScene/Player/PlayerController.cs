@@ -46,6 +46,11 @@ namespace GameScene.Player
             }
         }
 
+        public void IdleAction()
+        {
+            _player.IdleAction();
+        }
+
         
 
         public void SetdirectionChange()

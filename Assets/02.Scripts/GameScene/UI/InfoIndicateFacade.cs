@@ -121,6 +121,11 @@ namespace GameScene.UI
             }
         }
 
+        public void ResetLifeStatus()
+        {
+            _hpBar.fillAmount = 1.0f;
+        }
+
         public void SetLifeStatus(float setValue)
         {
             _hpText.text = setValue.ToString();
@@ -129,6 +134,12 @@ namespace GameScene.UI
         public void IndicateLevelStatus(float guage, int level)
         {
             LevelGaugeUp(guage, level).Forget();
+        }
+
+        public void CountdownAfterReward()
+        {
+            _countText.gameObject.SetActive(true);
+            StartCountdown().Forget();
         }
         #endregion
 

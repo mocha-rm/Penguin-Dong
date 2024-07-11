@@ -167,7 +167,6 @@ namespace LobbyScene.UI
             _disposables = null;
 
             _admob.Clear();
-            _admob.DestroyADs();
         }
 
         private async UniTaskVoid IndicateRankTMP()

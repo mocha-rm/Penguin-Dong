@@ -30,6 +30,7 @@ namespace GameScene.UI
         Button _directionBtn;
         IPublisher<DirectionButtonClick> _directionPub;
         IPublisher<SceneLoadEvent> _sceneloadPub;
+        IPublisher<GetRewardAndContinueEvent> _getRewardPub;
 
         Button _pausePanelOpenBtn;
 
@@ -102,6 +103,8 @@ namespace GameScene.UI
             _directionPub = _container.Resolve<IPublisher<DirectionButtonClick>>();
 
             _sceneloadPub = _container.Resolve<IPublisher<SceneLoadEvent>>();
+
+            _getRewardPub = _container.Resolve<IPublisher<GetRewardAndContinueEvent>>();
 
             for (int i = 0; i < _pauseBtns.Length; i++)
             {
@@ -182,18 +185,45 @@ namespace GameScene.UI
 
             _gameOverBtns[(int)GameOverPanelBtn.AdContinue].OnClickAsObservable().Subscribe(_ =>
             {
-                _audioService.Stop(AudioService.SoundType.BGM);
-
-                _dbService.GetUserData(_loginService.PLAYFABID);
-
-                //Input AdMob Codes Here
-
-                //play ad here
-                _sceneloadPub.Publish(new SceneLoadEvent()
+                //부활 => 게임오버시 코인 2배로 획득
+                var adActions = new AdActions
                 {
-                    Scene = SceneName.GameScene
-                });
+                    _type = AdType.Reward,
 
+                    _onReward = (reward) =>
+                    {
+                        Debug.Log($"Reward received: {reward.Amount} {reward.Type}");
+                        // 리워드 처리 로직을 여기에 추가
+                       
+                    },
+
+                    _onOpen = () =>
+                    {
+                        Debug.Log("Ad is opened");
+                    },
+                    _onClose = () =>
+                    {
+                        Debug.Log("Ad is closed");
+                        // 리워드 광고가 닫혔을 때 게임재시작
+                        _getRewardPub.Publish(new GetRewardAndContinueEvent()
+                        {
+                            isRewardGet = true
+                        });
+                       
+                    },
+                    _onError = (error) =>
+                    {
+                        Debug.LogError("Ad failed with error: " + error);
+
+                        _getRewardPub.Publish(new GetRewardAndContinueEvent()
+                        {
+                            isRewardGet = true
+                        });
+                    }
+                };
+
+                _gameoverPanel.gameObject.SetActive(false);
+                _admob.RequestAd(adActions);
             }).AddTo(_disposable);
 
             PausePanelButtonsSetting();
@@ -207,7 +237,6 @@ namespace GameScene.UI
             _disposable?.Clear();
             _disposable = null;
             _admob.Clear();
-            _admob.DestroyADs();
         }
 
         #region Public Methods
@@ -217,6 +246,11 @@ namespace GameScene.UI
             _pausePanelOpenBtn.interactable = false;
 
             ResultTask(isRecord, score, level, coin).Forget();
+        }
+
+        public void NonactiveAdContinueButton()
+        {
+            _gameOverBtns[(int)GameOverPanelBtn.AdContinue].enabled = false;
         }
         #endregion
 

@@ -73,6 +73,13 @@ namespace GameScene.Player
         }
 
 
+        public void Idle()
+        {
+            _ani.SetBool("Run", false);
+            _ani.SetBool("Idle", true);
+        }
+
+
         public void Move()
         {
             _ani.SetBool("Run", true);

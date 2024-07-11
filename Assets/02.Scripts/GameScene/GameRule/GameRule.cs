@@ -23,6 +23,7 @@ namespace GameScene.Rule
         GameModel _model;
         bool isGameOver;
         float levelGuage = 0f;
+        
 
         [Inject] IObjectResolver _container;
 
@@ -102,6 +103,8 @@ namespace GameScene.Rule
             SubscribeRoguelikeRefreshEvent().AddTo(bag);
 
             SubscribeRoguelikeSkipEvent().AddTo(bag);
+
+            SubscribeGetRewardAndContinueEvent().AddTo(bag);
 
             _disposable = bag.Build();
         }
@@ -226,6 +229,7 @@ namespace GameScene.Rule
                 Life = new ReactiveProperty<float>(Constants.DefaultHP),
                 Coin = new ReactiveProperty<int>(0),
                 Level = new ReactiveProperty<int>(Constants.DefaultLevel),
+                IsGetReward = new ReactiveProperty<bool>(false),
                 GameState = new ReactiveProperty<GameState>(GameState.Waiting),
             };
         }

@@ -55,10 +55,25 @@ namespace GameScene.UI
             _infoIndicateFacade.SetLifeStatus(setValue);
         }
 
+        public void ReCountdown()
+        {
+            _infoIndicateFacade.CountdownAfterReward();
+        }
+
+        public void ResetHpBar()
+        {
+            _infoIndicateFacade.ResetLifeStatus();
+        }
+
         #region Interaction Part
         public void GameOverUIAction(bool isRecord, int score, int level, int coin)
         {
             _interactionFacade.ActivateGameOverPanel(isRecord, score, level, coin);
+        }
+
+        public void NonactiveAdContinueBtn()
+        {
+            _interactionFacade.NonactiveAdContinueButton();
         }
         #endregion
     }

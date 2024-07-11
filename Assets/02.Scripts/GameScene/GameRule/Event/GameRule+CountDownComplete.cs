@@ -21,7 +21,15 @@ namespace GameScene.Rule
             {
                 _model.GameState.Value = GameState.Playing;
                 //_audioService.Play(AudioService.AudioResources.GO);
-                _audioService.RandomBGMPlay();
+
+                if (!_model.IsGetReward.Value)
+                {
+                    _audioService.RandomBGMPlay();
+                }
+                else
+                {
+                    CoreTask(levelGuage).Forget();
+                }
             });
         }
     }

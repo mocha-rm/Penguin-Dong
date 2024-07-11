@@ -13,7 +13,7 @@ namespace GameScene.Rule
     {
         ISubscriber<ObstacleCrashEvent> _colObstacleSub;
 
-        float _damage = 20.0f;
+        float _damage = 100.0f;
 
         IDisposable SubscribeObstacleCrashEvent()
         {

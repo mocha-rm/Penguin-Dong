@@ -25,15 +25,10 @@ namespace GameScene.Rule
                 _uiController.LifeUIAction(_model.Life.Value);
                 _model.GameState.Value = GameState.GameOver;
 
-                _model.Coin.Value = _model.Score.Value / 10; // need to save the total coin on DB
-                Debug.Log($"EarnCoin : {_model.Coin.Value}");
+                _model.Coin.Value = _model.Score.Value / 10; // need to save the total coin on DB                
                 _roguelikeController.AddCoin(_model.Coin.Value);
 
-                Debug.Log($"SaveCoin In DB : {_roguelikeController.GetCoin().ToString()}");
                 _dbService.SetPlayerData("TotalCoin", _roguelikeController.GetCoin().ToString());
-
-
-                //만약 점수가 지금의 베스트보다 높으면 서버로 업로드
                 if (_model.Score.Value > _dbService.BestScore)
                 {
                     isRecord = true;
