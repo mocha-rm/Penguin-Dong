@@ -151,8 +151,7 @@ public class LoginService : IInitializable, IDisposable
 
     private async UniTaskVoid UpdatePlayerData()
     {
-        _dbService.GetStatisticsAndUpdateNickName();
-        //_dbService.SetPlayerData("NickName", customId);
+        _dbService.UpdateUsernameAndCount();
         await UniTask.Delay(System.TimeSpan.FromMilliseconds(500));
   
         _dbService.SetPlayerData("BestScore", "0");

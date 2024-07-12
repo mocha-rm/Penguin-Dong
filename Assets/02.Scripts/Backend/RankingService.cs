@@ -71,7 +71,7 @@ public class RankingService : IInitializable, IDisposable
 
     //Get My Rank Status in Realtime;;;
 
-    public void GetMyRanking(string myPlayFabId, Action<int> onSuccess, Action<string> onFailure)
+    public void MyRankChecking(string myPlayFabId, Action<int> onSuccess, Action<string> onFailure)
     {
         var request = new GetLeaderboardAroundPlayerRequest
         {
@@ -88,7 +88,8 @@ public class RankingService : IInitializable, IDisposable
     private void OnGetLeaderboardSuccess(GetLeaderboardAroundPlayerResult result, Action<int> onSuccess)
     {
         var myEntry = result.Leaderboard[0]; // 항상 한 개의 항목만 가져올 것이므로 첫 번째 항목이 본인의 정보
-        int myPosition = myEntry.Position;
+        int myPosition = myEntry.Position + 1;
+        
         Debug.Log("My Position: " + myPosition);
         onSuccess?.Invoke(myPosition); // 콜백 호출
     }
@@ -100,8 +101,7 @@ public class RankingService : IInitializable, IDisposable
         onFailure?.Invoke(errorMessage); // 실패 콜백 호출
     }
 
-
-
+    
     //Write to Leaderboard
 
     public void SubmitScore(int playerScore) //call when gameoverEvent if get a bestscore

@@ -151,7 +151,7 @@ namespace LobbyScene.UI
                         _startBtn.transform.parent.gameObject.SetActive(true);
                         _myInfo.gameObject.SetActive(true);
 
-                        GetMyInfo(_myInfo);
+                        GetMyInfo();
                     }
                     
                 }).AddTo(_disposables);
@@ -182,16 +182,15 @@ namespace LobbyScene.UI
             }
         }
 
-        private void GetMyInfo(TextMeshProUGUI tmp)
+        private void GetMyInfo()
         {
-            int myRank = 0;
-
-            _rankService.GetMyRanking(_loginService.PLAYFABID, position => myRank = position, error => Debug.LogError("Error:" + error));
-            
-
-            tmp.text = $"Name : {_dbService.NickName}\nScore : {_dbService.BestScore}\nRank : {myRank + 1}";//시작이 0이라서 1더해주기
+            _rankService.MyRankChecking(_loginService.PLAYFABID, OnSuccess, error => Debug.LogError("Error:" + error));
         }
-
+        private void OnSuccess(int rank)
+        {
+            int myRank = rank;
+            _myInfo.text = $"Name : {_dbService.NickName}\nScore : {_dbService.BestScore}\nRank : {myRank}";//시작이 0이라서 1더해주기
+        }
 
 
         public static class Hierarchy

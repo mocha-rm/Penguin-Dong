@@ -45,7 +45,7 @@ public class ProjectLifeScope : LifetimeScope
     }
 
     private async void Start()
-    {       
+    {
         var sceneService = Container.Resolve<SceneService>();
 
         await sceneService.LoadPreload();

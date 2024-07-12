@@ -121,53 +121,66 @@ public class DBService : IInitializable, IDisposable
         }, DisplayPlayfabError);
     }
 
-    public void GetStatisticsAndUpdateNickName()
+    public void UpdateUsernameAndCount()
     {
-        PlayFabClientAPI.GetPlayerStatistics(
-            new GetPlayerStatisticsRequest(),
-            OnGetStatistics,
-            error => Debug.LogError(error.GenerateErrorReport())
-        );
+        GetCurrentUserCountAndSave();
     }
 
-    private void OnGetStatistics(GetPlayerStatisticsResult result)
+    private void GetCurrentUserCountAndSave()
     {
-        Debug.Log("Received the following Statistics:");
-        int totalUsers = 0;
-        foreach (var eachStat in result.Statistics)
+        PlayFabClientAPI.GetLeaderboard(new GetLeaderboardRequest
         {
-            if (eachStat.StatisticName == TOTAL_USER_KEY)
-            {
-                totalUsers = eachStat.Value;
-                Debug.Log("Statistic (" + eachStat.StatisticName + "): " + eachStat.Value);
-                break;
+            StatisticName = TOTAL_USER_KEY,
+            StartPosition = 0,
+            MaxResultsCount = 1
+        }, result => OnLeaderboardDataReceived(result), FailureCallback);
+    }
+
+    private void OnLeaderboardDataReceived(GetLeaderboardResult result)
+    {
+        if (result.Leaderboard.Count == 0)
+        {
+            // No data exists for this leaderboard, save initial user count.
+            SaveUser(0, false);
+        }
+        else
+        {
+            // Data exists, extract the current user count.
+            int userCount = result.Leaderboard[0].StatValue;
+            SaveUser(userCount, true);
+        }
+    }
+
+
+    public void SaveUser(int userCount, bool hasData)
+    {
+        PlayFabClientAPI.UpdatePlayerStatistics(new UpdatePlayerStatisticsRequest
+        {
+            Statistics = new List<StatisticUpdate> {
+            new StatisticUpdate {
+                StatisticName = TOTAL_USER_KEY,
+                Value = hasData? (userCount + 1) : 1
             }
         }
+        }, result => OnStatisticsUpdated(result, hasData ? (userCount + 1) : 1), FailureCallback);
+    }
 
-        // Increment total users count
-        totalUsers++;
-        string newNickName = "Guest" + totalUsers;
-        NickName = newNickName;
-        SetPlayerData("NickName", newNickName);
-
-        // Update the total user count statistic in PlayFab
-        var updateRequest = new UpdatePlayerStatisticsRequest
-        {
-            Statistics = new List<StatisticUpdate>
-            {
-                new StatisticUpdate
-                {
-                    StatisticName = TOTAL_USER_KEY,
-                    Value = totalUsers
-                }
-            }
-        };
-
-        PlayFabClientAPI.UpdatePlayerStatistics(updateRequest,
-            success => { Debug.Log("Total user count updated successfully."); },
-            error => { Debug.LogError("Failed to update total user count: " + error.GenerateErrorReport()); }
-        );
-
+    private void OnStatisticsUpdated(UpdatePlayerStatisticsResult updateResult, int newUserCount)
+    {
+        SetNickname(newUserCount);
         IsUserLoaded = true;
+        Debug.Log("Successfully submitted user count");
+    }
+    private void SetNickname(int userCount)
+    {
+        NickName = $"Guest{userCount}";
+        SetPlayerData("NickName", NickName);
+    }
+
+
+    private void FailureCallback(PlayFabError error)
+    {
+        Debug.LogWarning("Something went wrong with your API call. Here's some debug information:");
+        Debug.LogError(error.GenerateErrorReport());
     }
 }
