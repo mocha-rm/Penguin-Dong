@@ -145,11 +145,14 @@ namespace LobbyScene.UI
             Observable.EveryUpdate().Where(_ => _loginService.IsLoginSuccess).Where(_ => !_myInfo.gameObject.activeInHierarchy)
                 .Subscribe(_ =>
                 {
-                    _guestBtn.transform.parent.gameObject.SetActive(false);
-                    _startBtn.transform.parent.gameObject.SetActive(true);
-                    _myInfo.gameObject.SetActive(true);
+                    if (_dbService.IsUserLoaded)
+                    {
+                        _guestBtn.transform.parent.gameObject.SetActive(false);
+                        _startBtn.transform.parent.gameObject.SetActive(true);
+                        _myInfo.gameObject.SetActive(true);
 
-                    GetMyInfo(_myInfo);
+                        GetMyInfo(_myInfo);
+                    }
                     
                 }).AddTo(_disposables);
         }

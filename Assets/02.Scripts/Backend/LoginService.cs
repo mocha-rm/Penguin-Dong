@@ -141,7 +141,6 @@ public class LoginService : IInitializable, IDisposable
     public void OnLoginSuccess(LoginResult result) //로그인 결과
     {
         Debug.Log("Playfab Login Success");
-
         playfabId = result.PlayFabId;
         entityId = result.EntityToken.Entity.Id;
         entityType = result.EntityToken.Entity.Type;
@@ -149,12 +148,39 @@ public class LoginService : IInitializable, IDisposable
     }
 
 
+
     private async UniTaskVoid UpdatePlayerData()
     {
-        _dbService.SetPlayerData("NickName", customId);
+        _dbService.GetStatisticsAndUpdateNickName();
+        //_dbService.SetPlayerData("NickName", customId);
         await UniTask.Delay(System.TimeSpan.FromMilliseconds(500));
   
         _dbService.SetPlayerData("BestScore", "0");
         await UniTask.Delay(System.TimeSpan.FromMilliseconds(500));
+
+        SetDisplayName(_dbService.NickName);
+    }
+
+
+
+    //Display Name
+    void SetDisplayName(string displayName)
+    {
+        var request = new UpdateUserTitleDisplayNameRequest
+        {
+            DisplayName = displayName
+        };
+
+        PlayFabClientAPI.UpdateUserTitleDisplayName(request, OnDisplayNameUpdateSuccess, OnDisplayNameUpdateFailure);
+    }
+
+    void OnDisplayNameUpdateSuccess(UpdateUserTitleDisplayNameResult result)
+    {
+        Debug.Log("DisplayName updated to: " + result.DisplayName);
+    }
+
+    void OnDisplayNameUpdateFailure(PlayFabError error)
+    {
+        Debug.LogError("DisplayName update failed: " + error.GenerateErrorReport());
     }
 }

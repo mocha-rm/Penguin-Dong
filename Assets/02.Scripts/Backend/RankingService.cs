@@ -41,7 +41,6 @@ public class RankingService : IInitializable, IDisposable
     {
         PlayFabClientAPI.GetLeaderboard(new GetLeaderboardRequest
         {
-
             StatisticName = "BestScore",
             StartPosition = 0,
             MaxResultsCount = 10,
@@ -56,10 +55,11 @@ public class RankingService : IInitializable, IDisposable
 
         foreach (PlayerLeaderboardEntry player in curBoard)
         {
-            string playFabId = player.PlayFabId;
+            Debug.Log(player.DisplayName);
+            string displayName = player.DisplayName;
             int score = player.StatValue;
 
-            _rankDic[playFabId] = score;
+            _rankDic[displayName] = score;
         }
         obj.SetActive(false);
     }
