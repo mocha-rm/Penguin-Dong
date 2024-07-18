@@ -20,7 +20,7 @@ public class DBService : IInitializable, IDisposable
     public bool IsUserLoaded { get; private set; }
 
     //DATA
-    public string NickName { get; private set; }
+    public string NickName { get; private set; } = null;
     public int TotalCoin { get; private set; } = 5000;
     public int BestScore { get; private set; }
     private const string TOTAL_USER_KEY = "TotalUsers";

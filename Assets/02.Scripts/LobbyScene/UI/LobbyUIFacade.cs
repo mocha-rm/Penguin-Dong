@@ -31,12 +31,13 @@ namespace LobbyScene.UI
 
         Button _guestBtn;
         Button _googleBtn;
+        TextMeshProUGUI _dataexplainText;
         #endregion
 
         AudioService _audioService;
         RankingService _rankService;
         RankingBoard _rankBoard;
-        GameObject _loadingPanel;
+        Transform _loadingPanel;
 
         //Admob
         AdmobService _admob;
@@ -59,6 +60,9 @@ namespace LobbyScene.UI
 
             _guestBtn = gameObject.GetHierachyPath<Button>(Hierarchy.GuestLoginButton);
             _googleBtn = gameObject.GetHierachyPath<Button>(Hierarchy.GoogleLoginButton);
+            _dataexplainText = gameObject.GetHierachyPath<TextMeshProUGUI>(Hierarchy.DataExplainTMP);
+
+            _loadingPanel = gameObject.GetHierachyPath<Transform>(Hierarchy.LoadingPanel);
         }
 
 
@@ -75,15 +79,7 @@ namespace LobbyScene.UI
             _admob = new AdmobService();
             _admob.Init();
 
-            var adAction = new AdActions()
-            {
-                _type = AdType.Banner,                
-            };
-
-            _admob.RequestAd(adAction);
-            
-
-
+           
             _disposables = new CompositeDisposable();
 
             var loader = _container.Resolve<SceneService>();
@@ -93,11 +89,12 @@ namespace LobbyScene.UI
             preferences.CheckSoundStatus(_soundBtn);
             preferences.CheckVibrationStatus(_vibrationBtn);
 
-            _loadingPanel = _rankBoard.transform.GetChild(1).gameObject;
+            _rankingloadBtn.interactable = false;
 
-
+           
             _guestBtn.OnClickAsObservable().Subscribe(_ =>
             {
+                _loadingPanel.gameObject.SetActive(true);
                 _loginService.OnClickGuestLogin();
             }).AddTo(_disposables);
 
@@ -134,7 +131,7 @@ namespace LobbyScene.UI
             {
                 _audioService.Play(AudioService.AudioResources.Button);
                 _rankBoard.gameObject.SetActive(true);
-                _rankService.RequestLeaderboard(_loadingPanel);
+                _rankService.RequestLeaderboard(_loadingPanel.gameObject);
 
                 IndicateRankTMP().Forget();
 
@@ -147,11 +144,21 @@ namespace LobbyScene.UI
                 {
                     if (_dbService.IsUserLoaded)
                     {
+                        _rankingloadBtn.interactable = true;
+                        _loadingPanel.gameObject.SetActive(false);
                         _guestBtn.transform.parent.gameObject.SetActive(false);
+                        _dataexplainText.gameObject.SetActive(false);
                         _startBtn.transform.parent.gameObject.SetActive(true);
                         _myInfo.gameObject.SetActive(true);
 
                         GetMyInfo();
+
+                        var adAction = new AdActions()
+                        {
+                            _type = AdType.Banner,
+                        };
+
+                        _admob.RequestAd(adAction);
                     }
                     
                 }).AddTo(_disposables);
@@ -176,7 +183,7 @@ namespace LobbyScene.UI
         {
             await UniTask.Delay(TimeSpan.FromMilliseconds(500f));
 
-            if (!_loadingPanel.activeInHierarchy)
+            if (!_loadingPanel.gameObject.activeInHierarchy)
             {
                 _rankBoard.SetTMP(_rankService.GetRankInfo());
             }
@@ -207,6 +214,9 @@ namespace LobbyScene.UI
 
             public static readonly string GuestLoginButton = "Background/Login/GuestLogin";
             public static readonly string GoogleLoginButton = "Background/Login/GoogleLogin";
+            public static readonly string DataExplainTMP = "Background/Dataexplain";
+
+            public static readonly string LoadingPanel = "Loading";
         }
     }
 }

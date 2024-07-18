@@ -25,7 +25,13 @@ namespace GameScene.Rule
                 _uiController.LifeUIAction(_model.Life.Value);
                 _model.GameState.Value = GameState.GameOver;
 
-                _model.Coin.Value = _model.Score.Value / 10; // need to save the total coin on DB                
+                _model.Coin.Value = _model.Score.Value / 10; // need to save the total coin on DB
+
+                if (_model.IsGetReward.Value is true)
+                {
+                    _model.Coin.Value *= 2;
+                }
+
                 _roguelikeController.AddCoin(_model.Coin.Value);
 
                 _dbService.SetPlayerData("TotalCoin", _roguelikeController.GetCoin().ToString());

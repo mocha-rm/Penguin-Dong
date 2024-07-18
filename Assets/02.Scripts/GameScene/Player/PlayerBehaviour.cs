@@ -11,8 +11,6 @@ namespace GameScene.Player
 {
     public class PlayerBehaviour : MonoBehaviour
     {
-        //Player �� ��ǰ �� 1
-
         private Vector3 LeftScale = new Vector3(-1f, 1f, 1f);
 
 
@@ -133,11 +131,11 @@ namespace GameScene.Player
                 controlValue = (float)Math.Round((0.02f + iceValue), 2);
             }
 #else
-             float controlValue = 0.62f;
+             float controlValue = 0.72f;
 
             if (iceValue > 0f)
             {
-                controlValue = (float)Math.Round((0.62f + iceValue), 2);
+                controlValue = (float)Math.Round((0.72f + iceValue), 2);
             }
 #endif
 
@@ -165,11 +163,11 @@ namespace GameScene.Player
                 controlValue = (float)Math.Round((0.02f + iceValue), 2);
             }
 #else
-            float controlValue = 0.62f;
+            float controlValue = 0.72f;
 
             if (iceValue > 0f)
             {
-                controlValue = (float)Math.Round((0.62f + iceValue), 2);
+                controlValue = (float)Math.Round((0.72f + iceValue), 2);
             }
 #endif
 

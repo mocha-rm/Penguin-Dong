@@ -1,17 +1,10 @@
-//using GooglePlayGames;
-//using GooglePlayGames.BasicApi;
-//using GooglePlayGames.BasicApi.Events;
-//using GooglePlayGames.BasicApi.Nearby;
-//using GooglePlayGames.BasicApi.SavedGame;
-//using GooglePlayGames.Android;
-//using GooglePlayGames.Editor;
-//using GooglePlayGames.OurUtils;
 using PlayFab;
 using PlayFab.ClientModels;
 using PlayFab.AuthenticationModels;
 using PlayFab.Json;
 using PlayFab.ProfilesModels;
 using System;
+using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,6 +31,9 @@ public enum LoginStatus
 public class LoginService : IInitializable, IDisposable
 {
     [Inject] IObjectResolver _container;
+
+    private string savePath;
+
     DBService _dbService;
 
     static string customId = "";
@@ -60,11 +56,13 @@ public class LoginService : IInitializable, IDisposable
 
         isLoginSuccess = false;
 
-        if (PlayerPrefs.HasKey("GUESTID"))
+        savePath = Application.persistentDataPath + "/guest_id.txt";
+
+        if (File.Exists(savePath))
         {
-            customId = PlayerPrefs.GetString("GUESTID");
+            customId = File.ReadAllText(savePath);
             LoginGuestId();
-        }
+        }       
     }
 
     public void Dispose()
@@ -96,10 +94,9 @@ public class LoginService : IInitializable, IDisposable
             CreateAccount = true
         }, result =>
         {
-            PlayerPrefs.SetString("GUESTID", customId);
-            PlayerPrefs.Save();
             UpdatePlayerData().Forget();
             OnLoginSuccess(result);
+            File.WriteAllText(savePath, customId);
         }, error =>
         {           
             Debug.LogError("Login Fail - Guest");
@@ -155,7 +152,8 @@ public class LoginService : IInitializable, IDisposable
         await UniTask.Delay(System.TimeSpan.FromMilliseconds(500));
   
         _dbService.SetPlayerData("BestScore", "0");
-        await UniTask.Delay(System.TimeSpan.FromMilliseconds(500));
+        await UniTask.WaitUntil(() => _dbService.NickName != null);
+        //await UniTask.Delay(System.TimeSpan.FromMilliseconds(500));
 
         SetDisplayName(_dbService.NickName);
     }

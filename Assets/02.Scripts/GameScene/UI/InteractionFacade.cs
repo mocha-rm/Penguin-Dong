@@ -20,6 +20,8 @@ namespace GameScene.UI
 {
     public class InteractionFacade : BaseFacade, IRegistMonobehavior
     {
+        BLOC _bloc;
+
         AdmobService _admob;
 
         AudioService _audioService;
@@ -35,6 +37,8 @@ namespace GameScene.UI
 
         Button _pausePanelOpenBtn;
 
+        [SerializeField]GameObject _loadingPanel;
+
         CompositeDisposable _disposable;
 
 
@@ -48,6 +52,7 @@ namespace GameScene.UI
         //Coin
         TextMeshProUGUI _coinText;
         Image _coinImg;
+        TextMeshProUGUI _x2Img;
 
         Button[] _gameOverBtns;
         enum GameOverPanelBtn { Home, AdContinue }
@@ -80,6 +85,7 @@ namespace GameScene.UI
             _levelText = gameObject.GetHierachyPath<TextMeshProUGUI>(Hierarchy.LevelText);
             _coinText = gameObject.GetHierachyPath<TextMeshProUGUI>(Hierarchy.CoinText);
             _coinImg = gameObject.GetHierachyPath<Image>(Hierarchy.CoinImage);
+            _x2Img = gameObject.GetHierachyPath<TextMeshProUGUI>(Hierarchy.X2CointImage);
         }
 
         public override void Initialize()
@@ -91,6 +97,8 @@ namespace GameScene.UI
             _loginService = _container.Resolve<LoginService>();
 
             _pref = _container.Resolve<Preferences>();
+
+            _bloc = _container.Resolve<BLOC>();
 
             _admob = new AdmobService();
             _admob.Init();
@@ -139,7 +147,6 @@ namespace GameScene.UI
             _gameOverBtns[(int)GameOverPanelBtn.Home].OnClickAsObservable().Subscribe(_ =>
             {
                 _audioService.Stop(AudioService.SoundType.BGM);
-
                 //Get Lastest UserInfo Here
                 _dbService.GetUserData(_loginService.PLAYFABID);
 
@@ -158,6 +165,7 @@ namespace GameScene.UI
                         {
                             Debug.Log("Ad is closed");
                             // 전면 광고가 닫혔을 때 씬 이동
+                            _loadingPanel.gameObject.SetActive(false);
                             _sceneloadPub.Publish(new SceneLoadEvent()
                             {
                                 Scene = SceneName.LobbyScene
@@ -166,6 +174,7 @@ namespace GameScene.UI
                         _onError = (error) =>
                         {
                             Debug.LogError("Ad failed with error: " + error);
+                            _loadingPanel.gameObject.SetActive(false);
                             // 광고 로드 실패 시에도 씬 이동을 원하면 여기에 추가
                             _sceneloadPub.Publish(new SceneLoadEvent()
                             {
@@ -174,6 +183,7 @@ namespace GameScene.UI
                         }
                     };
 
+                    _loadingPanel.SetActive(true);
                     _admob.RequestAd(adActions);
                 }
                 else
@@ -198,7 +208,6 @@ namespace GameScene.UI
                     {
                         Debug.Log($"Reward received: {reward.Amount} {reward.Type}");
                         // 리워드 처리 로직을 여기에 추가
-                       
                     },
 
                     _onOpen = () =>
@@ -209,6 +218,8 @@ namespace GameScene.UI
                     {
                         Debug.Log("Ad is closed");
                         // 리워드 광고가 닫혔을 때 게임재시작
+                        _loadingPanel.gameObject.SetActive(false);
+
                         _getRewardPub.Publish(new GetRewardAndContinueEvent()
                         {
                             isRewardGet = true
@@ -218,6 +229,7 @@ namespace GameScene.UI
                     _onError = (error) =>
                     {
                         Debug.LogError("Ad failed with error: " + error);
+                        _loadingPanel.gameObject.SetActive(false);
 
                         _getRewardPub.Publish(new GetRewardAndContinueEvent()
                         {
@@ -227,6 +239,7 @@ namespace GameScene.UI
                 };
 
                 _gameoverPanel.gameObject.SetActive(false);
+                _loadingPanel.SetActive(true);
                 _admob.RequestAd(adActions);
             }).AddTo(_disposable);
         }
@@ -246,6 +259,7 @@ namespace GameScene.UI
             _pausePanelOpenBtn.interactable = false;
 
             ResultTask(isRecord, score, level, coin).Forget();
+            //여기서 리워드 받으면 코인 한번더 올려주는 로직을 작성해도 되고
         }
 
         public void NonactiveAdContinueButton()
@@ -266,6 +280,7 @@ namespace GameScene.UI
             _coinText.transform.parent.gameObject.SetActive(false);
             _coinText.gameObject.SetActive(false);
             _coinImg.gameObject.SetActive(false);
+            
                        
             foreach (Button btn in _gameOverBtns)
             {
@@ -288,6 +303,7 @@ namespace GameScene.UI
             _pauseBtns[(int)PausePanelBtn.Home].OnClickAsObservable().Subscribe(_ =>
             {
                 _pausePanel.gameObject.SetActive(false);
+
                 Time.timeScale = 1.0f;
                 _audioService.Stop(AudioService.SoundType.BGM);
 
@@ -305,6 +321,7 @@ namespace GameScene.UI
                         _onClose = () =>
                         {
                             Debug.Log("Ad is closed");
+                            _loadingPanel.gameObject.SetActive(false);
                             // 전면 광고가 닫혔을 때 씬 이동
                             _sceneloadPub.Publish(new SceneLoadEvent()
                             {
@@ -314,6 +331,7 @@ namespace GameScene.UI
                         _onError = (error) =>
                         {
                             Debug.LogError("Ad failed with error: " + error);
+                            _loadingPanel.gameObject.SetActive(false);
                             // 광고 로드 실패 시에도 씬 이동을 원하면 여기에 추가
                             _sceneloadPub.Publish(new SceneLoadEvent()
                             {
@@ -321,7 +339,7 @@ namespace GameScene.UI
                             });
                         }
                     };
-
+                    _loadingPanel.SetActive(true);
                     _admob.RequestAd(adActions);
                 }
                 else
@@ -355,13 +373,13 @@ namespace GameScene.UI
             _scoreText.transform.parent.gameObject.SetActive(true);
             await UniTask.Delay(TimeSpan.FromMilliseconds(500));
             _scoreText.gameObject.SetActive(true);
-            _scoreText.text = score.ToString();
+            await AnimateValue(_scoreText, score);
 
             await UniTask.Delay(TimeSpan.FromMilliseconds(500));
             _levelText.transform.parent.gameObject.SetActive(true);
             await UniTask.Delay(TimeSpan.FromMilliseconds(500));
             _levelText.gameObject.SetActive(true);
-            _levelText.text = level.ToString();
+            await AnimateValue(_levelText, level);
 
             if (isRecord)
             {
@@ -372,15 +390,48 @@ namespace GameScene.UI
             await UniTask.Delay(TimeSpan.FromMilliseconds(500));
             _coinText.transform.parent.gameObject.SetActive(true);
             await UniTask.Delay(TimeSpan.FromMilliseconds(500));
-            _coinText.gameObject.SetActive(true);
-            _coinText.text = coin.ToString();
             _coinImg.gameObject.SetActive(true);
+            _coinText.gameObject.SetActive(true);
+
+            if (_bloc.GameModel.GetRewardProperty.Value is true)
+            {
+                await AnimateValue(_coinText, coin/2);
+                await UniTask.Delay(TimeSpan.FromMilliseconds(800));
+                PresentDoubleCoinEffect(coin).Forget();
+            }
+            else
+            {
+                await AnimateValue(_coinText, coin);
+            }
 
             await UniTask.Delay(TimeSpan.FromMilliseconds(500));
 
             foreach (Button btn in _gameOverBtns)
             {
                 btn.gameObject.SetActive(true);
+            }
+        }
+        private async UniTaskVoid PresentDoubleCoinEffect(int coin)
+        {
+            await AnimateValue(_coinText, coin, coin/2);
+            _x2Img.gameObject.SetActive(true);
+        }
+
+
+        private async UniTask AnimateValue(TextMeshProUGUI textElement, int targetValue, int currentValue = 0)
+        {
+            int increment = 30; // Change this to control the speed of the count-up animation
+            float delay = 0.01f; // Change this to control the delay between each increment
+
+            while (currentValue < targetValue)
+            {
+                currentValue += increment;
+                if (currentValue > targetValue)
+                {
+                    currentValue = targetValue;
+                }
+                textElement.text = currentValue.ToString();
+                await UniTask.Delay(TimeSpan.FromSeconds(delay));
             }
         }
         #endregion
@@ -407,6 +458,7 @@ namespace GameScene.UI
             public static readonly string LevelText = "GameOver/Tr_Level/Text_Level";
             public static readonly string CoinText = "GameOver/Tr_Coin/Text_Coin";
             public static readonly string CoinImage = "GameOver/Tr_Coin/Img_Coin";
+            public static readonly string X2CointImage = "GameOver/Tr_Coin/Double";
         }
     }
 }
