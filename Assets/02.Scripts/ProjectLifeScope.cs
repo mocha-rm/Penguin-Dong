@@ -22,6 +22,7 @@ public enum SceneName
 
 public class ProjectLifeScope : LifetimeScope
 {
+    [SerializeField] SplashSceen _splash;
     readonly SceneName StartScene = SceneName.LobbyScene;
     #region SingleScope
 
@@ -49,6 +50,8 @@ public class ProjectLifeScope : LifetimeScope
         var sceneService = Container.Resolve<SceneService>();
 
         await sceneService.LoadPreload();
+
+        await _splash.ShowCustomSplash();
 
         Container.Resolve<SceneService>().LoadScene(StartScene).Forget();
     }

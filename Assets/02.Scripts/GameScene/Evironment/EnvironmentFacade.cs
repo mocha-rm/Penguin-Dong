@@ -8,10 +8,11 @@ namespace GameScene.Environment
     {
         [SerializeField] Transform _obstacleSpawnTrans;
         [SerializeField] Transform _groundTrans;
-        //[SerializeField] List<WarpComponent> _warpComponentList;
 
 
         Collider2D _spawnCollider;
+
+
 
         public Vector3 GetRandomObstacleSpawnPos()
         {
@@ -21,16 +22,12 @@ namespace GameScene.Environment
 
         public float GetGroundY()
         {
-            //5.4 + 0.6 = 6.0
             return _groundTrans.position.y + 0.6f;
         }
 
         public override void Initialize()
         {
             _spawnCollider = _obstacleSpawnTrans.GetComponent<Collider2D>();
-
-            //_warpComponentList.ForEach(warp => warp.Init());
-
         }
 
         public override void Dispose()

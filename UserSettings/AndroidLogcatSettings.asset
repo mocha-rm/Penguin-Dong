@@ -2,8 +2,8 @@
     "m_SelectedDeviceId": "43081JEKB10566",
     "m_SelectedPackage": {
         "deviceId": "43081JEKB10566",
-        "name": "com.gsmr.tingleavoid",
-        "processId": 31995,
+        "name": "com.gsmr.randomtingles",
+        "processId": 16577,
         "exited": false
     },
     "m_SelectedPriority": 0,
@@ -46,32 +46,32 @@
         },
         {
             "deviceId": "43081JEKB10566",
-            "name": "com.google.android.apps.nexuslauncher",
-            "processId": 15965,
-            "exited": false
-        },
-        {
-            "deviceId": "43081JEKB10566",
-            "name": "com.gsmr.tingleavoid",
-            "processId": 25921,
+            "name": "com.gsmr.randomtingles",
+            "processId": 11726,
             "exited": true
         },
         {
             "deviceId": "43081JEKB10566",
-            "name": "com.gsmr.tingleavoid",
-            "processId": 28666,
+            "name": "com.gsmr.randomtingles",
+            "processId": 25887,
             "exited": true
         },
         {
             "deviceId": "43081JEKB10566",
-            "name": "com.gsmr.tingleavoid",
-            "processId": 29890,
+            "name": "com.gsmr.randomtingles",
+            "processId": 12527,
             "exited": true
         },
         {
             "deviceId": "43081JEKB10566",
-            "name": "com.gsmr.tingleavoid",
-            "processId": 31995,
+            "name": "com.gsmr.randomtingles",
+            "processId": 16175,
+            "exited": true
+        },
+        {
+            "deviceId": "43081JEKB10566",
+            "name": "com.gsmr.randomtingles",
+            "processId": 16577,
             "exited": false
         }
     ],

@@ -2,9 +2,9 @@
 using System;
 using UniRx;
 using UnityEngine;
-using static TingleAvoid.AD.Ad_BannerViewProvider;
+using static RandomTingles.AD.Ad_BannerViewProvider;
 
-namespace TingleAvoid.AD
+namespace RandomTingles.AD
 {
     public class Ad_FullScreenViewProvider
     {

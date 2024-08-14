@@ -8,7 +8,7 @@ using UniRx;
 using System.Drawing;
 
 
-namespace TingleAvoid.AD
+namespace RandomTingles.AD
 {
     public class Ad_BannerViewProvider
     {

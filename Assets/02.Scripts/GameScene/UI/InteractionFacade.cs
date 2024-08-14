@@ -11,8 +11,8 @@ using UniRx;
 using System;
 using MessagePipe;
 using GameScene.Message;
-using TingleAvoid;
-using TingleAvoid.AD;
+using RandomTingles;
+using RandomTingles.AD;
 using UnityEngine.SocialPlatforms.Impl;
 
 

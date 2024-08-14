@@ -17,7 +17,7 @@ namespace GameScene
     public class RoguelikeFacade : BaseFacade, IRegistMonobehavior
     {
         //DB
-        private int _dbCoin = 0; //Get DB`s Coin Info at FirstTime
+        private int _dbCoin = 0;
         public int useCoin { get; private set; }
         DBService _dbService;
 
@@ -233,8 +233,26 @@ namespace GameScene
         #region Public
         public void SetOriginPosition()
         {
-            _rect.offsetMin = new Vector2(_rect.offsetMin.x, -Screen.height);
-            _rect.offsetMax = new Vector2(_rect.offsetMax.x, -Screen.height);
+            // _rect.offsetMin = new Vector2(_rect.offsetMin.x, -Screen.height);
+            // _rect.offsetMax = new Vector2(_rect.offsetMax.x, -Screen.height);
+
+            // _item1Btn.enabled = false;
+            // _item2Btn.enabled = false;
+            // _refreshBtn.enabled = false;
+            // _skipBtn.enabled = false;
+
+            RectTransform rectTransform = GetComponent<RectTransform>();
+
+            // Calculate the safe area based on device
+            Rect safeArea = Screen.safeArea;
+            float safeAreaBottom = Screen.height - safeArea.y;
+            
+            // Move the UI offscreen by using safe area calculations
+            Vector2 newOffsetMin = new Vector2(rectTransform.offsetMin.x, -safeAreaBottom - rectTransform.rect.height);
+            Vector2 newOffsetMax = new Vector2(rectTransform.offsetMax.x, -safeAreaBottom - rectTransform.rect.height);
+
+            rectTransform.offsetMin = newOffsetMin;
+            rectTransform.offsetMax = newOffsetMax;
 
             _item1Btn.enabled = false;
             _item2Btn.enabled = false;

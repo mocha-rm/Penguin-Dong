@@ -3,7 +3,7 @@ using System;
 using UniRx;
 using UnityEngine;
 
-namespace TingleAvoid.AD
+namespace RandomTingles.AD
 {
     public class Ad_RewardViewProvider
     {

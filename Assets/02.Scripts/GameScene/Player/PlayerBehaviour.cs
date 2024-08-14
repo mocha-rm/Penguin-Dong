@@ -100,7 +100,7 @@ namespace GameScene.Player
             }
         }
 
-        public void Crashed() //invulnerable (상처를 입힐 수 없는ㅋ)
+        public void Crashed() //invulnerable
         {
             _ani.Play("penguin_jump");
 

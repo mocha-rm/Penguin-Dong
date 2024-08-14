@@ -9,8 +9,9 @@ using TMPro;
 
 using UniRx;
 using Cysharp.Threading.Tasks;
-using TingleAvoid.AD;
-using TingleAvoid;
+using RandomTingles.AD;
+using RandomTingles;
+using GooglePlayGames.BasicApi;
 
 
 namespace LobbyScene.UI
@@ -101,7 +102,8 @@ namespace LobbyScene.UI
 
             _googleBtn.OnClickAsObservable().Subscribe(_ =>
             {
-                //Add Later
+                //_loadingPanel.gameObject.SetActive(true);
+                _loginService.GoogleLogin();
             }).AddTo(_disposables);
 
 

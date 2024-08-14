@@ -32,12 +32,12 @@ namespace GameScene.Player
         }
 
 
-        BLOC _bloc; //Through BLOC can Access GameState of GameRule.GameModel
+        BLOC _bloc;
 
-        //Component (��ǰ)
+        
         PlayerBehaviour _pBehaviour;
         ShieldBehaviour _shield;
-        //ReactiveProperty<int> _shieldCount;
+        
 
         //Model
         FacadeModel _model;

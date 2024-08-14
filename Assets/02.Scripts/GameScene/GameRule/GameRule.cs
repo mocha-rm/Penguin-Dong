@@ -12,6 +12,8 @@ using GameScene.UI;
 using GameScene.Obstacle;
 using GameScene.Message;
 
+
+
 namespace GameScene.Rule
 {
     public enum GameState { Waiting, Playing, GameOver }
@@ -153,7 +155,6 @@ namespace GameScene.Rule
 
                 _obstacleController.SpawnObstacles(1);
                 _audioService.RandomObjectPlay();
-                //_audioService.Play(AudioService.AudioResources.Fire_Shoot);
             }
         }
 
@@ -175,7 +176,6 @@ namespace GameScene.Rule
                 _model.GameState.Value = GameState.Waiting;
                 _roguelikeController.ActivateRoguelike();
                 _playerController.SetPlayerInvulnerable(true);
-                 //Level Up Particle and sound?
             }
         }
 
@@ -185,7 +185,6 @@ namespace GameScene.Rule
             Utility.CustomLog.Log(_roguelikeController.GetItem().Value);
             _model.Abilities[_roguelikeController.GetItem().Name] = _roguelikeController.GetItem().Value;
 
-            //만약에 벨류가 일회용이면 벨류 만큼 있다가 다시 0으로 초기화 하기
             if (_roguelikeController.GetItem().Disposable)
             {
                 DisposableAbilityActions(_roguelikeController.GetItem().Name);

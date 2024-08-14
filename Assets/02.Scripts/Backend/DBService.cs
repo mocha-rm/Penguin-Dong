@@ -15,6 +15,8 @@ public class DBService : IInitializable, IDisposable
 {
     [Inject] IObjectResolver _container;
 
+    LoginService _loginService;
+
     IDisposable _disposable;
 
     public bool IsUserLoaded { get; private set; }
@@ -29,7 +31,7 @@ public class DBService : IInitializable, IDisposable
 
     public void Initialize()
     {
-        _container.Resolve<LoginService>();
+        _loginService = _container.Resolve<LoginService>();
         IsUserLoaded = false;
     }
 
@@ -173,7 +175,15 @@ public class DBService : IInitializable, IDisposable
     }
     private void SetNickname(int userCount)
     {
-        NickName = $"Guest{userCount}";
+        if (_loginService.IsGoogleLogin)
+        {
+            NickName = _loginService.GoogleNickname;            
+        }
+        else
+        {
+            NickName = $"Guest{userCount}";
+        }
+        
         SetPlayerData("NickName", NickName);
     }
 

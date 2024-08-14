@@ -3,6 +3,8 @@ using PlayFab.ClientModels;
 using PlayFab.AuthenticationModels;
 using PlayFab.Json;
 using PlayFab.ProfilesModels;
+using GooglePlayGames;
+using GooglePlayGames.BasicApi;
 using System;
 using System.IO;
 using System.Collections;
@@ -19,13 +21,6 @@ using Cysharp.Threading.Tasks;
 
 using EntityKey = PlayFab.ProfilesModels.EntityKey;
 
-public enum LoginStatus
-{
-    FIRST,
-    USED,
-    NONE
-}
-
 
 
 public class LoginService : IInitializable, IDisposable
@@ -38,7 +33,10 @@ public class LoginService : IInitializable, IDisposable
 
     static string customId = "";
     static string playfabId = "";
-    public string PLAYFABID { get => playfabId; } 
+    public string PLAYFABID { get => playfabId; }
+
+    public string GoogleNickname {get; private set;}
+    public bool IsGoogleLogin {get; set;} = false;
 
     private string entityId;
     private string entityType;
@@ -62,7 +60,11 @@ public class LoginService : IInitializable, IDisposable
         {
             customId = File.ReadAllText(savePath);
             LoginGuestId();
-        }       
+        }
+
+        PlayGamesPlatform.DebugLogEnabled = true;
+        PlayGamesPlatform.Activate();
+        GoogleLogin();
     }
 
     public void Dispose()
@@ -70,6 +72,67 @@ public class LoginService : IInitializable, IDisposable
         _disposable?.Dispose();
         _disposable = null;
     }
+
+    #region GoogleLogin
+    public void GoogleLogin()
+    {
+        //Google Play Games Login
+        PlayGamesPlatform.Instance.Authenticate(ProcessAuthentication);
+        //PlayGamesPlatform.Instance.ManuallyAuthenticate(ProcessAuthentication);
+    }
+
+    internal void ProcessAuthentication(SignInStatus status)
+    {
+        if (status == SignInStatus.Success)
+        {
+            PlayGamesPlatform.Instance.RequestServerSideAccess(false, ProcessServerAuthCode);
+            Debug.Log("Google Login Successed");
+        }
+        else
+        {
+            Debug.Log(status.ToString());
+            Debug.LogError("Google Login Failed");
+        }        
+    }
+
+    private void ProcessServerAuthCode(string serverAuthCode)
+    {
+        Debug.Log("Server Auth Code: " + serverAuthCode);
+
+        var request = new LoginWithGooglePlayGamesServicesRequest
+        {
+            ServerAuthCode = serverAuthCode,
+            CreateAccount = true,
+            TitleId = PlayFabSettings.TitleId
+        };
+
+        PlayFabClientAPI.LoginWithGooglePlayGamesServices(request, OnLoginWithGooglePlayGamesServicesSuccess, OnLoginWithGooglePlayGamesServicesFailure);
+    }
+
+    private void OnLoginWithGooglePlayGamesServicesSuccess(LoginResult result)
+    {
+        Debug.Log("PF Login Success LoginWithGooglePlayGamesServices");
+        IsGoogleLogin = true;
+
+        if (result.NewlyCreated)
+        {
+            GoogleNickname = PlayGamesPlatform.Instance.GetUserDisplayName();
+            UpdatePlayerData().Forget();
+        }
+        else
+        {
+            string playfabID = result.PlayFabId;        
+            _dbService.GetUserData(playfabID);
+        }
+
+        isLoginSuccess = true;
+    }
+
+    private void OnLoginWithGooglePlayGamesServicesFailure(PlayFabError error)
+    {
+        Debug.Log("PF Login Failure LoginWithGooglePlayGamesServices: " + error.GenerateErrorReport());
+    }
+    #endregion
 
 
 
@@ -98,7 +161,7 @@ public class LoginService : IInitializable, IDisposable
             OnLoginSuccess(result);
             File.WriteAllText(savePath, customId);
         }, error =>
-        {           
+        {
             Debug.LogError("Login Fail - Guest");
         });
 
@@ -150,11 +213,10 @@ public class LoginService : IInitializable, IDisposable
     {
         _dbService.UpdateUsernameAndCount();
         await UniTask.Delay(System.TimeSpan.FromMilliseconds(500));
-  
+
         _dbService.SetPlayerData("BestScore", "0");
         await UniTask.WaitUntil(() => _dbService.NickName != null);
-        //await UniTask.Delay(System.TimeSpan.FromMilliseconds(500));
-
+        
         SetDisplayName(_dbService.NickName);
     }
 

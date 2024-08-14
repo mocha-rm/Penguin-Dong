@@ -7,7 +7,7 @@ using GoogleMobileAds;
 using GoogleMobileAds.Api;
 
 
-namespace TingleAvoid
+namespace RandomTingles
 {
     using AD;
 
@@ -47,7 +47,7 @@ namespace TingleAvoid
         Ad_FullScreenViewProvider _fullScreenProvider;
         Ad_RewardViewProvider _rewardProvider;
 
-        public void Init() //Initialize at GameManager or objects of a similar class
+        public void Init()
         {
             if (_isInitialized.HasValue) return;
 
